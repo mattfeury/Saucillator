@@ -10,6 +10,6 @@ They are included.
 
 To compile and run:
 open terminal and cd to the repository's home directory
-then run the example shell. it may need 'sudo' properties
+then run the example shell. it may need 'sudo' priveledges
 
 $ sudo ./runTest.sh
