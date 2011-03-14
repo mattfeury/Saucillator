@@ -1,4 +1,3 @@
-e glob syntax.
 syntax: glob
 *.ser
 *.class
@@ -9,9 +8,6 @@ syntax: glob
 .DS_Store
 *.swo
 *.swp
-
-# logs
-derby.log
 
 # eclipse conf file
 .settings
