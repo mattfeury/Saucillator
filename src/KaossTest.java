@@ -11,24 +11,41 @@
  */
 
 import com.softsynth.jsyn.*;
-
+import vavi.sensor.accelerometer.Accelerometer;
+import vavi.sensor.accelerometer.macbook.MacbookAccelerometer;
+import javax.swing.SwingUtilities;
 public class KaossTest {
 
     public KaossTest()
     {
+        MacbookAccelerometer acc = new MacbookAccelerometer();
         try {
-            Synth.startEngine(0);   
-        } catch(SynthException e) {
+            Synth.startEngine(0);  
+        } catch(Exception e) {
           System.out.println(e);
         }
-        Instrument i = new Square();
-        InstrumentController ic = new InstrumentController(i);
+
+        
+        //scope monitor
+        //new Oscilloscope(Synth.getSharedContext());
+        Instrument i = new SingingSaw();
+        InstrumentController ic = new InstrumentController(i, acc);
       //  Instrument s = new SingingSaw();
       //  InstrumentController ic2 = new InstrumentController(s);
     }
     
     public static void main(String[] args) {
         KaossTest k = new KaossTest();
+
+        
+        //finger monitor
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+											   public void run() {
+											   new SwingTest();
+											   }
+											   });
+
+
         System.out.println("CTRL-C to exit.");
         try { while(true) {Thread.sleep(5000); }    } catch (Exception e) {}
     }

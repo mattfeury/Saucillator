@@ -8,6 +8,9 @@ import com.alderstone.multitouch.mac.touchpad.TouchpadObservable;
 import com.alderstone.multitouch.mac.touchpad.Finger;
 import com.alderstone.multitouch.mac.touchpad.FingerState;
 
+import vavi.sensor.accelerometer.Accelerometer;
+import vavi.sensor.accelerometer.macbook.MacbookAccelerometer;
+
 import com.softsynth.jsyn.*;
 
 public class InstrumentController implements Observer {
@@ -15,13 +18,16 @@ public class InstrumentController implements Observer {
     // Class that is resposible for registering with the Trackpad
     // and notifies registered clients of Touchpad Multitouch Events
     TouchpadObservable tpo;    
+    MacbookAccelerometer acc;
     Instrument instrument;
-    public InstrumentController(Instrument i)
+
+    public InstrumentController(Instrument i, MacbookAccelerometer acc)
     {
         //multitouch
         tpo = TouchpadObservable.getInstance();
         tpo.addObserver(this);
         this.instrument = i;
+        this.acc = acc;
         i.start();
     }
     
@@ -45,6 +51,16 @@ public class InstrumentController implements Observer {
         float   dx = f.getXVelocity();
         float   dy = f.getYVelocity();
         
+        //accel?
+        int sense = acc.sense();
+        int aX = acc.getX();
+        int aY = acc.getY();
+        int aZ = acc.getZ();
+
+        //        int aY 
+        System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
+
+
         //mark on / off
         if(state.equals(FingerState.PRESSED) && !instrument.isPlaying()) //finger pressed. start playback
             instrument.start();
