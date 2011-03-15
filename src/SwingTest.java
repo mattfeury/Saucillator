@@ -27,6 +27,10 @@ import java.awt.geom.AffineTransform;
 
 
 import com.alderstone.multitouch.mac.touchpad.*;
+import com.softsynth.jsyn.view102.WaveDisplay;
+import com.softsynth.jsyn.view102.SynthScope;
+import com.softsynth.jsyn.*;
+
 
 class Fingers implements Observer {
 	private static final int MAX_FINGER_BLOBS = 20;
@@ -95,15 +99,28 @@ public class SwingTest extends JFrame {
 	
 	private Fingers fingers;
 	private SurfaceCanvas surface;
+  private SynthScope scope;
+  private SynthMixer mixer;
 	
-	public SwingTest() {
+	public SwingTest(SynthScope scope) {
+    this.scope = scope;
+
 		surface = new SurfaceCanvas();
-		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
-		this.setContentPane(surface);
+		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+ 200));
+
+    Dialog scopeDialog;
+  	scopeDialog = new Dialog( (Frame) getParent(), "JSyn Scope", false );
+	  scopeDialog.add( "Center", scope );
+		scopeDialog.reshape( 200,100, 500,400 );
+		scopeDialog.show();
+    
+    this.setContentPane(surface);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setTitle("kaoss");
 		this.setVisible(true);
+
+
 
 		surfaceStart();
 	}
@@ -139,12 +156,6 @@ public class SwingTest extends JFrame {
 	}
 
 	
-	public static void main(String[] args) {
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-											   public void run() {
-											   new SwingTest();
-											   }
-											   });
-	}
+	
 }
 

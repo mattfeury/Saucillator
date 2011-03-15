@@ -1,5 +1,17 @@
-import java.util.LinkedList;
+
+
+import java.util.*;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.AffineTransform;
+
 import com.softsynth.jsyn.*;
+import com.softsynth.jsyn.view102.SynthScope;
+
+
+
 /**
  * Abstract class Instrument - write a description of the class here
  * 
@@ -12,6 +24,10 @@ public abstract class Instrument
     protected LinkedList<SineOscillator> sineInputs; //the individual sine oscs to make our complex wavveform
     
     protected int BASE_FREQ = 440;
+    protected SynthScope scope;
+    protected SynthMixer mixer;
+    protected LineOut lineOut;
+
     
     protected int[] scale;
     public static int[] majorScale = {0,2,4,5,7,9,11};
@@ -34,9 +50,36 @@ public abstract class Instrument
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
     
+    public void connectMixerToLineOut()
+    {
+        lineOut = new LineOut();                  
+        mixer.connectOutput( 0, lineOut.input, 0 );
+        mixer.connectOutput( 1, lineOut.input, 1 );
+        lineOut.start();
+        mixer.start();
+
+        startScope();          
+    }
+
+    public void startScope()
+    {      
+      scope = new SynthScope();
+      
+      scope.createProbe( mixer.getOutput(0), "Square", Color.blue );
+      scope.finish();
+      scope.getWaveDisplay().setBackground( Color.white );
+      scope.getWaveDisplay().setForeground( Color.black );
+
+    }
+
     public static double getScaleIntervalFromOffset(int[] scale, int offset)
     {   
         return (scale[offset % scale.length] + 12*((int)((offset)/scale.length)));
+    }
+
+    public SynthScope getScope()
+    {
+        return scope;
     }
 
     public boolean isPlaying()

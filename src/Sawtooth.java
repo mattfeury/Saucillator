@@ -20,23 +20,24 @@ public class Sawtooth extends Instrument {
 
         //make timbre         
         makeTimbre();
+        connectMixerToLineOut();
     }
 
     public void makeTimbre()
     {
+        mixer = new SynthMixer(harmonics.length, 2);
         for(int i = 0; i < harmonics.length; i++)
-          {
-            LineOut lineOut = new LineOut();        
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
+        {
+          SineOscillator sineOsc = new SineOscillator();
+          sineInputs.add(sineOsc);
 
-            //stereo wavves
-            sineOsc.output.connect( 0, lineOut.input, 0 );
-            sineOsc.output.connect( 0, lineOut.input, 1 );
-            
-            lineOut.start();
-            sineOsc.amplitude.set(amplitude / (i+1)); //sawtooth and square
-          }
+          //stereo wavves
+          mixer.connectInput( i, sineOsc.output, 0 );
+          mixer.setGain( i, 0, amplitude / (i+1) );
+          mixer.setGain( i, 1, amplitude / (i+1) );
+          
+          sineOsc.amplitude.set(amplitude / (i+1)); //sawtooth and square
+        } 
     }
     
     public void start()  
