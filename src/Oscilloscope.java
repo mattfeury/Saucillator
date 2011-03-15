@@ -8,6 +8,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.AffineTransform;
 
 import com.softsynth.jsyn.*;
+import com.softsynth.jsyn.view102.WaveDisplay;
 import com.softsynth.jsyn.view102.SynthScope;
 
 /**
@@ -18,27 +19,32 @@ import com.softsynth.jsyn.view102.SynthScope;
 
 public class Oscilloscope extends JFrame 
 {
-	SynthContext         lineIn;
+  LineOut unitOut;
 	SynthScope     scope;
 
 	private static final int SURFACE_WIDTH = 800;
 	private static final int SURFACE_HEIGHT = 600;
 
   /* Can be run as either an application or as an applet. */
-    public Oscilloscope(SynthContext lineIn)
+    public Oscilloscope(LineOut unitOut)
 	{
-    this.lineIn = lineIn;
+    this.unitOut = unitOut;
 
 		JPanel surface = new JPanel();
 		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
 		this.setContentPane(surface);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
-		this.setTitle("kaoss");
+		this.setTitle("oscillo");
 		this.setVisible(true);
 
 
 	}
+
+  public WaveDisplay getWaveDisplay()
+  {
+    return (scope != null) ? scope.getWaveDisplay() : null;
+  }
 
 /*
  * Setup synthesis.
@@ -48,13 +54,9 @@ public class Oscilloscope extends JFrame
 		setLayout( new BorderLayout() );
 				
 /* Create an oscilloscope to show Line Input. */
-		scope = new SynthScope();
-		scope.createProbe( lineIn, 0, "Left", Color.red );
-		scope.createProbe( lineIn, 1, "Right", Color.blue );
-		scope.finish();
-		scope.getWaveDisplay().setBackground( Color.white );
-		scope.getWaveDisplay().setForeground( Color.black );
-		add( "Center", scope );
+		
+
+
 
 /* Synchronize Java display. */
 		getParent().validate();

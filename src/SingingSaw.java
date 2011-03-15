@@ -5,6 +5,16 @@
 import java.util.*;
 import com.softsynth.jsyn.*;
 
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.AffineTransform;
+
+
+import com.softsynth.jsyn.view102.SynthScope;
+
+
 public class SingingSaw extends Instrument {
 
     int[] overtones = {0,2,4}; //this will give us the third and the fifth (index # in the scale)
@@ -20,9 +30,10 @@ public class SingingSaw extends Instrument {
         //set characteristics
         scale = majorScale;
         harmonics = noHarmonics;
-        
+ 
         //make timbre and start        
         makeTimbre();
+        connectMixerToLineOut();
     }
         
     public void makeTimbre()
@@ -39,21 +50,21 @@ public class SingingSaw extends Instrument {
 			envData = new SynthEnvelope( data );
 
       //harmonics
+      mixer = new SynthMixer(overtones.length, 2);
       for(int i = 0; i < overtones.length; i++)
       {
-        LineOut lineOut = new LineOut();        
         SineOscillator sineOsc = new SineOscillator();
         sineInputs.add(sineOsc);
 
         //stereo wavves
-        sineOsc.output.connect( 0, lineOut.input, 0 );
-        sineOsc.output.connect( 0, lineOut.input, 1 );
+			  mixer.connectInput( i, sineOsc.output, 0 );
+  			mixer.setGain( i, 0, 0.5 );
+  			mixer.setGain( i, 1, 0.5 );
+        
         envPlayer.output.connect( sineOsc.amplitude );
         
-        lineOut.start();
         sineOsc.amplitude.set(1.0);
       }
-
       envPlayer.start();
     }
     

@@ -27,9 +27,13 @@ public class KaossTest {
 
         
         //scope monitor
-        //new Oscilloscope(Synth.getSharedContext());
-        Instrument i = new SingingSaw();
+        Instrument i = new Sawtooth();
         InstrumentController ic = new InstrumentController(i, acc);
+
+        //finger monitor
+        new SwingTest(i.getScope());
+
+        //
       //  Instrument s = new SingingSaw();
       //  InstrumentController ic2 = new InstrumentController(s);
     }
@@ -38,13 +42,6 @@ public class KaossTest {
         KaossTest k = new KaossTest();
 
         
-        //finger monitor
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-											   public void run() {
-											   new SwingTest();
-											   }
-											   });
-
 
         System.out.println("CTRL-C to exit.");
         try { while(true) {Thread.sleep(5000); }    } catch (Exception e) {}

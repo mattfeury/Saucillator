@@ -5,6 +5,14 @@
 import java.util.*;
 import com.softsynth.jsyn.*;
 
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.AffineTransform;
+
+
+import com.softsynth.jsyn.view102.SynthScope;
+
 public class Square extends Instrument {
 
     public Square()
@@ -17,23 +25,25 @@ public class Square extends Instrument {
 
         //make timbre and start        
         makeTimbre();
+        connectMixerToLineOut();
     }
         
     public void makeTimbre()
     {
+        mixer = new SynthMixer(harmonics.length, 2);    
         for(int i = 0; i < harmonics.length; i++)
           {
-            LineOut lineOut = new LineOut();        
             SineOscillator sineOsc = new SineOscillator();
             sineInputs.add(sineOsc);
 
             //stereo wavves
-            sineOsc.output.connect( 0, lineOut.input, 0 );
-            sineOsc.output.connect( 0, lineOut.input, 1 );
+            mixer.connectInput( i, sineOsc.output, 0 );
+            mixer.setGain( i, 0, amplitude / (i+1) );
+            mixer.setGain( i, 1, amplitude / (i+1) );
+
             
-            lineOut.start();
             sineOsc.amplitude.set(amplitude / (i+1)); //sawtooth and square
-          }
+          }   
     }
     
     public void start()  
