@@ -106,7 +106,7 @@ public class SwingTest extends JFrame {
     this.scope = scope;
 
 		surface = new SurfaceCanvas();
-		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+ 200));
+		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
 
     Dialog scopeDialog;
   	scopeDialog = new Dialog( (Frame) getParent(), "JSyn Scope", false );

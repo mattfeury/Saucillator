@@ -82,7 +82,7 @@ public class SingingSaw extends Instrument {
     {
        System.out.println("stop");
        isPlaying = false;
-       envPlayer.envelopePort.clear(); // clear the queue
+      // envPlayer.envelopePort.clear(); // clear the queue
        
        for(SineOscillator sineOsc : sineInputs)
          sineOsc.stop();

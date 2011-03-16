@@ -14,6 +14,8 @@ import com.softsynth.jsyn.*;
 import vavi.sensor.accelerometer.Accelerometer;
 import vavi.sensor.accelerometer.macbook.MacbookAccelerometer;
 import javax.swing.SwingUtilities;
+import java.awt.MouseInfo;
+
 public class KaossTest {
 
     public KaossTest()
@@ -25,26 +27,26 @@ public class KaossTest {
           System.out.println(e);
         }
 
-        
+        System.out.println(System.getProperty("os.name"));
         //scope monitor
-        Instrument i = new Sawtooth();
+        Instrument i = new Sine();
         InstrumentController ic = new InstrumentController(i, acc);
 
         //finger monitor
         new SwingTest(i.getScope());
-
-        //
-      //  Instrument s = new SingingSaw();
-      //  InstrumentController ic2 = new InstrumentController(s);
     }
     
     public static void main(String[] args) {
         KaossTest k = new KaossTest();
+        
 
         
 
         System.out.println("CTRL-C to exit.");
-        try { while(true) {Thread.sleep(5000); }    } catch (Exception e) {}
+			  try { while(true) {
+          Thread.sleep(100);
+          System.out.println("("+MouseInfo.getPointerInfo().getLocation().x+", "+MouseInfo.getPointerInfo().getLocation().y+")"); 
+        }    } catch (Exception e) {}
     }
 }
 

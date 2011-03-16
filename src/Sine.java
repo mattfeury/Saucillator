@@ -5,15 +5,15 @@
 import java.util.*;
 import com.softsynth.jsyn.*;
 
-public class Triangle extends Instrument {
+public class Sine extends Instrument {
 
-    public Triangle()
+    public Sine()
     {
         super();
 
         //set characteristics
         scale = majorScale;
-        harmonics = oddHarmonics; //square & triangle
+        harmonics = noHarmonics; //square & triangle
 
         //make timbre and start        
         makeTimbre();
@@ -33,7 +33,7 @@ public class Triangle extends Instrument {
             mixer.setGain( i, 0, amplitude );
             mixer.setGain( i, 1, amplitude );
 
-            sineOsc.amplitude.set(amplitude / Math.pow(i+1,2));  //triangle
+            sineOsc.amplitude.set(amplitude);  //triangle
           }
     }
     
@@ -63,9 +63,6 @@ public class Triangle extends Instrument {
         
         for(SineOscillator sineOsc : sineInputs)
         {
-            //overtone offset
-            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
-            
             //harmonic offset
             sineOsc.frequency.set(freq * harmonics[i]);
             i++;
