@@ -60,7 +60,6 @@ class Fingers implements Observer {
 	}
  
 	public void draw(Graphics g) {
-	   
 	   ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 	   for (int i=0; i<MAX_FINGER_BLOBS;i++) {
@@ -73,17 +72,19 @@ class Fingers implements Observer {
 			   int ysize = (int) (10*f.getSize() * (f.getMinorAxis()/2));
 			   int ang   = f.getAngle();
 
+
+				Color pitchcolor = new Color(x % 255, y % 255, (x + y) % 255);
+			   g.setColor(pitchcolor);
 			   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
 			   
 			   AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
 			   at.translate(x-xsize/2, y-ysize/2);
 			   at.rotate((Math.PI/180)*-ang, xsize/2, ysize/2);  // convert degrees to radians
 			   
-			   g.setColor(Color.PINK);
 			   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
 			   
 			   g.setColor(Color.DARK_GRAY);
-			   g.drawString("" + i, x,y);
+			   //g.drawString("" + i, x,y);
 		   }
 	   }
 	}
