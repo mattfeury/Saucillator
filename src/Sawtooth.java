@@ -44,7 +44,7 @@ public class Sawtooth extends Instrument {
     {
        System.out.println("start");
        isPlaying = true;
-       for(SineOscillator sineOsc : sineInputs)
+       for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
     
@@ -52,7 +52,7 @@ public class Sawtooth extends Instrument {
     {
        System.out.println("stop");
        isPlaying = false;
-       for(SineOscillator sineOsc : sineInputs)
+       for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
     
@@ -64,7 +64,7 @@ public class Sawtooth extends Instrument {
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SineOscillator sineOsc : sineInputs)
+        for(SynthOscillator sineOsc : sineInputs)
         {
             //overtone offset
             //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);

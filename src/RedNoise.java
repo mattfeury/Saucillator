@@ -5,9 +5,9 @@
 import java.util.*;
 import com.softsynth.jsyn.*;
 
-public class Sine extends Instrument {
+public class RedNoise extends Instrument {
 
-    public Sine()
+    public RedNoise()
     {
         super();
 
@@ -25,15 +25,15 @@ public class Sine extends Instrument {
         mixer = new SynthMixer(harmonics.length, 2);      
         for(int i = 0; i < harmonics.length; i++)
           {
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
+            RedNoise noiseOsc = new RedNoise();
+            sineInputs.add(noiseOsc); //this errors. but it works. swearsies.
 
             //stereo wavves
-            mixer.connectInput( i, sineOsc.output, 0 );
+            mixer.connectInput( i, noiseOsc.output, 0 );
             mixer.setGain( i, 0, amplitude );
             mixer.setGain( i, 1, amplitude );
 
-            sineOsc.amplitude.set(amplitude);  //sine
+            //noiseOsc.amplitude.set(amplitude);  //noise
           }
     }
     
@@ -41,7 +41,7 @@ public class Sine extends Instrument {
     {
        System.out.println("start");
        isPlaying = true;
-       for(SynthOscillator sineOsc : sineInputs)
+       for(SynthUnit sineOsc : sineInputs)
          sineOsc.start();
     }
     
@@ -49,14 +49,12 @@ public class Sine extends Instrument {
     {
        System.out.println("stop");
        isPlaying = false;
-       for(SynthOscillator sineOsc : sineInputs)
+       for(SynthUnit sineOsc : sineInputs)
          sineOsc.stop();
     }
     
     public void adjustFrequencyByOffset(int offset) {
         
-        
-        //harmonic mode
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
@@ -67,6 +65,7 @@ public class Sine extends Instrument {
             sineOsc.frequency.set(freq * harmonics[i]);
             i++;
         }
+
     }   
     
     

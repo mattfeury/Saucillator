@@ -74,7 +74,7 @@ public class SingingSaw extends Instrument {
        isPlaying = true;
    		 envPlayer.envelopePort.queueLoop(0, envData );  // queue an envelope
        
-       for(SineOscillator sineOsc : sineInputs)
+       for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
     
@@ -84,7 +84,7 @@ public class SingingSaw extends Instrument {
        isPlaying = false;
       // envPlayer.envelopePort.clear(); // clear the queue
        
-       for(SineOscillator sineOsc : sineInputs)
+       for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
     
@@ -96,7 +96,7 @@ public class SingingSaw extends Instrument {
 //        double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
 //        int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SineOscillator sineOsc : sineInputs)
+        for(SynthOscillator sineOsc : sineInputs)
         {
             //overtone offset
             double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);

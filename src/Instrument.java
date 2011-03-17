@@ -21,7 +21,7 @@ import com.softsynth.jsyn.view102.SynthScope;
 public abstract class Instrument
 {
     protected boolean isPlaying;
-    protected LinkedList<SineOscillator> sineInputs; //the individual sine oscs to make our complex wavveform
+    protected LinkedList<SynthOscillator> sineInputs; //the individual sine oscs to make our complex wavveform
     
     protected int BASE_FREQ = 440;
     protected SynthScope scope;
@@ -41,8 +41,8 @@ public abstract class Instrument
 
     protected float amplitude = 1.0f; //amplitude for the fundamental
     
-    public Instrument() {
-      sineInputs = new LinkedList<SineOscillator>();                
+    public Instrument() { //constructor needs: scale, freq, amp?
+      sineInputs = new LinkedList<SynthOscillator>();                
     }
     
     abstract void start();
