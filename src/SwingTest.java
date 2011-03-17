@@ -32,32 +32,22 @@ import com.softsynth.jsyn.view102.SynthScope;
 import com.softsynth.jsyn.*;
 
 
-class Fingers implements Observer {
+class Fingers {
 	private static final int MAX_FINGER_BLOBS = 20;
 	
 	private int width, height;
-	TouchpadObservable tpo;
 	Finger blobs[] = new Finger[MAX_FINGER_BLOBS];
 	
-    public Fingers(int width, int height) {	
+  public Fingers(int width, int height) {	
 		this.width = width;
 		this.height=height;
-		tpo = TouchpadObservable.getInstance();
-		tpo.addObserver(this);
 	}
 
-	// Multitouch update event 
-	public void update( Observable obj, Object arg ) {
-		
-		// The event 'arg' is of type: com.alderstone.multitouch.mac.touchpad.Finger
-		Finger f = (Finger) arg;
+  public void updateFinger(Finger f) {
 		int id = f.getID();
 		if (id <= MAX_FINGER_BLOBS)
 			blobs[id-1]= f;
-	}	
-
-	public void update() {	   
-	}
+  }    
  
 	public void draw(Graphics g) {
 	   ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -125,6 +115,11 @@ public class SwingTest extends JFrame {
 
 		surfaceStart();
 	}
+
+  public void updateFinger(Finger f)
+  {
+    fingers.updateFinger(f);
+  }
 	
 	public void surfaceStart() {
 		fingers = new Fingers(SURFACE_WIDTH, SURFACE_HEIGHT);
@@ -144,7 +139,7 @@ public class SwingTest extends JFrame {
 	}
 	
 	public void surfaceUpdate() {
-		fingers.update();
+	//	fingers.update();
 	}
 	
 	class SurfaceCanvas extends JPanel {

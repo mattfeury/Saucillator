@@ -37,6 +37,7 @@ public class KaossTest implements Observer {
     private MacbookAccelerometer acc;
 
     private InstrumentController controller;
+    private SwingTest display;
 
     //GLOBALS
     public static final int TRACKPAD_GRID_SIZE = 12;
@@ -61,7 +62,7 @@ public class KaossTest implements Observer {
         controller = new InstrumentController(new Sawtooth());
 
         //finger monitor
-        new SwingTest(controller.getScope());
+        display = new SwingTest(controller.getScope());
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
@@ -82,6 +83,9 @@ public class KaossTest implements Observer {
        
         // The event 'arg' is of type: com.alderstone.multitouch.mac.touchpad.Finger
         Finger f = (Finger) arg;
+
+        //update display
+        display.updateFinger(f);
  
         int     frame = f.getFrame();
         double  timestamp = f.getTimestamp();
