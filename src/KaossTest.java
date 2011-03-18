@@ -1,4 +1,4 @@
-/*
+  /*
  * A test for the basic idea behind our Kaoss Emulator. This class will see substantial changes.
  *
  * TODO:
@@ -23,13 +23,13 @@ import com.alderstone.multitouch.mac.touchpad.FingerState;
 import vavi.sensor.accelerometer.Accelerometer;
 import vavi.sensor.accelerometer.macbook.MacbookAccelerometer;
 import javax.swing.SwingUtilities;
-import java.awt.MouseInfo;
 
 public class KaossTest implements Observer {
 
     // Class that is resposible for registering with the Trackpad
     // and notifies registered clients of Touchpad Multitouch Events
     private TouchpadObservable tpo;    
+    private MouseObservable mouseObs;
 
     // Tracks how many fingers are pressed and what value
     private LinkedList<Integer> fingersPressed;
@@ -42,40 +42,48 @@ public class KaossTest implements Observer {
     //GLOBALS
     public static final int TRACKPAD_GRID_SIZE = 12;
     private final boolean useMultitouch = true;
+    private final boolean DISPLAY = true;
 
     public KaossTest()
     {
 
+      //start synth & instruments
+      try {
+          Synth.startEngine(0);  
+      } catch(Exception e) {
+        System.out.println(e);
+      }
+
+      controller = new InstrumentController(new Sawtooth());
+
+      //start display
+      if(DISPLAY)
+        display = new SwingTest(controller.getScope());
+      
+      //start input devices based on support
+      if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
         tpo.addObserver(this);
+        acc = new MacbookAccelerometer();    
+
         fingersPressed = new LinkedList<Integer>();
-        
-        acc = new MacbookAccelerometer();
-        try {
-            Synth.startEngine(0);  
-        } catch(Exception e) {
-          System.out.println(e);
-        }
+      } else {
+        mouseObs = new MouseObservable();
+        mouseObs.addObserver(this);
+      
+        Thread thread = new MouseObserverThread(mouseObs);
+        thread.start(); //start observing
 
-        System.out.println(System.getProperty("os.name"));
-        //scope monitor
-        controller = new InstrumentController(new Sawtooth());
+        controller.start();
 
-        //finger monitor
-        display = new SwingTest(controller.getScope());
+      }
+      
+      System.out.println(System.getProperty("os.name"));
+      
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
     public void update( Observable obj, Object arg ) {
-         
-      //accel?
-      int sense = acc.sense();
-      int aX = acc.getX();
-      int aY = acc.getY();
-      int aZ = acc.getZ();
-
-      //        int aY 
-     // System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
 
       //check macbook?
       if(useMultitouch)
@@ -84,8 +92,18 @@ public class KaossTest implements Observer {
         // The event 'arg' is of type: com.alderstone.multitouch.mac.touchpad.Finger
         Finger f = (Finger) arg;
 
+        
+        //accel?
+        int sense = acc.sense();
+        int aX = acc.getX();
+        int aY = acc.getY();
+        int aZ = acc.getZ();
+        // System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
+
+
         //update display
-        display.updateFinger(f);
+        if(DISPLAY)
+          display.updateFinger(f);
  
         int     frame = f.getFrame();
         double  timestamp = f.getTimestamp();
@@ -123,16 +141,28 @@ public class KaossTest implements Observer {
         
         boolean fingerIsController = fingersPressed.getFirst().equals(id);
         if(fingerIsController) {
-          int yProper = (int)((y * 100) / (100 / TRACKPAD_GRID_SIZE)); //inc is value from 0-12 inclusive        
+          int yProper = (int)((y * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-12 inclusive        
           controller.changeFrequency(yProper);
         }
       } else {
-        //degrade to mouse position on screen. this sucks but it's quick and stable
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//        MouseInfo.getPointerInfo().getLocation().x;
-  //        MouseInfo.getPointerInfo().getLocation().y;
+        //degrade to mouse position on screen. this sucks but it's a quick and stable alternative
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension mouse = (Dimension)arg;
 
+        if(mouse.height == 0 && mouse.width == 0 && controller.isPlaying()) { //corner, turn off
+          controller.stop();
+          return;
+        } 
+        if(! controller.isPlaying()) {
+          controller.start();
+        }
+      
 
+        float yPercentageFromBottom = ((float)screen.height - mouse.height) / screen.height; //value from 0-1 of the y position. bottom is 0, 1 is top.
+        int yProper = (int)((yPercentageFromBottom * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-12 inclusive        
+        controller.changeFrequency(yProper);
+
+        
       } 
 
     }   
@@ -142,9 +172,6 @@ public class KaossTest implements Observer {
         KaossTest k = new KaossTest();   
 
         System.out.println("CTRL-C to exit.");
-			  try { while(true) {
-          Thread.sleep(5000);
-        }    } catch (Exception e) {}
     }
 }
 
