@@ -57,7 +57,7 @@ class Fingers {
 		   Finger f = blobs[i];
 		   if(f != null) bloblist.add(f);
 		   for(Finger blob : bloblist) {
-		   	if (f != null && f.getState() == FingerState.PRESSED) {
+		   	if (blob != null && blob.getState() == FingerState.PRESSED) {
 			   
 				   int x     = (int) (width  * (blob.getX()));
 				   int y     = (int) (height * (1-blob.getY()));
