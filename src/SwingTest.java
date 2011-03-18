@@ -37,6 +37,7 @@ class Fingers {
 	
 	private int width, height;
 	Finger blobs[] = new Finger[MAX_FINGER_BLOBS];
+	java.util.List<Finger> bloblist = new java.util.LinkedList<Finger>(); 
 	
   public Fingers(int width, int height) {	
 		this.width = width;
@@ -54,28 +55,32 @@ class Fingers {
 
 	   for (int i=0; i<MAX_FINGER_BLOBS;i++) {
 		   Finger f = blobs[i];
-		   if (f != null && f.getState() == FingerState.PRESSED) {
+		   if(f != null) bloblist.add(f);
+		   for(Finger blob : bloblist) {
+		   	if (f != null && f.getState() == FingerState.PRESSED) {
 			   
-			   int x     = (int) (width  * (f.getX()));
-			   int y     = (int) (height * (1-f.getY()));
-			   int xsize = (int) (10*f.getSize() * (f.getMajorAxis()/2));
-			   int ysize = (int) (10*f.getSize() * (f.getMinorAxis()/2));
-			   int ang   = f.getAngle();
+				   int x     = (int) (width  * (blob.getX()));
+				   int y     = (int) (height * (1-blob.getY()));
+				   int xsize = (int) (10*blob.getSize() * (blob.getMajorAxis()/2));
+				   int ysize = (int) (10*blob.getSize() * (blob.getMinorAxis()/2));
+				   int ang   = blob.getAngle();
 
 
-				Color pitchcolor = new Color(x % 255, y % 255, (x + y) % 255);
-			   g.setColor(pitchcolor);
-			   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
+					Color pitchcolor = new Color(x % 255, y % 255, (x + y) % 255);
+				   g.setColor(pitchcolor);
+				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
 			   
-			   AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
-			   at.translate(x-xsize/2, y-ysize/2);
-			   at.rotate((Math.PI/180)*-ang, xsize/2, ysize/2);  // convert degrees to radians
+				   AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
+				   at.translate(x-xsize/2, y-ysize/2);
+				   at.rotate((Math.PI/180)*-ang, xsize/2, ysize/2);  // convert degrees to radians
 			   
-			   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
+				   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
 			   
-			   g.setColor(Color.DARK_GRAY);
-			   //g.drawString("" + i, x,y);
-		   }
+				   g.setColor(Color.DARK_GRAY);
+				   //g.drawString("" + i, x,y);
+			   }
+	   		}
+			if(bloblist.size() > 10) bloblist.remove(0);
 	   }
 	}
 }
