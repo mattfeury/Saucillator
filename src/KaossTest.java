@@ -40,7 +40,7 @@ public class KaossTest implements Observer {
     private SwingTest display;
 
     //GLOBALS
-    public static final int TRACKPAD_GRID_SIZE = 12;
+    public static int TRACKPAD_GRID_SIZE = 12;
     private final boolean useMultitouch = true;
     private final boolean DISPLAY = true;
 
@@ -49,12 +49,14 @@ public class KaossTest implements Observer {
 
       //start synth & instruments
       try {
+          Synth.requestVersion( 144 );
           Synth.startEngine(0);  
       } catch(Exception e) {
         System.out.println(e);
       }
 
       controller = new InstrumentController(new Sawtooth());
+      //TRACKPAD_GRID_SIZE = 100; //for singing saw only
 
       //start display
       if(DISPLAY)
@@ -63,19 +65,19 @@ public class KaossTest implements Observer {
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
-        tpo.addObserver(this);
         acc = new MacbookAccelerometer();    
 
         fingersPressed = new LinkedList<Integer>();
+
+        tpo.addObserver(this);        
       } else {
         mouseObs = new MouseObservable();
-        mouseObs.addObserver(this);
       
         Thread thread = new MouseObserverThread(mouseObs);
-        thread.start(); //start observing
+        thread.start(); 
 
         controller.start();
-
+        mouseObs.addObserver(this); //start observing
       }
       
       System.out.println(System.getProperty("os.name"));
@@ -159,7 +161,7 @@ public class KaossTest implements Observer {
       
 
         float yPercentageFromBottom = ((float)screen.height - mouse.height) / screen.height; //value from 0-1 of the y position. bottom is 0, 1 is top.
-        int yProper = (int)((yPercentageFromBottom * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-12 inclusive        
+        int yProper = (int)((yPercentageFromBottom * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-TRACKPAD_GRID_SIZE inclusive        
         controller.changeFrequency(yProper);
 
         
