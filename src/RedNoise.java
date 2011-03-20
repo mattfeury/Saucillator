@@ -25,8 +25,8 @@ public class RedNoise extends Instrument {
         mixer = new SynthMixer(harmonics.length, 2);      
         for(int i = 0; i < harmonics.length; i++)
           {
-            RedNoise noiseOsc = new RedNoise();
-            sineInputs.add(noiseOsc); //this errors. but it works. swearsies.
+            com.softsynth.jsyn.RedNoise noiseOsc = new com.softsynth.jsyn.RedNoise();
+            sineInputs.add(noiseOsc);
 
             //stereo wavves
             mixer.connectInput( i, noiseOsc.output, 0 );
