@@ -182,13 +182,17 @@ public class KaossTest implements Observer {
           return;
         } 
         if(! controller.isPlaying()) {
-          controller.start();
+          controller.startInstrument();
         }
       
 
         float yPercentageFromBottom = ((float)screen.height - mouse.height) / screen.height; //value from 0-1 of the y position. bottom is 0, 1 is top.
-        int yProper = scaleToRange(yPercentageFromBottom, TRACKPAD_GRID_SIZE);
-        controller.changeFrequency(yProper);
+        float xPercentage = ((float)mouse.width / screen.width); //value from 0-1 of the y position. bottom is 0, 1 is top.
+        
+        int yProper = (int)(yPercentageFromBottom * TRACKPAD_GRID_SIZE);
+        updateFrequency(yProper);
+        updateLFO((int)(xPercentage*20));
+        
 
         
       } 
