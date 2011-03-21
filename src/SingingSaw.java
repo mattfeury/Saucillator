@@ -22,6 +22,7 @@ public class SingingSaw extends Instrument {
     
   	private SynthEnvelope      envData;
     private EnvelopePlayer     envPlayer;
+    private LinearLag lagUnit;
 
     public SingingSaw()
     {
@@ -33,7 +34,7 @@ public class SingingSaw extends Instrument {
  
         //make timbre and start        
         makeTimbre();
-        connectMixerToLineOut();
+        startScope();
     }
         
     public void makeTimbre()
@@ -50,22 +51,37 @@ public class SingingSaw extends Instrument {
 			envData = new SynthEnvelope( data );
 
       //harmonics
+			lagUnit = new LinearLag(); //this doesn't work at all
+  		lagUnit.time.set( 0.05 );
+
+
       mixer = new SynthMixer(overtones.length, 2);
+
       for(int i = 0; i < overtones.length; i++)
       {
         SineOscillator sineOsc = new SineOscillator();
         sineInputs.add(sineOsc);
 
+        //lagUnit.output.connect( sineOsc.frequency );
+        //DelayUnit delayUnit = new DelayUnit(0.3 * (i+1));
+        //delayUnit.input.connect(sineOsc.output);
         //stereo wavves
 			  mixer.connectInput( i, sineOsc.output, 0 );
-  			mixer.setGain( i, 0, 0.5 );
-  			mixer.setGain( i, 1, 0.5 );
+        //mixer.connectInput( i+overtones.length, delayUnit.output, 0);
+
+        mixer.setGain( i, 0, .7);
+        mixer.setGain( i, 1, .7);
+        //mixer.setGain( i + overtones.length, 0, .3);
+        //mixer.setGain( i + overtones.length, 1, .3);
+        
         
         envPlayer.output.connect( sineOsc.amplitude );
         
         sineOsc.amplitude.set(1.0);
+        //delayUnit.start();
       }
       envPlayer.start();
+      lagUnit.start();
     }
     
     public void start()  
@@ -112,24 +128,14 @@ public class SingingSaw extends Instrument {
     }
     
     public void adjustFrequencyByOffset(int offset) {  
-        //harmonic mode
         int i = 0; 
         for(SynthOscillator sineOsc : sineInputs)
         {
             //overtone offset
-            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
-            //int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+            double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
+            int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
             
-            int freq = (int)((float)((float)offset / KaossTest.TRACKPAD_GRID_SIZE + 1) * BASE_FREQ);
-            /*
-            if(i==0) {
-              if(freq != lastFreq) { //new note
-                envPlayer.envelopePort.clear(); // clear the queue        
-                envPlayer.envelopePort.queue(envData );  // queue an envelope
-              }
-              
-              lastFreq = freq;
-            }*/
+            //int freq = (int)((float)((float)offset / KaossTest.TRACKPAD_GRID_SIZE + 1) * BASE_FREQ);
             sineOsc.frequency.set(freq);
            // System.out.println(i + ": " +freq);
             i++;

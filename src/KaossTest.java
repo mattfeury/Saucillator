@@ -55,7 +55,7 @@ public class KaossTest implements Observer {
         System.out.println(e);
       }
 
-      controller = new InstrumentController(new Sawtooth());
+      controller = new InstrumentController(new Square());
       //TRACKPAD_GRID_SIZE = 100; //for singing saw only
 
       //start display
@@ -69,7 +69,8 @@ public class KaossTest implements Observer {
 
         fingersPressed = new LinkedList<Integer>();
 
-        tpo.addObserver(this);        
+        tpo.addObserver(this);  
+        controller.start();      
       } else {
         mouseObs = new MouseObservable();
       
@@ -100,8 +101,8 @@ public class KaossTest implements Observer {
         int aX = acc.getX();
         int aY = acc.getY();
         int aZ = acc.getZ();
-        // System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
-
+       //  System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
+        //controller.pan((double)(acc.getX() % 100) / 100);
 
         //update display
         if(DISPLAY)
@@ -126,7 +127,7 @@ public class KaossTest implements Observer {
           //we were not tracking this finger. so let's add it to the queue.          
           System.out.println("now tracking: "+id);
           if(fingersPressed.isEmpty())
-            controller.start();
+            controller.startInstrument();
 
           fingersPressed.add((Integer)id);
         }
@@ -143,8 +144,12 @@ public class KaossTest implements Observer {
         
         boolean fingerIsController = fingersPressed.getFirst().equals(id);
         if(fingerIsController) {
-          int yProper = (int)((y * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-12 inclusive        
+          int yProper = scaleToRange(y,TRACKPAD_GRID_SIZE);        
+          int lowpass = scaleToRange(x,2000);
+
           controller.changeFrequency(yProper);
+          controller.lowpass(lowpass);
+          //System.out.println(lowpass + "   " + x);
         }
       } else {
         //degrade to mouse position on screen. this sucks but it's a quick and stable alternative
@@ -161,7 +166,7 @@ public class KaossTest implements Observer {
       
 
         float yPercentageFromBottom = ((float)screen.height - mouse.height) / screen.height; //value from 0-1 of the y position. bottom is 0, 1 is top.
-        int yProper = (int)((yPercentageFromBottom * 100) / (100 / TRACKPAD_GRID_SIZE)); //value from 0-TRACKPAD_GRID_SIZE inclusive        
+        int yProper = scaleToRange(yPercentageFromBottom, TRACKPAD_GRID_SIZE);
         controller.changeFrequency(yProper);
 
         
@@ -169,6 +174,14 @@ public class KaossTest implements Observer {
 
     }   
     
+    /*
+     * Returns a value from 0 - max inclusive based on a percentage (float from 0.0 - 1.0)
+     */
+    public int scaleToRange(float scale, double max)
+    {
+      int scaled = (int)((scale * 100) / (100 / max)); 
+      return scaled;
+    }
     
     public static void main(String[] args) {
         KaossTest k = new KaossTest();   

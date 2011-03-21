@@ -17,7 +17,7 @@ public class Triangle extends Instrument {
 
         //make timbre and start        
         makeTimbre();
-        connectMixerToLineOut();        
+        startScope();        
     }
     
     public void makeTimbre()

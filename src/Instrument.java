@@ -26,8 +26,6 @@ public abstract class Instrument
     protected int BASE_FREQ = 440;
     protected SynthScope scope;
     protected SynthMixer mixer;
-    protected LineOut lineOut;
-
     
     protected int[] scale;
     public static int[] majorScale = {0,2,4,5,7,9,11};
@@ -49,23 +47,17 @@ public abstract class Instrument
     abstract void stop();
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
-    
-    public void connectMixerToLineOut()
+
+    public SynthMixer getMixer()
     {
-        lineOut = new LineOut();                  
-        mixer.connectOutput( 0, lineOut.input, 0 );
-        mixer.connectOutput( 1, lineOut.input, 1 );
-        lineOut.start();
-        mixer.start();
-
-        startScope();          
+      return mixer;
     }
-
+    
     public void startScope()
     {      
       scope = new SynthScope();
       
-      scope.createProbe( mixer.getOutput(0), "Square", Color.blue );
+      scope.createProbe( mixer.getOutput(0), "", Color.blue );
       scope.finish();
       scope.getWaveDisplay().setBackground( Color.white );
       scope.getWaveDisplay().setForeground( Color.black );
@@ -86,4 +78,5 @@ public abstract class Instrument
     {
         return isPlaying;
     }
+
 }
