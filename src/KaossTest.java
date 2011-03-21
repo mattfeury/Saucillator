@@ -56,9 +56,8 @@ public class KaossTest implements Observer {
         System.out.println(e);
       }
 
-      i = new Triangle();
-      i.makeLFOs();
-      i.enableLFOs();
+      i = new SingingSaw();
+      i.makeLFOs(true);
       controller = new InstrumentController(i);
       //TRACKPAD_GRID_SIZE = 100; //for singing saw only
 
@@ -86,7 +85,7 @@ public class KaossTest implements Observer {
       }
       
       System.out.println(System.getProperty("os.name"));
-      
+      //updateLFO(0);
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
@@ -145,27 +144,34 @@ public class KaossTest implements Observer {
           return;
         }
         
+        //pan by accelerometer
         controller.pan((double)(acc.getX() % 100) / 100);
 
-
         boolean fingerIsController = fingersPressed.getFirst().equals(id);
-        if(fingerIsController) {
-          
-          int yProper = scaleToRange(y,TRACKPAD_GRID_SIZE);        
-          int lowpass = scaleToRange(x,2000);
+        if(! fingerIsController) return; //only use control finger for points
 
-          if(lowpass < 20)
-          {
-            System.out.println("dis");
-            controller.disableLFO();
-            return;  
+        int numFingers = fingersPressed.size();
+        //System.out.println(numFingers);
+        //x location depends on amount of fingers
+        switch(numFingers)
+        {
+          case 0:
+            return;
+          case 1:
+            updateLowpass((int)(x * 2000));
+            break;
+          case 2:
+            updateLFO((int)(x*20));
+            break;
+          //default:
             
-          }
 
-          controller.changeFrequency(yProper);
-          controller.lowpass(lowpass);
-          //System.out.println(lowpass + "   " + x);
         }
+
+        //freq is always y location
+        updateFrequency((int)(y * TRACKPAD_GRID_SIZE));
+
+        
       } else {
         //degrade to mouse position on screen. this sucks but it's a quick and stable alternative
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -187,14 +193,35 @@ public class KaossTest implements Observer {
         
       } 
 
-    }   
+    }  
+
+    public void updateFrequency(int y)
+    {
+      controller.changeFrequency(y);
+    } 
+
+    public void updateLowpass(int lowpass)
+    {
+      controller.lowpass(lowpass);
+    }  
+
+    public void updateLFO(int rate)
+    {
+      System.out.println(rate);
+      if(rate == 0)
+        controller.stopLFO(); //herm
+      else
+        controller.updateModRate(rate);
+    } 
     
     /*
      * Returns a value from 0 - max inclusive based on a percentage (float from 0.0 - 1.0)
+     *
+     * this is a stupid method. you just multiple the numbers. oy vay. don't use this.
      */
     public int scaleToRange(float scale, double max)
     {
-      int scaled = (int)((scale * 100) / (100 / max)); 
+      int scaled = (int)((scale * max)); 
       return scaled;
     }
     

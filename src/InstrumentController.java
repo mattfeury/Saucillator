@@ -78,6 +78,27 @@ public class InstrumentController {
       //controller.start();    
     }
 
+    public void enableLFO()
+    { 
+      instrument.enableLFOs();
+    }
+
+    public void updateLFO()
+    {
+      instrument.updateLFOs();
+    }
+
+    public void stopLFO()
+    {
+      instrument.stopLFOs();
+    }
+
+    public void updateModRate(int rate)
+    {
+      instrument.MOD_RATE = rate;
+      updateLFO();
+    }
+
     public Instrument getInstrument()
     {
       return instrument;

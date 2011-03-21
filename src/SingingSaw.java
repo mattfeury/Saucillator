@@ -28,7 +28,7 @@ public class SingingSaw extends Instrument {
         super();
 
         //set characteristics
-        scale = minorScale;
+        scale = majorScale;
         harmonics = noHarmonics;
  
         //make timbre and start        
@@ -100,6 +100,7 @@ public class SingingSaw extends Instrument {
           double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
           int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
           
+          System.out.println(freq);
           freqMod.set(freq);
           i++;
       }

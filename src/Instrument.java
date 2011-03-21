@@ -41,8 +41,13 @@ public abstract class Instrument
     public static int[] noHarmonics = {1};
 
     
-      public static int MOD_DEPTH = 200;
-      public static int MOD_RATE = 10; //in hz (0-20)
+    public static int MOD_DEPTH = 20;
+    public static int MOD_RATE = 0; //in hz (0-20)
+    public static int LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
+
+    //state variables?
+    private boolean LFO_INIT = false;
+    private boolean LFO_ENABLED = false;
 
 
     protected float amplitude = 1.0f; //amplitude for the fundamental
@@ -57,7 +62,7 @@ public abstract class Instrument
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
 
-    public void makeLFOs()
+    public void makeLFOs(boolean enable)
     {
       //LFO
       lfos = new ArrayList<LFO>();
@@ -66,30 +71,47 @@ public abstract class Instrument
         LFO lfo = new LFO(osc.frequency);
         lfos.add(lfo);
       }
+      LFO_INIT = true;      
+      if(enable) enableLFOs();
+      else  disableLFOs();
     }
 
     public void enableLFOs()
     {
+      LFO_ENABLED = true;
       freqMods.clear();
       for(LFO lfo : lfos)
       {
         lfo.connect();
         freqMods.add(lfo.getFreqMod());
       }
+      updateLFOs();
     }
 
     public void disableLFOs()
     {
-      MOD_DEPTH = 0;
-      MOD_RATE = 0;
+      LFO_ENABLED = false;
       for(LFO lfo : lfos)
       {
         lfo.disconnect();
       }
+    }
 
-      /*freqMods.clear();
-      sineInputs.clear();      
-      makeTimbre();*/
+    public void updateLFOs()
+    {
+      for(LFO lfo : lfos)
+        lfo.update();
+    }
+
+    public void stopLFOs()
+    {
+      for(LFO lfo : lfos)
+        lfo.disconnect();
+    }
+
+    public boolean isLfoEnabled()
+    {
+      return LFO_ENABLED;
     }
 
     public SynthMixer getMixer()
@@ -144,10 +166,7 @@ public abstract class Instrument
         myLag.input.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
         myLag.current.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
         myLFO.amplitude.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
-        myLFO.amplitude.set(0); //mod depth
-        myLFO.frequency.set(0); //mod rate
-
-        System.out.println(myLag.halfLife.getMax() + "    " + myLag.halfLife.getMin());
+        update();
 
         mySum.start();
     		myLag.start();
@@ -159,23 +178,29 @@ public abstract class Instrument
         return myLag.input;
       }
 
+      /*
+       * It's not actually ever disconnected. Just sounds "invisible" by resetting to 0
+       */
       public void disconnect()
       {
-
         myLag.halfLife.set(0);
         myLFO.amplitude.set(0); //mod depth
-        myLFO.frequency.set(0); //mod rate        
-        //mySum.output.disconnect();
-                //frequency.disconnect();
+        myLFO.frequency.set(0); //mod rate      
       }
 
       public void connect()
-      {
-        myLFO.amplitude.set(MOD_DEPTH); //mod depth
-        myLFO.frequency.set(MOD_RATE); //mod rate        
-        
+      { 
+        update();
         mySum.output.connect(frequency);
       }
+
+      public void update()
+      {
+        myLag.halfLife.set(LAG_LIFE); //freq lag        
+        myLFO.amplitude.set(MOD_DEPTH); //mod depth
+        myLFO.frequency.set(MOD_RATE); //mod rate   
+      }
+
 
     }
 
