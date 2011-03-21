@@ -27,6 +27,7 @@ public class RedNoise extends Instrument {
           {
             com.softsynth.jsyn.RedNoise noiseOsc = new com.softsynth.jsyn.RedNoise();
             sineInputs.add(noiseOsc);
+            freqMods.add(noiseOsc.frequency);
 
             //stereo wavves
             mixer.connectInput( i, noiseOsc.output, 0 );
@@ -59,10 +60,10 @@ public class RedNoise extends Instrument {
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SynthOscillator sineOsc : sineInputs)
+        for(SynthInput freqMod : freqMods)
         {
             //harmonic offset
-            sineOsc.frequency.set(freq * harmonics[i]);
+            freqMod.set(freq * harmonics[i]);
             i++;
         }
 

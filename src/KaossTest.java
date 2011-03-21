@@ -38,6 +38,7 @@ public class KaossTest implements Observer {
 
     private InstrumentController controller;
     private SwingTest display;
+    private Instrument i;
 
     //GLOBALS
     public static int TRACKPAD_GRID_SIZE = 12;
@@ -55,7 +56,10 @@ public class KaossTest implements Observer {
         System.out.println(e);
       }
 
-      controller = new InstrumentController(new Square());
+      i = new Triangle();
+      i.makeLFOs();
+      i.enableLFOs();
+      controller = new InstrumentController(i);
       //TRACKPAD_GRID_SIZE = 100; //for singing saw only
 
       //start display
@@ -102,7 +106,6 @@ public class KaossTest implements Observer {
         int aY = acc.getY();
         int aZ = acc.getZ();
        //  System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
-        //controller.pan((double)(acc.getX() % 100) / 100);
 
         //update display
         if(DISPLAY)
@@ -123,7 +126,7 @@ public class KaossTest implements Observer {
         float   dy = f.getYVelocity();        
 
         //mark on / off 
-        if(!fingersPressed.contains(id)) { //finger pressed. 
+        if(! fingersPressed.contains(id)) { //finger pressed. 
           //we were not tracking this finger. so let's add it to the queue.          
           System.out.println("now tracking: "+id);
           if(fingersPressed.isEmpty())
@@ -142,10 +145,22 @@ public class KaossTest implements Observer {
           return;
         }
         
+        controller.pan((double)(acc.getX() % 100) / 100);
+
+
         boolean fingerIsController = fingersPressed.getFirst().equals(id);
         if(fingerIsController) {
+          
           int yProper = scaleToRange(y,TRACKPAD_GRID_SIZE);        
           int lowpass = scaleToRange(x,2000);
+
+          if(lowpass < 20)
+          {
+            System.out.println("dis");
+            controller.disableLFO();
+            return;  
+            
+          }
 
           controller.changeFrequency(yProper);
           controller.lowpass(lowpass);

@@ -27,6 +27,7 @@ public class Sine extends Instrument {
           {
             SineOscillator sineOsc = new SineOscillator();
             sineInputs.add(sineOsc);
+            freqMods.add(sineOsc.frequency);
 
             //stereo wavves
             mixer.connectInput( i, sineOsc.output, 0 );
@@ -54,17 +55,15 @@ public class Sine extends Instrument {
     }
     
     public void adjustFrequencyByOffset(int offset) {
-        
-        
         //harmonic mode
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SynthOscillator sineOsc : sineInputs)
+        for(SynthInput freqMod : freqMods)
         {
             //harmonic offset
-            sineOsc.frequency.set(freq * harmonics[i]);
+            freqMod.set(freq * harmonics[i]);
             i++;
         }
     }   

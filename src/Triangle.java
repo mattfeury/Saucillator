@@ -22,19 +22,20 @@ public class Triangle extends Instrument {
     
     public void makeTimbre()
     {
-        mixer = new SynthMixer(harmonics.length, 2);      
-        for(int i = 0; i < harmonics.length; i++)
-          {
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
+      mixer = new SynthMixer(harmonics.length, 2);      
+      for(int i = 0; i < harmonics.length; i++)
+      {
+        SineOscillator sineOsc = new SineOscillator();
+        sineInputs.add(sineOsc);
+        freqMods.add(sineOsc.frequency);
 
-            //stereo wavves
-            mixer.connectInput( i, sineOsc.output, 0 );
-            mixer.setGain( i, 0, amplitude );
-            mixer.setGain( i, 1, amplitude );
+        //stereo wavves
+        mixer.connectInput( i, sineOsc.output, 0 );
+        mixer.setGain( i, 0, amplitude );
+        mixer.setGain( i, 1, amplitude );
 
-            sineOsc.amplitude.set(amplitude / Math.pow(i+1,2));  //triangle
-          }
+        sineOsc.amplitude.set(amplitude / Math.pow(i+1,2));  //triangle
+      }
     }
     
     public void start()  
@@ -61,13 +62,13 @@ public class Triangle extends Instrument {
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SynthOscillator sineOsc : sineInputs)
+        for(SynthInput freqMod : freqMods)
         {
             //overtone offset
             //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
             
             //harmonic offset
-            sineOsc.frequency.set(freq * harmonics[i]);
+            freqMod.set(freq * harmonics[i]);
             i++;
         }
     }   

@@ -30,6 +30,7 @@ public class Sawtooth extends Instrument {
         {
           SineOscillator sineOsc = new SineOscillator();
           sineInputs.add(sineOsc);
+          freqMods.add(sineOsc.frequency);
 
           //stereo wavves
           mixer.connectInput( i, sineOsc.output, 0 );
@@ -64,13 +65,13 @@ public class Sawtooth extends Instrument {
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
-        for(SynthOscillator sineOsc : sineInputs)
+        for(SynthInput freqMod : freqMods)
         {
             //overtone offset
             //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
             
             //harmonic offset
-            sineOsc.frequency.set(freq * harmonics[i]);
+            freqMod.set(freq * harmonics[i]);
             i++;
         }
     }   

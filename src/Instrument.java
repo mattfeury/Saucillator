@@ -22,6 +22,9 @@ public abstract class Instrument
 {
     protected boolean isPlaying;
     protected LinkedList<SynthOscillator> sineInputs; //the individual sine oscs to make our complex wavveform
+    protected LinkedList<SynthInput> freqMods;
+    protected ArrayList<LFO> lfos;
+    
     
     protected int BASE_FREQ = 440;
     protected SynthScope scope;
@@ -37,16 +40,57 @@ public abstract class Instrument
     public static int[] allHarmonics = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
     public static int[] noHarmonics = {1};
 
+    
+      public static int MOD_DEPTH = 200;
+      public static int MOD_RATE = 10; //in hz (0-20)
+
+
     protected float amplitude = 1.0f; //amplitude for the fundamental
     
     public Instrument() { //constructor needs: scale, freq, amp?
-      sineInputs = new LinkedList<SynthOscillator>();                
+      sineInputs = new LinkedList<SynthOscillator>();
+      freqMods   = new LinkedList<SynthInput>();
     }
     
     abstract void start();
     abstract void stop();
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
+
+    public void makeLFOs()
+    {
+      //LFO
+      lfos = new ArrayList<LFO>();
+      for(SynthOscillator osc : sineInputs)
+      {
+        LFO lfo = new LFO(osc.frequency);
+        lfos.add(lfo);
+      }
+    }
+
+    public void enableLFOs()
+    {
+      freqMods.clear();
+      for(LFO lfo : lfos)
+      {
+        lfo.connect();
+        freqMods.add(lfo.getFreqMod());
+      }
+    }
+
+    public void disableLFOs()
+    {
+      MOD_DEPTH = 0;
+      MOD_RATE = 0;
+      for(LFO lfo : lfos)
+      {
+        lfo.disconnect();
+      }
+
+      /*freqMods.clear();
+      sineInputs.clear();      
+      makeTimbre();*/
+    }
 
     public SynthMixer getMixer()
     {
@@ -77,6 +121,62 @@ public abstract class Instrument
     public boolean isPlaying()
     {
         return isPlaying;
+    }
+
+    class LFO
+    {
+      private SineOscillator myLFO;
+      private AddUnit mySum;
+      private ExponentialLag myLag;
+      private SynthInput frequency;
+
+      public LFO(SynthInput frequency)
+      {
+        this.frequency = frequency;
+        myLFO = new SineOscillator();
+        mySum = new AddUnit();
+        myLag = new ExponentialLag();
+
+        /* LFO and Lag are added together to calculate new frequency. */
+        myLag.output.connect( mySum.inputB );
+        myLFO.output.connect( mySum.inputA );
+
+        myLag.input.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
+        myLag.current.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
+        myLFO.amplitude.setSignalType( Synth.SIGNAL_TYPE_OSC_FREQ );
+        myLFO.amplitude.set(0); //mod depth
+        myLFO.frequency.set(0); //mod rate
+
+        System.out.println(myLag.halfLife.getMax() + "    " + myLag.halfLife.getMin());
+
+        mySum.start();
+    		myLag.start();
+		    myLFO.start();
+      }
+
+      public SynthInput getFreqMod()
+      {
+        return myLag.input;
+      }
+
+      public void disconnect()
+      {
+
+        myLag.halfLife.set(0);
+        myLFO.amplitude.set(0); //mod depth
+        myLFO.frequency.set(0); //mod rate        
+        //mySum.output.disconnect();
+                //frequency.disconnect();
+      }
+
+      public void connect()
+      {
+        myLFO.amplitude.set(MOD_DEPTH); //mod depth
+        myLFO.frequency.set(MOD_RATE); //mod rate        
+        
+        mySum.output.connect(frequency);
+      }
+
     }
 
 }

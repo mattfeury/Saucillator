@@ -22,14 +22,13 @@ public class SingingSaw extends Instrument {
     
   	private SynthEnvelope      envData;
     private EnvelopePlayer     envPlayer;
-    private LinearLag lagUnit;
 
     public SingingSaw()
     {
         super();
 
         //set characteristics
-        scale = majorScale;
+        scale = minorScale;
         harmonics = noHarmonics;
  
         //make timbre and start        
@@ -51,95 +50,59 @@ public class SingingSaw extends Instrument {
 			envData = new SynthEnvelope( data );
 
       //harmonics
-			lagUnit = new LinearLag(); //this doesn't work at all
-  		lagUnit.time.set( 0.05 );
-
 
       mixer = new SynthMixer(overtones.length, 2);
-
       for(int i = 0; i < overtones.length; i++)
       {
         SineOscillator sineOsc = new SineOscillator();
         sineInputs.add(sineOsc);
+        freqMods.add(sineOsc.frequency);
 
-        //lagUnit.output.connect( sineOsc.frequency );
-        //DelayUnit delayUnit = new DelayUnit(0.3 * (i+1));
-        //delayUnit.input.connect(sineOsc.output);
         //stereo wavves
 			  mixer.connectInput( i, sineOsc.output, 0 );
-        //mixer.connectInput( i+overtones.length, delayUnit.output, 0);
 
-        mixer.setGain( i, 0, .7);
-        mixer.setGain( i, 1, .7);
-        //mixer.setGain( i + overtones.length, 0, .3);
-        //mixer.setGain( i + overtones.length, 1, .3);
-        
+        mixer.setGain( i, 0, .5);
+        mixer.setGain( i, 1, .5);
         
         envPlayer.output.connect( sineOsc.amplitude );
         
-        sineOsc.amplitude.set(1.0);
-        //delayUnit.start();
+        sineOsc.amplitude.set(1.0);      
       }
       envPlayer.start();
-      lagUnit.start();
     }
     
     public void start()  
     {
-       System.out.println("start");
-       isPlaying = true;
+      System.out.println("start");
+      isPlaying = true;
        
-                envPlayer.envelopePort.clear(); // clear the queue        
-                envPlayer.envelopePort.queue(envData );  // queue an envelope
-       
-       for(SynthOscillator sineOsc : sineInputs)
-         sineOsc.start();
-    }
-
-    public void fadeOut()
-    {
-     /* double[] data =
-			{
-				0.0, 0.8,  // The envelope moves to 1.0 in 2 seconds.
-				0.5, 0.0
-			};
-			SynthEnvelope envData = new SynthEnvelope( data );
-
       envPlayer.envelopePort.clear(); // clear the queue        
       envPlayer.envelopePort.queue(envData );  // queue an envelope
-
-      try {
-        Thread.sleep(500);
-      } catch(Exception e) {
-        System.out.println(e);
-      }
-*/
+       
+      for(SynthOscillator sineOsc : sineInputs)
+        sineOsc.start();
     }
     
     public void stop()
     { 
-   //   fadeOut();
       System.out.println("stop");
       isPlaying = false;
-      // envPlayer.envelopePort.clear(); // clear the queue
       
       for(SynthOscillator sineOsc : sineInputs)
         sineOsc.stop();
     }
     
     public void adjustFrequencyByOffset(int offset) {  
-        int i = 0; 
-        for(SynthOscillator sineOsc : sineInputs)
-        {
-            //overtone offset
-            double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
-            int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
-            
-            //int freq = (int)((float)((float)offset / KaossTest.TRACKPAD_GRID_SIZE + 1) * BASE_FREQ);
-            sineOsc.frequency.set(freq);
-           // System.out.println(i + ": " +freq);
-            i++;
-        }
+      int i = 0; 
+      for(SynthInput freqMod : freqMods)
+      {
+          //overtone offset
+          double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
+          int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+          
+          freqMod.set(freq);
+          i++;
+      }
     }   
     
     
