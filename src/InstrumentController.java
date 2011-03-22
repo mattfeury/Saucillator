@@ -99,6 +99,12 @@ public class InstrumentController {
       updateLFO();
     }
 
+    public void updateModDepth(int depth)
+    {
+      instrument.MOD_DEPTH = depth;
+      updateLFO();
+    }
+
     public Instrument getInstrument()
     {
       return instrument;

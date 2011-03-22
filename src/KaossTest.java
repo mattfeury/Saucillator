@@ -56,7 +56,7 @@ public class KaossTest implements Observer {
         System.out.println(e);
       }
 
-      i = new SingingSaw();
+      i = new Square();
       i.makeLFOs(true);
       controller = new InstrumentController(i);
       //TRACKPAD_GRID_SIZE = 100; //for singing saw only
@@ -148,28 +148,28 @@ public class KaossTest implements Observer {
         controller.pan((double)(acc.getX() % 100) / 100);
 
         boolean fingerIsController = fingersPressed.getFirst().equals(id);
-        if(! fingerIsController) return; //only use control finger for points
+        //if(! fingerIsController) return; //only use control finger for points
 
-        int numFingers = fingersPressed.size();
-        //System.out.println(numFingers);
-        //x location depends on amount of fingers
-        switch(numFingers)
+        int whichFinger = fingersPressed.indexOf(id) + 1;
+        System.out.println(whichFinger);
+        //depends on nth finger
+        switch(whichFinger)
         {
           case 0:
             return;
           case 1:
             updateLowpass((int)(x * 2000));
+            updateFrequency((int)(y * TRACKPAD_GRID_SIZE));        
             break;
           case 2:
-            updateLFO((int)(x*20));
+            updateModRate((int)(x*20));
+            updateModDepth((int)(y*2000));
             break;
           //default:
             
 
         }
 
-        //freq is always y location
-        updateFrequency((int)(y * TRACKPAD_GRID_SIZE));
 
         
       } else {
@@ -191,7 +191,7 @@ public class KaossTest implements Observer {
         
         int yProper = (int)(yPercentageFromBottom * TRACKPAD_GRID_SIZE);
         updateFrequency(yProper);
-        updateLFO((int)(xPercentage*20));
+        updateModRate((int)(xPercentage*20));
         
 
         
@@ -209,14 +209,19 @@ public class KaossTest implements Observer {
       controller.lowpass(lowpass);
     }  
 
-    public void updateLFO(int rate)
+    public void updateModRate(int rate)
     {
-      System.out.println(rate);
-      if(rate == 0)
-        controller.stopLFO(); //herm
-      else
+      //System.out.println(rate);
+      //if(rate == 0)
+      //  controller.stopLFO(); //stop it all
+      //else
         controller.updateModRate(rate);
     } 
+
+    public void updateModDepth(int depth)
+    {
+      controller.updateModDepth(depth);
+    }
     
     /*
      * Returns a value from 0 - max inclusive based on a percentage (float from 0.0 - 1.0)

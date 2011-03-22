@@ -41,7 +41,7 @@ public abstract class Instrument
     public static int[] noHarmonics = {1};
 
     
-    public static int MOD_DEPTH = 20;
+    public static int MOD_DEPTH = 20; //(0-2000) maybe
     public static int MOD_RATE = 0; //in hz (0-20)
     public static int LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
 
