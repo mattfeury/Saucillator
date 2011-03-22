@@ -90,27 +90,52 @@ public class SwingTest extends JFrame {
 	
 	private static final int SURFACE_WIDTH = 800;
 	private static final int SURFACE_HEIGHT = 600;
-	private static final int UPDATE_RATE = 30;  // number of update per second
+	private static final int UPDATE_RATE = 90;  // number of update per second
 	private static final long UPDATE_PERIOD = 1000L / UPDATE_RATE;  // milliseconds
 	
 	private Fingers fingers;
 	private SurfaceCanvas surface;
   private SynthScope scope;
   private SynthMixer mixer;
-	
-	public SwingTest(SynthScope scope) {
+  private JPanel content, container, controls;
+  private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
+  private Color bgColor = Color.BLACK;
+  private Color fgText = KaossTest.darkGreenTest;
+  private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
+
+	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.scope = scope;
+    this.kaoss = kaoss;
 
-		surface = new SurfaceCanvas();
-		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
-
-    Dialog scopeDialog;
-  	scopeDialog = new Dialog( (Frame) getParent(), "JSyn Scope", false );
-	  scopeDialog.add( "Center", scope );
-		scopeDialog.reshape( 200,100, 500,400 );
-		scopeDialog.show();
     
-    this.setContentPane(surface);
+    scope.getWaveDisplay().setBackground( bgColor );
+    scope.getWaveDisplay().setForeground( KaossTest.darkBrownTest );
+
+    scope.hideControls();
+    scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 250)); //this is a pretty strange number
+
+    //panels
+    container = new JPanel(); //holds all
+		container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
+    container.setLayout(new BorderLayout());
+
+    makeControls();
+
+    content = new JPanel(); //holds scope, fingers
+		content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
+    content.setLayout(new BorderLayout());
+
+		surface = new SurfaceCanvas(); //holds fingers. inside content
+		surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
+    surface.setBackground( bgColor );
+
+    content.add(surface, BorderLayout.CENTER);
+    content.add(scope, BorderLayout.SOUTH);
+    
+    container.add(content, BorderLayout.CENTER);
+    container.add(controls, BorderLayout.WEST);
+
+    this.setContentPane(container);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setTitle("kaoss");
@@ -120,6 +145,19 @@ public class SwingTest extends JFrame {
 
 		surfaceStart();
 	}
+
+  public void makeControls()
+  {
+    controls = new JPanel(); //future sidebar?
+		controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
+    controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
+    controls.setBackground( bgColor );
+
+    JLabel header = new JLabel("SAUCILLATOR");
+    header.setFont(headerFont);
+    header.setForeground(fgText);
+    controls.add(header);
+  }
 
   public void updateFinger(Finger f)
   {
@@ -151,7 +189,7 @@ public class SwingTest extends JFrame {
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			setBackground(Color.WHITE);
+			setBackground(bgColor);
 			fingers.draw(g);
 		}
 	}

@@ -26,7 +26,9 @@ public class SingingSaw extends Instrument {
     public SingingSaw()
     {
         super();
-        LAG_LIFE = 0.2;
+        LAG_LIFE = 0.4;
+        MOD_DEPTH = 16;
+        MOD_RATE = 9;
 
         //set characteristics
         scale = majorScale;
@@ -45,7 +47,10 @@ public class SingingSaw extends Instrument {
 			double[] data =
 			{
 				0.0, 0.0,  // The envelope moves to 1.0 in 2 seconds.
-				1.0, 1.0
+				0.8, 1.0,
+        0.5, 1.5,
+        0.3, 1.0
+
 //				0.4, 0.0   
 			};
 			envData = new SynthEnvelope( data );
@@ -101,7 +106,7 @@ public class SingingSaw extends Instrument {
           double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
           int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
           
-          System.out.println(freq);
+          //System.out.println(freq);
           freqMod.set(freq);
           i++;
       }

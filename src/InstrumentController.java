@@ -16,7 +16,7 @@ public class InstrumentController {
     private LineOut lineOut;
     private AddUnit effectsAdder;
 
-    public static boolean fxEnabled = false;
+    public boolean fxEnabled = false;
 
     public InstrumentController(Instrument i)
     {
@@ -51,13 +51,13 @@ public class InstrumentController {
       filter.Q.set(1.0);
       filter.frequency.set(20000);
 
-
-      lineOut.start();
-      effectsAdder.start();
-      panUnit.start();
-      effectsUnit.start();
-      filter.start();
       instrumentMix.start();
+      filter.start();
+      effectsUnit.start();
+      panUnit.start();
+      effectsAdder.start();
+      lineOut.start();
+
       System.out.println("controller made");
 
     }
@@ -96,12 +96,14 @@ public class InstrumentController {
     public void updateModRate(int rate)
     {
       instrument.MOD_RATE = rate;
+      //System.out.println("MOd "+rate);
       updateLFO();
     }
 
     public void updateModDepth(int depth)
     {
       instrument.MOD_DEPTH = depth;
+      //System.out.println("depth "+depth);      
       updateLFO();
     }
 

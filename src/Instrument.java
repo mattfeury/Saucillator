@@ -41,12 +41,12 @@ public abstract class Instrument
     public static int[] noHarmonics = {1};
 
     
-    public static int MOD_DEPTH = 20; //(0-2000) maybe
+    public static int MOD_DEPTH = 0; //(0-2000) maybe
     public static int MOD_RATE = 0; //in hz (0-20)
     public double LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
 
     //state variables?
-    private boolean LFO_INIT = false;
+    private boolean LFO_INIT = false; //we don't prolly need these
     private boolean LFO_ENABLED = false;
 
 
@@ -123,10 +123,10 @@ public abstract class Instrument
     {      
       scope = new SynthScope();
       
-      scope.createProbe( mixer.getOutput(0), "", Color.blue );
+      scope.createProbe( mixer.getOutput(0), "", KaossTest.darkGreenTest );
       scope.finish();
-      scope.getWaveDisplay().setBackground( Color.white );
-      scope.getWaveDisplay().setForeground( Color.black );
+      scope.getWaveDisplay().setBackground( Color.black );
+      scope.getWaveDisplay().setForeground( Color.green );
 
     }
 

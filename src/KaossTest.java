@@ -11,6 +11,7 @@
  */
 
 import com.softsynth.jsyn.*;
+import java.awt.Color;
 
 import java.util.*;
 import java.awt.Dimension;
@@ -44,6 +45,13 @@ public class KaossTest implements Observer {
     private final boolean useMultitouch = true;
     private final boolean DISPLAY = true;
 
+    //most of these are sucky. but we are using some for now
+    public static Color darkBrownTest = new Color(166, 65, 8);
+    public static Color lightBrownTest = new Color(242, 204, 133);
+    public static Color darkGreenTest = new Color(37,89,59);
+    public static Color lightGreenTest = new Color(100, 126, 41);
+    public static Color brownTest = new Color(223,167,73);
+
     public KaossTest()
     {
 
@@ -58,12 +66,12 @@ public class KaossTest implements Observer {
       Instrument i = new SingingSaw();
       i.makeLFOs(true);
       controller = new InstrumentController(i);
-      //TRACKPAD_GRID_SIZE = 100; //for singing saw only
 
       //start display
       if(DISPLAY)
-        display = new SwingTest(controller.getScope());
+        display = new SwingTest(this, controller.getScope());
       
+      System.out.println(System.getProperty("os.name")); //use this to determine multitouch      
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
@@ -83,8 +91,6 @@ public class KaossTest implements Observer {
         mouseObs.addObserver(this); //start observing
       }
       
-      System.out.println(System.getProperty("os.name"));
-      //updateLFO(0);
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
@@ -146,7 +152,7 @@ public class KaossTest implements Observer {
         //pan by accelerometer
         controller.pan((double)(acc.getX() % 100) / 100);
 
-        boolean fingerIsController = fingersPressed.getFirst().equals(id);
+        //boolean fingerIsController = fingersPressed.getFirst().equals(id);
         //if(! fingerIsController) return; //only use control finger for points
 
         int whichFinger = fingersPressed.indexOf(id) + 1;
@@ -162,7 +168,7 @@ public class KaossTest implements Observer {
             break;
           case 2:
             updateModRate((int)(x*20));
-            updateModDepth((int)(y*1000));
+            updateModDepth((int)((size/(3.0f))*1000)); //this is cool except it is rarely zero
             break;
           //default:
             
