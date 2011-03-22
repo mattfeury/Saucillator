@@ -38,7 +38,6 @@ public class KaossTest implements Observer {
 
     private InstrumentController controller;
     private SwingTest display;
-    private Instrument i;
 
     //GLOBALS
     public static int TRACKPAD_GRID_SIZE = 12;
@@ -56,7 +55,7 @@ public class KaossTest implements Observer {
         System.out.println(e);
       }
 
-      i = new Square();
+      Instrument i = new SingingSaw();
       i.makeLFOs(true);
       controller = new InstrumentController(i);
       //TRACKPAD_GRID_SIZE = 100; //for singing saw only
@@ -151,7 +150,7 @@ public class KaossTest implements Observer {
         //if(! fingerIsController) return; //only use control finger for points
 
         int whichFinger = fingersPressed.indexOf(id) + 1;
-        System.out.println(whichFinger);
+        //System.out.println(whichFinger);
         //depends on nth finger
         switch(whichFinger)
         {
@@ -163,7 +162,7 @@ public class KaossTest implements Observer {
             break;
           case 2:
             updateModRate((int)(x*20));
-            updateModDepth((int)(y*2000));
+            updateModDepth((int)(y*1000));
             break;
           //default:
             

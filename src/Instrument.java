@@ -43,7 +43,7 @@ public abstract class Instrument
     
     public static int MOD_DEPTH = 20; //(0-2000) maybe
     public static int MOD_RATE = 0; //in hz (0-20)
-    public static int LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
+    public double LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
 
     //state variables?
     private boolean LFO_INIT = false;

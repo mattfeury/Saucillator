@@ -26,6 +26,7 @@ public class SingingSaw extends Instrument {
     public SingingSaw()
     {
         super();
+        LAG_LIFE = 0.2;
 
         //set characteristics
         scale = majorScale;
