@@ -24,6 +24,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.AffineTransform;
+import java.awt.event.*;
 
 
 import com.alderstone.multitouch.mac.touchpad.*;
@@ -48,6 +49,7 @@ class Fingers {
 		int id = f.getID();
 		if (id <= MAX_FINGER_BLOBS)
 			blobs[id-1]= f;
+
   }    
  
 	public void draw(Graphics g) {
@@ -86,11 +88,11 @@ class Fingers {
 }
 
 
-public class SwingTest extends JFrame {  
+public class SwingTest extends JFrame implements KeyListener {  
 	
 	private static final int SURFACE_WIDTH = 800;
 	private static final int SURFACE_HEIGHT = 600;
-	private static final int UPDATE_RATE = 90;  // number of update per second
+	private static final int UPDATE_RATE = 30;  // number of update per second
 	private static final long UPDATE_PERIOD = 1000L / UPDATE_RATE;  // milliseconds
 	
 	private Fingers fingers;
@@ -100,19 +102,16 @@ public class SwingTest extends JFrame {
   private JPanel content, container, controls;
   private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   private Color bgColor = Color.BLACK;
-  private Color fgText = KaossTest.darkGreenTest;
-  private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
+  private Color fgText = KaossTest.lightGreenTest;
+  private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.scope = scope;
     this.kaoss = kaoss;
+    this.setFocusable(true);   // Allow this panel to get focus.
+    this.addKeyListener(this); // listen to our own key events.
 
-    
-    scope.getWaveDisplay().setBackground( bgColor );
-    scope.getWaveDisplay().setForeground( KaossTest.darkBrownTest );
-
-    scope.hideControls();
-    scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 250)); //this is a pretty strange number
+    setupScope();
 
     //panels
     container = new JPanel(); //holds all
@@ -146,6 +145,15 @@ public class SwingTest extends JFrame {
 		surfaceStart();
 	}
 
+  public void setupScope()
+  {
+    scope.getWaveDisplay().setBackground( bgColor );
+    scope.getWaveDisplay().setForeground( bgColor );
+
+    scope.hideControls();
+    scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 250)); //this is a pretty strange number
+  }
+
   public void makeControls()
   {
     controls = new JPanel(); //future sidebar?
@@ -156,6 +164,7 @@ public class SwingTest extends JFrame {
     JLabel header = new JLabel("SAUCILLATOR");
     header.setFont(headerFont);
     header.setForeground(fgText);
+    header.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(header);
   }
 
@@ -180,6 +189,23 @@ public class SwingTest extends JFrame {
 		};
 		surfaceThread.start(); 
 	}
+
+  /*
+   * Use this to change freq or whatnot
+   */
+  public void keyPressed(KeyEvent e) 
+  { 
+    System.out.println(e); 
+    content.remove(scope);
+    Instrument i = new Sawtooth();
+    scope = kaoss.changeController(i).getScope();
+    setupScope();
+    content.add(scope, BorderLayout.SOUTH);
+    
+  }
+  public void keyReleased(KeyEvent e) {}
+  public void keyTyped(KeyEvent e)   {}
+  
 	
 	public void surfaceUpdate() {
 	//	fingers.update();

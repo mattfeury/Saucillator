@@ -145,6 +145,20 @@ public abstract class Instrument
         return isPlaying;
     }
 
+    public void kill()
+    {
+      mixer.delete();
+
+      for(LFO lfo : lfos)
+        lfo.delete();
+      
+      for(SynthOscillator osc : sineInputs)
+      {
+        osc.stop();
+        osc.delete();
+      }
+    }
+
     class LFO
     {
       private SineOscillator myLFO;
@@ -199,6 +213,17 @@ public abstract class Instrument
         myLag.halfLife.set(LAG_LIFE); //freq lag        
         myLFO.amplitude.set(MOD_DEPTH); //mod depth
         myLFO.frequency.set(MOD_RATE); //mod rate   
+      }
+
+      public void delete()
+      {
+        myLag.stop();
+        myLFO.stop();
+        mySum.stop();
+        
+        myLag.delete();
+        myLFO.delete();
+        mySum.delete();
       }
 
 

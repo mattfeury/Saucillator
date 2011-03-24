@@ -42,8 +42,9 @@ public class KaossTest implements Observer {
 
     //GLOBALS
     public static int TRACKPAD_GRID_SIZE = 12;
-    private final boolean useMultitouch = true;
-    private final boolean DISPLAY = true;
+    private boolean useMultitouch = false;
+    private boolean DISPLAY = true;
+    private boolean CONTROLLER_PENDING = false;
 
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
@@ -52,6 +53,8 @@ public class KaossTest implements Observer {
     public static Color lightGreenTest = new Color(100, 126, 41);
     public static Color brownTest = new Color(223,167,73);
 
+//    public static SynthContext context = new SynthContext(); //we should prob implement this
+
     public KaossTest()
     {
 
@@ -59,19 +62,18 @@ public class KaossTest implements Observer {
       try {
           Synth.requestVersion( 144 );
           Synth.startEngine(0);  
+          System.out.println("go");
+          SynthObject.enableDeletionByGarbageCollector(true); //formerly static
       } catch(Exception e) {
         System.out.println(e);
       }
+ 
+      if(System.getProperty("os.name").toLowerCase().contains("mac"))
+        useMultitouch = true;
 
-      Instrument i = new SingingSaw();
-      i.makeLFOs(true);
-      controller = new InstrumentController(i);
-
-      //start display
-      if(DISPLAY)
-        display = new SwingTest(this, controller.getScope());
       
-      System.out.println(System.getProperty("os.name")); //use this to determine multitouch      
+      Instrument i = new SingingSaw();
+
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
@@ -79,130 +81,175 @@ public class KaossTest implements Observer {
 
         fingersPressed = new LinkedList<Integer>();
 
-        tpo.addObserver(this);  
-        controller.start();      
+        tpo.addObserver(this);
+          changeController(i);      
       } else {
         mouseObs = new MouseObservable();
       
         Thread thread = new MouseObserverThread(mouseObs);
         thread.start(); 
 
-        controller.start();
+        changeController(i);
         mouseObs.addObserver(this); //start observing
       }
+      //start display
+      if(DISPLAY)
+        display = new SwingTest(this, controller.getScope());
       
+    }
+
+    public InstrumentController changeController(Instrument i)
+    {
+      CONTROLLER_PENDING = true;
+      if(controller != null) controller.kill();
+      SynthObject.deleteAll();
+
+      i.makeLFOs(true);
+      InstrumentController newController = new InstrumentController(i);
+      newController.start();
+
+      if(! fingersPressed.isEmpty())
+        newController.startInstrument();
+
+      controller = newController;
+      CONTROLLER_PENDING = false;      
+      return controller;
+    }
+
+    public void changeInstrument(Instrument i)
+    {
+      controller.changeInstrument(i);
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
     public void update( Observable obj, Object arg ) {
 
+      if(CONTROLLER_PENDING) return;
+
       //check macbook?
       if(useMultitouch)
       {
-       
-        // The event 'arg' is of type: com.alderstone.multitouch.mac.touchpad.Finger
         Finger f = (Finger) arg;
-
-        
-        //accel?
-        int sense = acc.sense();
-        int aX = acc.getX();
-        int aY = acc.getY();
-        int aZ = acc.getZ();
-       //  System.out.println(sense + " , " + aX + " , " + aY + " , " + aZ);
-
-        //update display
-        if(DISPLAY)
-          display.updateFinger(f);
- 
-        int     frame = f.getFrame();
-        double  timestamp = f.getTimestamp();
-        int     id = f. getID(); 
-        FingerState     state = f.getState();
-        float   size = f.getSize();
-        float   angRad = f.getAngleInRadians();
-        int     angle = f.getAngle();           // return in Degrees
-        float   majorAxis = f.getMajorAxis();
-        float   minorAxis = f.getMinorAxis();
-        float   x = f.getX();
-        float   y = f.getY();
-        float   dx = f.getXVelocity();
-        float   dy = f.getYVelocity();        
-
-        //mark on / off 
-        if(! fingersPressed.contains(id)) { //finger pressed. 
-          //we were not tracking this finger. so let's add it to the queue.          
-          System.out.println("now tracking: "+id);
-          if(fingersPressed.isEmpty())
-            controller.startInstrument();
-
-          fingersPressed.add((Integer)id);
-        }
-        if(state.equals(FingerState.RELEASED) && controller.isPlaying() && fingersPressed.contains(id)) { //finger lifted
-          System.out.println("finger lifted: "+id);
-          fingersPressed.remove((Integer)id);
-        }
-
-        if(fingersPressed.isEmpty()) {
-          System.out.println("no more fingers");
-          controller.stop(); //stop
-          return;
-        }
-        
-        //pan by accelerometer
-        controller.pan((double)(acc.getX() % 100) / 100);
-
-        //boolean fingerIsController = fingersPressed.getFirst().equals(id);
-        //if(! fingerIsController) return; //only use control finger for points
-
-        int whichFinger = fingersPressed.indexOf(id) + 1;
-        //System.out.println(whichFinger);
-        //depends on nth finger
-        switch(whichFinger)
-        {
-          case 0:
-            return;
-          case 1:
-            updateLowpass((int)(x * 2000));
-            updateFrequency((int)(y * TRACKPAD_GRID_SIZE));        
-            break;
-          case 2:
-            updateModRate((int)(x*20));
-            updateModDepth((int)((size/(3.0f))*1000)); //this is cool except it is rarely zero
-            break;
-          //default:
-            
-
-        }
-
-
-        
+        updateViaFinger(f);
       } else {
         //degrade to mouse position on screen. this sucks but it's a quick and stable alternative
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension mouse = (Dimension)arg;
-
-        if(mouse.height == 0 && mouse.width == 0 && controller.isPlaying()) { //corner, turn off
-          controller.stop();
-          return;
-        } 
-        if(! controller.isPlaying()) {
-          controller.startInstrument();
-        }
-      
-
-        float yPercentageFromBottom = ((float)screen.height - mouse.height) / screen.height; //value from 0-1 of the y position. bottom is 0, 1 is top.
-        float xPercentage = ((float)mouse.width / screen.width); //value from 0-1 of the y position. bottom is 0, 1 is top.
-        
-        int yProper = (int)(yPercentageFromBottom * TRACKPAD_GRID_SIZE);
-        updateFrequency(yProper);
-        updateModRate((int)(xPercentage*20));
-        
-
-        
+        updateViaMouse((Dimension)arg);
       } 
 
-    }  
+    }
+
+    public void updateViaFinger(Finger f)
+    {
+      //update display
+      if(DISPLAY && display != null)
+        display.updateFinger(f);
+
+      int     frame = f.getFrame();
+      double  timestamp = f.getTimestamp();
+      int     id = f. getID(); 
+      FingerState     state = f.getState();
+      float   size = f.getSize();
+      float   angRad = f.getAngleInRadians();
+      int     angle = f.getAngle();           // return in Degrees
+      float   majorAxis = f.getMajorAxis();
+      float   minorAxis = f.getMinorAxis();
+      float   x = f.getX();
+      float   y = f.getY();
+      float   dx = f.getXVelocity();
+      float   dy = f.getYVelocity();                
+
+      //mark on / off 
+      if(! fingersPressed.contains(id)) { //finger pressed. 
+        //we were not tracking this finger. so let's add it to the queue.          
+        System.out.println("now tracking: "+id);
+        if(fingersPressed.isEmpty())
+          controller.startInstrument();
+
+        fingersPressed.add((Integer)id);
+      }
+      if(state.equals(FingerState.RELEASED) && controller.isPlaying() && fingersPressed.contains(id)) { //finger lifted
+        System.out.println("finger lifted: "+id);
+        fingersPressed.remove((Integer)id);
+      }
+
+      if(fingersPressed.isEmpty()) {
+        System.out.println("no more fingers");
+        controller.stop(); //stop
+        return;
+      }
+      
+      updateViaAccelerometer();
+
+      //boolean fingerIsController = fingersPressed.getFirst().equals(id);
+      //if(! fingerIsController) return; //only use control finger for points
+
+      int whichFinger = fingersPressed.indexOf(id) + 1;
+      //System.out.println(whichFinger);
+      //depends on nth finger
+      switch(whichFinger)
+      {
+        case 0:
+          return;
+        case 1:
+          updateLowpass((int)(x * 2000));
+          updateFrequency((int)(y * TRACKPAD_GRID_SIZE));        
+          break;
+        case 2:
+          updateModRate((int)(x*20));
+          updateModDepth((int)(y*1000)); //this is cool except it is rarely zero
+          break;
+        //default:
+          
+
+      }
+
+    }
+
+    public void updateViaMouse(Dimension mouse)
+    {
+      Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+      if(mouse.height == 0 && mouse.width == 0 && controller.isPlaying()) { //corner, turn off
+        controller.stop();
+        return;
+      } 
+      if(! controller.isPlaying()) {
+        controller.startInstrument();
+      }
+
+      float x = (float)mouse.width / screen.width;
+      float y = ((float)screen.height - mouse.height) / screen.height;
+      //update display
+      if(DISPLAY)
+      {
+        //int frame, double timestamp, int id, int state, float size,   float x, float y, float dx, float dy, float angle, float majorAxis, float minorAxis
+        Finger f = new Finger(0,0, 1, 4, 1.5f, x, y, 0.0f, 0.0f, 3.14f / 2, 9.0f, 9.0f);
+        display.updateFinger(f);
+
+      }
+
+      updateFrequency((int)(y * TRACKPAD_GRID_SIZE));
+      updateModRate((int)(x * 20));
+
+    }
+
+    public void updateViaAccelerometer()
+    {
+
+      int sense = acc.sense();
+      int aX = acc.getX();
+      int aY = acc.getY();
+      int aZ = acc.getZ();
+
+      //pan by accelerometer
+      updatePan((double)(acc.getX() % 100) / 100);
+    }
+    
+
+    public void updatePan(double pan)
+    {
+      //controller.pan(pan);
+    }
 
     public void updateFrequency(int y)
     {
@@ -216,11 +263,7 @@ public class KaossTest implements Observer {
 
     public void updateModRate(int rate)
     {
-      //System.out.println(rate);
-      //if(rate == 0)
-      //  controller.stopLFO(); //stop it all
-      //else
-        controller.updateModRate(rate);
+      controller.updateModRate(rate);
     } 
 
     public void updateModDepth(int depth)

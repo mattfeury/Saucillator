@@ -30,7 +30,7 @@ public class InstrumentController {
       
       panUnit = new PanUnit();
       filter = new Filter_LowPass();
-      effectsUnit = new DelayUnit(0.5); 
+      effectsUnit = new DelayUnit( 0.5); 
       effectsAdder = new AddUnit();
       lineOut = new LineOut();        
   
@@ -70,6 +70,33 @@ public class InstrumentController {
     public void stop()
     {
       instrument.stop();
+    }
+
+    public void changeInstrument(Instrument i)
+    {
+      instrument.kill();
+
+      instrument = i;
+      start();      
+    }
+
+    public void kill()
+    {
+      stop();
+      instrument.kill();
+
+      lineOut.stop();      
+      filter.stop();
+      effectsUnit.stop();
+      panUnit.stop();
+      effectsAdder.stop();
+
+      lineOut.delete();      
+      filter.delete();
+      effectsUnit.delete();
+      panUnit.delete();
+      effectsAdder.delete();
+
     }
 
     public void disableLFO()
