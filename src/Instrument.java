@@ -62,6 +62,13 @@ public abstract class Instrument
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
 
+	public int[] addHarmonics(int[] firstHarmonics, int[] secondHarmonics) {
+		int[] newHarmonics = new int[firstHarmonics.length + secondHarmonics.length];
+		System.arraycopy(secondHarmonics, 0, newHarmonics, 0, secondHarmonics.length);
+		System.arraycopy(firstHarmonics, 0, newHarmonics, secondHarmonics.length, firstHarmonics.length);
+		return newHarmonics;
+	}
+
     public void makeLFOs(boolean enable)
     {
       //LFO
