@@ -195,12 +195,13 @@ public class SwingTest extends JFrame implements KeyListener {
    */
   public void keyPressed(KeyEvent e) 
   { 
-    System.out.println(e); 
+    System.out.println("pre change: "+Synth.getObjectCount()); 
     content.remove(scope);
-    Instrument i = new Sawtooth();
-    scope = kaoss.changeController(i).getScope();
+    kaoss.changeInstrument();
+  /*  scope = kaoss.changeController().getScope();
     setupScope();
     content.add(scope, BorderLayout.SOUTH);
+  */  System.out.println("post change: "+Synth.getObjectCount()); 
     
   }
   public void keyReleased(KeyEvent e) {}

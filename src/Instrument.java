@@ -147,6 +147,8 @@ public abstract class Instrument
 
     public void kill()
     {
+      //stop();
+      mixer.stop();
       mixer.delete();
 
       for(LFO lfo : lfos)

@@ -26,7 +26,6 @@ public class InstrumentController {
 
     public void start()
     {
-      SynthMixer instrumentMix = instrument.getMixer();
       
       panUnit = new PanUnit();
       filter = new Filter_LowPass();
@@ -34,6 +33,23 @@ public class InstrumentController {
       effectsAdder = new AddUnit();
       lineOut = new LineOut();        
   
+      connectMixer();
+
+      filter.start();
+      effectsUnit.start();
+      panUnit.start();
+      effectsAdder.start();
+      lineOut.start();
+
+      System.out.println("controller made");
+
+    }
+
+    public void connectMixer()
+    {
+
+      SynthMixer instrumentMix = instrument.getMixer();
+      
       instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
 
       filter.output.connect(effectsUnit.input); //send filter mix like an aux send using fx adder
@@ -50,16 +66,8 @@ public class InstrumentController {
 
       filter.Q.set(1.0);
       filter.frequency.set(20000);
-
       instrumentMix.start();
-      filter.start();
-      effectsUnit.start();
-      panUnit.start();
-      effectsAdder.start();
-      lineOut.start();
-
-      System.out.println("controller made");
-
+      
     }
 
     public void startInstrument()
@@ -72,20 +80,27 @@ public class InstrumentController {
       instrument.stop();
     }
 
-    public void changeInstrument(Instrument i)
+    public void changeInstrument()
     {
+      //SynthMixer mixer = instrument.getMixer();
+      //filter.input.disconnect();
       instrument.kill();
 
+      Instrument i = new Sawtooth();   
+      i.makeLFOs(true); 
+
+
       instrument = i;
+      //connectMixer();      
       start();      
     }
 
     public void kill()
     {
-      stop();
+      //stop();
       instrument.kill();
 
-      lineOut.stop();      
+      /*lineOut.stop();      
       filter.stop();
       effectsUnit.stop();
       panUnit.stop();
@@ -95,7 +110,7 @@ public class InstrumentController {
       filter.delete();
       effectsUnit.delete();
       panUnit.delete();
-      effectsAdder.delete();
+      effectsAdder.delete();*/
 
     }
 

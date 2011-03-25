@@ -46,6 +46,13 @@ public class KaossTest implements Observer {
     private boolean DISPLAY = true;
     private boolean CONTROLLER_PENDING = false;
 
+    public final static int INSTRUMENT_SAWTOOTH = 0;
+    public final static int INSTRUMENT_SINE = 1;
+    public final static int INSTRUMENT_TRIANGLE = 2;
+    public final static int INSTRUMENT_SQUARE = 3;
+    public final static int INSTRUMENT_SINGINGSAW = 4;
+//    public static int INSTRUMENT_SAWTOOTH = 0;
+
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
     public static Color lightBrownTest = new Color(242, 204, 133);
@@ -72,7 +79,7 @@ public class KaossTest implements Observer {
         useMultitouch = true;
 
       
-      Instrument i = new SingingSaw();
+     // Instrument i = new Sawtooth();
 
       //start input devices based on support
       if(useMultitouch) {
@@ -81,15 +88,20 @@ public class KaossTest implements Observer {
 
         fingersPressed = new LinkedList<Integer>();
 
+        Instrument i = new SingingSaw();
+        i.makeLFOs(true);
+        controller = new InstrumentController(i);
+        controller.start();
+
         tpo.addObserver(this);
-          changeController(i);      
       } else {
         mouseObs = new MouseObservable();
       
         Thread thread = new MouseObserverThread(mouseObs);
         thread.start(); 
 
-        changeController(i);
+        //FIXME
+        //changeController();
         mouseObs.addObserver(this); //start observing
       }
       //start display
@@ -98,11 +110,21 @@ public class KaossTest implements Observer {
       
     }
 
-    public InstrumentController changeController(Instrument i)
+    /*
+     * either get rid of this or use it. probably want to use changeInstrument instead
+     * but there is no apparent perf difference except bloat.
+     *
+     */
+    public InstrumentController changeController()
     {
       CONTROLLER_PENDING = true;
+    System.out.println("prekill count: "+Synth.getObjectCount()); 
+      
       if(controller != null) controller.kill();
-      SynthObject.deleteAll();
+    //  SynthObject.deleteAll();
+    Instrument i = new SingingSaw();
+
+    System.out.println("postkill new create count: "+Synth.getObjectCount()); 
 
       i.makeLFOs(true);
       InstrumentController newController = new InstrumentController(i);
@@ -116,9 +138,18 @@ public class KaossTest implements Observer {
       return controller;
     }
 
-    public void changeInstrument(Instrument i)
+    public void changeInstrument()
     {
-      controller.changeInstrument(i);
+      CONTROLLER_PENDING = true;
+      //if(controller != null) controller.kill();
+      //      if(! fingersPressed.isEmpty())
+  //      i.start();
+      
+      controller.changeInstrument();
+      if(! fingersPressed.isEmpty())
+        controller.startInstrument();
+      
+      CONTROLLER_PENDING = false;      
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event
@@ -248,7 +279,7 @@ public class KaossTest implements Observer {
 
     public void updatePan(double pan)
     {
-      //controller.pan(pan);
+      controller.pan(pan);
     }
 
     public void updateFrequency(int y)
