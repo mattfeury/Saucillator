@@ -103,7 +103,20 @@ public class SwingTest extends JFrame implements KeyListener {
   	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   	private Color bgColor = Color.BLACK;
   	private Color fgText = KaossTest.lightGreenTest;
+	private Color instrumText = KaossTest.darkBrownTest;
+	private Color instrumSelText = KaossTest.lightBrownTest;
   	private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
+
+	private JLabel header = new JLabel("SAUCILLATOR");
+	private JLabel oneLabel = new JLabel("1 Sine");
+	private JLabel twoLabel = new JLabel("2 Triangle");
+	private JLabel threeLabel = new JLabel("3 Square");
+	private JLabel fourLabel = new JLabel("4 Noise");
+	private JLabel fiveLabel = new JLabel("5 Sawtooth");
+	private JLabel sixLabel = new JLabel("6 Singing Saw");
+	private JLabel sevenLabel = new JLabel("7 Cuomo");
+	private JLabel eightLabel = new JLabel("8 Messier");
+	private JLabel nineLabel = new JLabel("9 Gong");
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -169,11 +182,55 @@ public class SwingTest extends JFrame implements KeyListener {
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
 
-    JLabel header = new JLabel("SAUCILLATOR");
     header.setFont(headerFont);
     header.setForeground(fgText);
     header.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(header);
+
+    oneLabel.setFont(headerFont);
+    oneLabel.setForeground(instrumText);
+    oneLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(oneLabel);
+	
+    twoLabel.setFont(headerFont);
+    twoLabel.setForeground(instrumText);
+    twoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(twoLabel);
+
+    threeLabel.setFont(headerFont);
+    threeLabel.setForeground(instrumText);
+    threeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(threeLabel);
+
+    fourLabel.setFont(headerFont);
+    fourLabel.setForeground(instrumText);
+    fourLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(fourLabel);
+
+    fiveLabel.setFont(headerFont);
+    fiveLabel.setForeground(instrumSelText);
+    fiveLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(fiveLabel);
+
+	sixLabel.setFont(headerFont);
+    sixLabel.setForeground(instrumText);
+    sixLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(sixLabel);
+
+	sevenLabel.setFont(headerFont);
+    sevenLabel.setForeground(instrumText);
+    sevenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(sevenLabel);
+	
+	eightLabel.setFont(headerFont);
+    eightLabel.setForeground(instrumText);
+    eightLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(eightLabel);
+
+	nineLabel.setFont(headerFont);
+    nineLabel.setForeground(instrumText);
+    nineLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(nineLabel);
   }
 
   public void updateFinger(Finger f)
@@ -197,6 +254,30 @@ public class SwingTest extends JFrame implements KeyListener {
 		};
 		surfaceThread.start(); 
 	}
+	
+  public void updateControls(int id)
+ {
+	oneLabel.setForeground(instrumText);
+	twoLabel.setForeground(instrumText);
+	threeLabel.setForeground(instrumText);
+	fourLabel.setForeground(instrumText);
+	fiveLabel.setForeground(instrumText);
+	sixLabel.setForeground(instrumText);
+	sevenLabel.setForeground(instrumText);
+	eightLabel.setForeground(instrumText);
+	nineLabel.setForeground(instrumText);
+	
+ 	if (id == 1) oneLabel.setForeground(instrumSelText);
+	else if (id == 2) twoLabel.setForeground(instrumSelText);
+	else if (id == 3) threeLabel.setForeground(instrumSelText);
+	else if (id == 4) fourLabel.setForeground(instrumSelText);
+	else if (id == 5) fiveLabel.setForeground(instrumSelText);
+	else if (id == 6) sixLabel.setForeground(instrumSelText);
+	else if (id == 7) sevenLabel.setForeground(instrumSelText);
+	else if (id == 8) eightLabel.setForeground(instrumSelText);
+	else if (id == 9) nineLabel.setForeground(instrumSelText);
+	else fiveLabel.setForeground(instrumSelText);
+ }
 
   public int getInstrumentIdFromChar(char c)
   {
@@ -243,7 +324,8 @@ public class SwingTest extends JFrame implements KeyListener {
         kaoss.changeScale(Instrument.chromaticScale);
         break;
       default:
-        kaoss.changeInstrument(id);    
+        kaoss.changeInstrument(id);
+    	updateControls(id);
     }
 
     System.out.println("post change: "+Synth.getObjectCount()); 
@@ -255,7 +337,7 @@ public class SwingTest extends JFrame implements KeyListener {
   
 	
 	public void surfaceUpdate() {
-	//	fingers.update();
+
 	}
 	
 	class SurfaceCanvas extends JPanel {
