@@ -106,12 +106,9 @@ public class SwingTest extends JFrame implements KeyListener {
   private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
-    this.scope = scope;
     this.kaoss = kaoss;
     this.setFocusable(true);   // Allow this panel to get focus.
     this.addKeyListener(this); // listen to our own key events.
-
-    setupScope();
 
     //panels
     container = new JPanel(); //holds all
@@ -129,7 +126,7 @@ public class SwingTest extends JFrame implements KeyListener {
     surface.setBackground( bgColor );
 
     content.add(surface, BorderLayout.CENTER);
-    content.add(scope, BorderLayout.SOUTH);
+    newScope(scope);
     
     container.add(content, BorderLayout.CENTER);
     container.add(controls, BorderLayout.WEST);
@@ -152,6 +149,17 @@ public class SwingTest extends JFrame implements KeyListener {
 
     scope.hideControls();
     scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 250)); //this is a pretty strange number
+  }
+
+  public void newScope(SynthScope scope)
+  {
+    if(this.scope != null)
+      content.remove(this.scope);
+
+    this.scope = scope;
+    setupScope();
+    content.add(this.scope, BorderLayout.SOUTH);
+    content.validate();
   }
 
   public void makeControls()
@@ -211,16 +219,10 @@ public class SwingTest extends JFrame implements KeyListener {
   public void keyPressed(KeyEvent e) 
   { 
     System.out.println("pre change: "+Synth.getObjectCount()); 
-    content.remove(scope);
     char c = e.getKeyChar();
     int id = getInstrumentIdFromChar(c);
     kaoss.changeInstrument(id);
-    
-  
-  /*  scope = kaoss.changeController().getScope();
-    setupScope();
-    content.add(scope, BorderLayout.SOUTH);
-  */  
+
     System.out.println("post change: "+Synth.getObjectCount()); 
   }
     

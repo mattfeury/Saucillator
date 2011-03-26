@@ -11,14 +11,13 @@ public class InstrumentController {
 
     private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINE = new Sine();
-    private Instrument SQUARE = new Square();
     private Instrument TRIANGLE = new Triangle();
-    private Instrument SINGINGSAW = new SingingSaw();
+    private Instrument SQUARE = new Square();
+    private Instrument SINGINGSAW = new SingingSaw();    
 
-    private int CURRENT_INSTRUMENT = 0;
+    private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
     private boolean init = false;
 
-    private Instrument instrument;
     private TunableFilter filter;
     private SynthFilter effectsUnit;
     private PanUnit panUnit;
@@ -29,14 +28,12 @@ public class InstrumentController {
 
     public InstrumentController()
     {
-        changeInstrument(CURRENT_INSTRUMENT);
+        changeInstrument(KaossTest.INSTRUMENT_SAWTOOTH);
         //i.start();
     }
 
     public void start()
-    {
-      SynthMixer instrumentMix = instrument.getMixer();
-      
+    { 
       panUnit = new PanUnit();
       filter = new Filter_LowPass();
       effectsUnit = new DelayUnit( 0.5); 
@@ -60,7 +57,7 @@ public class InstrumentController {
     public void connectMixer()
     {
 
-      SynthMixer instrumentMix = instrument.getMixer();
+      SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
       
       instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
 
@@ -84,12 +81,12 @@ public class InstrumentController {
 
     public void startInstrument()
     {
-      instrument.start();
+      CURRENT_INSTRUMENT.start();
     }      
 
     public void stop()
     {
-      instrument.stop();
+      CURRENT_INSTRUMENT.stop();
     }
 
     public void changeInstrument(int id)
@@ -98,31 +95,28 @@ public class InstrumentController {
       if(init)
         filter.input.disconnect();
      
-      Instrument current = null;
       switch(id)
       {
 
         case KaossTest.INSTRUMENT_SAWTOOTH:
-          current = SAWTOOTH;
+          CURRENT_INSTRUMENT = SAWTOOTH;
           break;
         case KaossTest.INSTRUMENT_SINE:
-          current = SINE;
+          CURRENT_INSTRUMENT = SINE;
           break;
         case KaossTest.INSTRUMENT_TRIANGLE:
-          current = TRIANGLE;
+          CURRENT_INSTRUMENT = TRIANGLE;
           break;
         case KaossTest.INSTRUMENT_SQUARE:
-          current = SQUARE;
+          CURRENT_INSTRUMENT = SQUARE;
           break;
         case KaossTest.INSTRUMENT_SINGINGSAW:
-          current = SINGINGSAW;
+          CURRENT_INSTRUMENT = SINGINGSAW;
           break;
           
       }
 
-      SynthMixer instrumentMix = current.getMixer();
-      instrument = current;
-      startInstrument();
+      SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
       instrumentMix.start();
       updateLFO();
 
@@ -133,7 +127,7 @@ public class InstrumentController {
     public void kill()
     {
       //stop();
-      instrument.kill();
+      CURRENT_INSTRUMENT.kill();
 
       /*
       lineOut.stop();      
@@ -153,57 +147,57 @@ public class InstrumentController {
 
     public void disableLFO()
     {
-      instrument.disableLFOs();
+      CURRENT_INSTRUMENT.disableLFOs();
       //controller.start();    
     }
 
     public void enableLFO()
     { 
-      instrument.enableLFOs();
+      CURRENT_INSTRUMENT.enableLFOs();
     }
 
     public void updateLFO()
     {
-      instrument.updateLFOs();
+      CURRENT_INSTRUMENT.updateLFOs();
     }
 
     public void stopLFO()
     {
-      instrument.stopLFOs();
+      CURRENT_INSTRUMENT.stopLFOs();
     }
 
     public void updateModRate(int rate)
     {
-      instrument.MOD_RATE = rate;
+      CURRENT_INSTRUMENT.MOD_RATE = rate;
       //System.out.println("MOd "+rate);
       updateLFO();
     }
 
     public void updateModDepth(int depth)
     {
-      instrument.MOD_DEPTH = depth;
+      CURRENT_INSTRUMENT.MOD_DEPTH = depth;
       //System.out.println("depth "+depth);      
       updateLFO();
     }
 
     public Instrument getInstrument()
     {
-      return instrument;
+      return CURRENT_INSTRUMENT;
     }
 
     public SynthScope getScope()
     {
-      return instrument.getScope();
+      return CURRENT_INSTRUMENT.getScope();
     }
 
     public boolean isPlaying()
     {
-      return instrument.isPlaying();
+      return CURRENT_INSTRUMENT.isPlaying();
     }
 
     public void changeFrequency(int offset)
     {
-      instrument.adjustFrequencyByOffset(offset);
+      CURRENT_INSTRUMENT.adjustFrequencyByOffset(offset);
     }
 
     public void changeAmplitude()

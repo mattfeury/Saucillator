@@ -78,9 +78,6 @@ public class KaossTest implements Observer {
       if(System.getProperty("os.name").toLowerCase().contains("mac"))
         useMultitouch = true;
 
-      
-     // Instrument i = new Sawtooth();
-
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
@@ -88,8 +85,6 @@ public class KaossTest implements Observer {
 
         fingersPressed = new LinkedList<Integer>();
 
-        //Instrument i = new SingingSaw();
-        //i.makeLFOs(true);
         controller = new InstrumentController();
         controller.start();
 
@@ -110,42 +105,16 @@ public class KaossTest implements Observer {
       
     }
 
-    /*
-     * either get rid of this or use it. probably want to use changeInstrument instead
-     * but there is no apparent perf difference except bloat.
-     *
-     */
-    public InstrumentController changeController()
-    {
-      /*CONTROLLER_PENDING = true;
-    System.out.println("prekill count: "+Synth.getObjectCount()); 
-      
-      if(controller != null) controller.kill();
-    //  SynthObject.deleteAll();
-
-    System.out.println("postkill new create count: "+Synth.getObjectCount()); 
-
-      InstrumentController newController = new InstrumentController(i);
-      newController.start();
-
-      if(! fingersPressed.isEmpty())
-        newController.startInstrument();
-
-      controller = newController;
-      CONTROLLER_PENDING = false;  */    
-      return null; //kill me
-    }
-
     public void changeInstrument(int id)
     {
       CONTROLLER_PENDING = true;
-      //if(controller != null) controller.kill();
-      //      if(! fingersPressed.isEmpty())
-  //      i.start();
       
       controller.changeInstrument(id);
-      //if(! fingersPressed.isEmpty())
-      //  controller.startInstrument();
+      if(! fingersPressed.isEmpty())
+        controller.startInstrument();
+
+      System.out.println("new scope");
+      display.newScope(controller.getScope());
       
       CONTROLLER_PENDING = false;      
     }
