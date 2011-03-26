@@ -49,17 +49,13 @@ public class KaossTest implements Observer {
     public final static int INSTRUMENT_SINE = 1;
     public final static int INSTRUMENT_TRIANGLE = 2;
     public final static int INSTRUMENT_SQUARE = 3;
-<<<<<<< HEAD
-    public final static int INSTRUMENT_SINGINGSAW = 4;
-    public final static int INSTRUMENT_CUOMO = 5;
-	 public final static int INSTRUMENT_GONG = 6;
-=======
-	public final static int INSTRUMENT_REDNOISE = 4;
-	public final static int INSTRUMENT_SAWTOOTH = 5;
-	public final static int INSTRUMENT_SINGINGSAW = 6;
-	public final static int INSTRUMENT_CUOMO = 7;
-	public final static int INSTRUMENT_MESSIER = 8;
->>>>>>> 1b96023ec7426fca1533b1e569dd6fb443a43164
+  	public final static int INSTRUMENT_REDNOISE = 4;
+	  public final static int INSTRUMENT_SAWTOOTH = 5;
+  	public final static int INSTRUMENT_SINGINGSAW = 6;
+	  public final static int INSTRUMENT_CUOMO = 7;
+  	public final static int INSTRUMENT_MESSIER = 8;
+	  public final static int INSTRUMENT_GONG = 9;
+    
 
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);

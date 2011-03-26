@@ -12,7 +12,7 @@ public class Cuomo extends Instrument {
 
         //set characteristics
         scale = majorScale;
-		harmonics = addHarmonics(noHarmonics, oddHarmonics); //Add sine and square harmonics
+		    harmonics = addHarmonics(noHarmonics, oddHarmonics); //Add sine and square harmonics
 
         //make timbre and start        
         makeTimbre();

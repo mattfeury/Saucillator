@@ -58,7 +58,9 @@ public class SingingSaw extends Instrument {
       //harmonics
 
 //      KaossTest.context.startEngine(0);
-      mixer = new SynthMixer(overtones.length, 2);
+      mixer = new SynthMixer(overtones.length + 1, 2);
+
+      //sines
       for(int i = 0; i < overtones.length; i++)
       {
         SineOscillator sineOsc = new SineOscillator();
@@ -75,6 +77,18 @@ public class SingingSaw extends Instrument {
         
         sineOsc.amplitude.set(1.0);      
       }
+
+      //red noise
+      com.softsynth.jsyn.RedNoise noiseOsc = new com.softsynth.jsyn.RedNoise();
+      sineInputs.add(noiseOsc);
+      freqMods.add(noiseOsc.frequency);
+      mixer.connectInput( overtones.length, noiseOsc.output, 0 );
+      mixer.setGain( overtones.length, 0, .5);
+      mixer.setGain( overtones.length, 1, .5);
+      envPlayer.output.connect( noiseOsc.amplitude );
+      noiseOsc.amplitude.set(1.0);      
+
+
       envPlayer.start();
     }
     
@@ -100,17 +114,23 @@ public class SingingSaw extends Instrument {
     }
     
     public void adjustFrequencyByOffset(int offset) {  
-      int i = 0; 
-      for(SynthInput freqMod : freqMods)
+      //sine oscs
+      for(int i = 0; i < overtones.length; i++)
       {
-          //overtone offset
-          double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
-          int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
-          
-          //System.out.println(freq);
-          freqMod.set(freq);
-          i++;
+        //overtone offset
+        double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + overtones[i]);
+        int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+        
+        //System.out.println(freq);
+        freqMods.get(i).set(freq);
       }
+ 
+      //noise osc
+      double scaleOffset = getScaleIntervalFromOffset(scale, (int)offset + 24);
+      int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+      
+      freqMods.get(overtones.length).set(freq);
+      
     }   
     
     

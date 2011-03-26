@@ -206,23 +206,18 @@ public class SwingTest extends JFrame implements KeyListener {
       return KaossTest.INSTRUMENT_TRIANGLE;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUARE,10) )
       return KaossTest.INSTRUMENT_SQUARE;
-<<<<<<< HEAD
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINGINGSAW,10) )
       return KaossTest.INSTRUMENT_SINGINGSAW;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
       return KaossTest.INSTRUMENT_GONG;
-=======
   	else if(c == Character.forDigit(KaossTest.INSTRUMENT_REDNOISE,10) )
     	return KaossTest.INSTRUMENT_REDNOISE;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SAWTOOTH,10) )
       return KaossTest.INSTRUMENT_SAWTOOTH;
-	else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINGINGSAW,10) )
-    	return KaossTest.INSTRUMENT_SINGINGSAW;
-	else if(c == Character.forDigit(KaossTest.INSTRUMENT_CUOMO,10) )
+	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_CUOMO,10) )
     	return KaossTest.INSTRUMENT_CUOMO;
-	else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
+	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
     	return KaossTest.INSTRUMENT_MESSIER;
->>>>>>> 1b96023ec7426fca1533b1e569dd6fb443a43164
     else
       return KaossTest.INSTRUMENT_CUOMO;
 
