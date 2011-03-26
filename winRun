@@ -1,1 +1,0 @@
-java -cp lib\GlulogitMT.jar;lib\jsyn_beta_163.jar -classpath .;lib\jsyn_beta_163.jar;lib\GlulogicMT.jar;lib\libGlulogicMT.jnilin -Djava.library.path=.;lib\GlulogicMT.jar;lib\libGlulogicMT.jnilib KaossTest

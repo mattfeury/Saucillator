@@ -66,7 +66,7 @@ public class SingingSaw extends Instrument {
         freqMods.add(sineOsc.frequency);
 
         //stereo wavves
-			  mixer.connectInput( i, sineOsc.output, 0 );
+		  mixer.connectInput( i, sineOsc.output, 0 );
 
         mixer.setGain( i, 0, .5);
         mixer.setGain( i, 1, .5);

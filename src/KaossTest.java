@@ -52,6 +52,7 @@ public class KaossTest implements Observer {
     public final static int INSTRUMENT_SQUARE = 3;
     public final static int INSTRUMENT_SINGINGSAW = 4;
     public final static int INSTRUMENT_CUOMO = 5;
+	 public final static int INSTRUMENT_GONG = 6;
 
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
@@ -215,7 +216,7 @@ public class KaossTest implements Observer {
     public void updateViaMouse(Dimension mouse)
     {
       Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
+		
       if(mouse.height == 0 && mouse.width == 0 && controller.isPlaying()) { //corner, turn off
         controller.stop();
         return;
@@ -231,7 +232,9 @@ public class KaossTest implements Observer {
       {
         //int frame, double timestamp, int id, int state, float size,   float x, float y, float dx, float dy, float angle, float majorAxis, float minorAxis
         Finger f = new Finger(0,0, 1, 4, 1.5f, x, y, 0.0f, 0.0f, 3.14f / 2, 9.0f, 9.0f);
-        display.updateFinger(f);
+
+	 	  if(display != null)    
+			  display.updateFinger(f);
 
       }
 

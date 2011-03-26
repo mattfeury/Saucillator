@@ -14,7 +14,8 @@ public class InstrumentController {
     private Instrument TRIANGLE = new Triangle();
     private Instrument SQUARE = new Square();
     private Instrument SINGINGSAW = new SingingSaw();    
-    private Instrument CUOMO = new Cuomo();    
+    private Instrument CUOMO = new Cuomo(); 
+	 private Instrument GONG = new Gong();   
 
     private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
     private boolean init = false;
@@ -116,6 +117,9 @@ public class InstrumentController {
           break;
         case KaossTest.INSTRUMENT_CUOMO:
           CURRENT_INSTRUMENT = CUOMO;
+			 break;
+		  case KaossTest.INSTRUMENT_GONG:
+          CURRENT_INSTRUMENT = GONG;
           break;
           
       }
@@ -191,6 +195,7 @@ public class InstrumentController {
       SQUARE.changeScale(scale);
       SINGINGSAW.changeScale(scale);
       CUOMO.changeScale(scale);
+		GONG.changeScale(scale);
     }
 
     public void changeFrequency(int offset)

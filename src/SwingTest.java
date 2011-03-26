@@ -210,6 +210,8 @@ public class SwingTest extends JFrame implements KeyListener {
       return KaossTest.INSTRUMENT_SQUARE;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINGINGSAW,10) )
       return KaossTest.INSTRUMENT_SINGINGSAW;
+    else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
+      return KaossTest.INSTRUMENT_GONG;
     else
       return KaossTest.INSTRUMENT_CUOMO;
 
