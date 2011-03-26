@@ -1,17 +1,18 @@
 Sup Y'all
 
-A very rough proof of concept for CS4590 proj 2.
+A very rough proof of concept for CS4590 proj 2. Much construction is being done here.
 
-Based on the idea of a kaossilator.
+Based on the idea of a kaossilator through use of the macbook pro trackpad. 
 
-This depends on two libraries:
+This depends on three libraries:
 MacMultitouch (GlulogicMT.jar)
+MacbookAccelerometer
 JSyn
 
-They are included.
+They are included. The first two work only on recent macbooks. This is designed for them. There is a fallback for other devices, but it offers much less functionality right now and for the foreseeable future.
 
 To compile and run:
 open terminal and cd to the repository's home directory
-then run the example shell. it may need 'sudo' privileges
+then run the example shell.
 
-$ sudo ./runTest.sh
+$ ./runTest.sh
