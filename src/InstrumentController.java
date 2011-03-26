@@ -13,7 +13,9 @@ public class InstrumentController {
     private Instrument SINE = new Sine();
     private Instrument TRIANGLE = new Triangle();
     private Instrument SQUARE = new Square();
-    private Instrument SINGINGSAW = new SingingSaw();    
+	private Instrument REDNOISE = new RedNoise();
+    private Instrument SINGINGSAW = new SingingSaw();
+	private Instrument CUOMO = new Cuomo();    
 
     private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
     private boolean init = false;
@@ -95,12 +97,10 @@ public class InstrumentController {
       if(init)
         filter.input.disconnect();
      
+	  System.out.println(init + "   " +id);
       switch(id)
       {
 
-        case KaossTest.INSTRUMENT_SAWTOOTH:
-          CURRENT_INSTRUMENT = SAWTOOTH;
-          break;
         case KaossTest.INSTRUMENT_SINE:
           CURRENT_INSTRUMENT = SINE;
           break;
@@ -110,9 +110,17 @@ public class InstrumentController {
         case KaossTest.INSTRUMENT_SQUARE:
           CURRENT_INSTRUMENT = SQUARE;
           break;
+		case KaossTest.INSTRUMENT_REDNOISE:
+          CURRENT_INSTRUMENT = REDNOISE;
+          break;
+        case KaossTest.INSTRUMENT_SAWTOOTH:
+          CURRENT_INSTRUMENT = SAWTOOTH;
+          break;
+		case KaossTest.INSTRUMENT_CUOMO:
+          CURRENT_INSTRUMENT = CUOMO;
+          break;
         case KaossTest.INSTRUMENT_SINGINGSAW:
           CURRENT_INSTRUMENT = SINGINGSAW;
-          break;
           
       }
 

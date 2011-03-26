@@ -46,12 +46,13 @@ public class KaossTest implements Observer {
     private boolean DISPLAY = true;
     private boolean CONTROLLER_PENDING = false;
 
-    public final static int INSTRUMENT_SAWTOOTH = 0;
     public final static int INSTRUMENT_SINE = 1;
     public final static int INSTRUMENT_TRIANGLE = 2;
     public final static int INSTRUMENT_SQUARE = 3;
-    public final static int INSTRUMENT_SINGINGSAW = 4;
-//    public static int INSTRUMENT_SAWTOOTH = 0;
+	public final static int INSTRUMENT_REDNOISE = 4;
+	public final static int INSTRUMENT_SAWTOOTH = 5;
+	public final static int INSTRUMENT_SINGINGSAW = 6;
+	public final static int INSTRUMENT_CUOMO = 7;
 
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
@@ -108,7 +109,6 @@ public class KaossTest implements Observer {
     public void changeInstrument(int id)
     {
       CONTROLLER_PENDING = true;
-      
       controller.changeInstrument(id);
       if(! useMultitouch || ! fingersPressed.isEmpty())
         controller.startInstrument();

@@ -33,7 +33,7 @@ public class Cuomo extends Instrument {
             mixer.setGain( i, 0, amplitude );
             mixer.setGain( i, 1, amplitude );
 
-            sineOsc.amplitude.set(amplitude);  
+            sineOsc.amplitude.set(1 / harmonics[i]); //Full amplitude for sine harmonic, 1/n for the rest  
           }
     }
     
