@@ -15,7 +15,8 @@ public class InstrumentController {
 	private Instrument REDNOISE = new RedNoise();
 	private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();
-	private Instrument CUOMO = new Cuomo();    
+	private Instrument CUOMO = new Cuomo();
+	private Instrument MESSIER = new Messier();      
 
     private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
     private boolean init = false;
@@ -121,6 +122,9 @@ public class InstrumentController {
 		case KaossTest.INSTRUMENT_CUOMO:
           CURRENT_INSTRUMENT = CUOMO;
           break;
+		case KaossTest.INSTRUMENT_MESSIER:
+          CURRENT_INSTRUMENT = MESSIER;
+          break;
       }
 
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
@@ -194,6 +198,7 @@ public class InstrumentController {
       SQUARE.changeScale(scale);
       SINGINGSAW.changeScale(scale);
       CUOMO.changeScale(scale);
+	  MESSIER.changeScale(scale);
     }
 
     public void changeFrequency(int offset)
