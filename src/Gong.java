@@ -75,29 +75,29 @@ public class Gong extends Instrument {
 	
 	       //stereo wavves
 	       mixer.connectInput( i, sineOsc.output, 0 );
-	       mixer.setGain( i, 0, 0.5);
-	       mixer.setGain( i, 1, 0.5);
+	       mixer.setGain( i, 0, amplitude / (i+1));
+	       mixer.setGain( i, 1, amplitude / (i+1));
 	
 			 envPlayer.output.connect( sineOsc.amplitude );
 	      
-	       sineOsc.amplitude.set(amplitude / (i+1)); //sawtooth and square
+	       sineOsc.amplitude.set(amplitude); //sawtooth and square
 	     }
 		  //triangle
 		  for(int i = 0; i < oddHarmonics.length; i++)
-        {
-          SineOscillator sineOsc = new SineOscillator();
-          sineInputs.add(sineOsc);
-          freqMods.add(sineOsc.frequency);
+      {
+        SineOscillator sineOsc = new SineOscillator();
+        sineInputs.add(sineOsc);
+        freqMods.add(sineOsc.frequency);
 
-          //stereo wavves
-	       mixer.connectInput( i + highHarmonics.length, sineOsc.output, 0 );
-	       mixer.setGain( i + highHarmonics.length, 0, 0.5);
-	       mixer.setGain( i + highHarmonics.length, 1, 0.5);
+        //stereo wavves
+	      mixer.connectInput( i + highHarmonics.length, sineOsc.output, 0 );
+	      mixer.setGain( i + highHarmonics.length, 0, amplitude / Math.pow(i+1,2));
+	      mixer.setGain( i + highHarmonics.length, 1, amplitude / Math.pow(i+1,2));
 	
-			 envPlayer2.output.connect( sineOsc.amplitude );
+			  envPlayer2.output.connect( sineOsc.amplitude );
 
-          sineOsc.amplitude.set(amplitude / Math.pow(i+1,2));  //triangle
-        }
+        sineOsc.amplitude.set(amplitude);  //triangle
+      }
 
 		  envPlayer.start();
 		  envPlayer2.start();   
