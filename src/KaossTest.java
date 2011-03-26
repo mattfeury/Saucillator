@@ -165,7 +165,7 @@ public class KaossTest implements Observer {
       if(dy < lDy) lDy = dy;
       if(dy > hDy) hDy = dy;
 
-      System.out.println(lDx + "  ,  "  +hDx + "  / " + lDy + "  " + hDy);      
+      //System.out.println(lDx + "  ,  "  +hDx + "  / " + lDy + "  " + hDy);      
 //-13.950837  ,  17.629349  / -15.644904  20.096266
 
       //mark on / off 

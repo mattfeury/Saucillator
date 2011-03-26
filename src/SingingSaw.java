@@ -83,8 +83,8 @@ public class SingingSaw extends Instrument {
       sineInputs.add(noiseOsc);
       freqMods.add(noiseOsc.frequency);
       mixer.connectInput( overtones.length, noiseOsc.output, 0 );
-      mixer.setGain( overtones.length, 0, .5);
-      mixer.setGain( overtones.length, 1, .5);
+      mixer.setGain( overtones.length, 0, .2);
+      mixer.setGain( overtones.length, 1, .2);
       envPlayer.output.connect( noiseOsc.amplitude );
       noiseOsc.amplitude.set(1.0);      
 
