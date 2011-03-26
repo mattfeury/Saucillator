@@ -88,9 +88,9 @@ public class KaossTest implements Observer {
 
         fingersPressed = new LinkedList<Integer>();
 
-        Instrument i = new SingingSaw();
-        i.makeLFOs(true);
-        controller = new InstrumentController(i);
+        //Instrument i = new SingingSaw();
+        //i.makeLFOs(true);
+        controller = new InstrumentController();
         controller.start();
 
         tpo.addObserver(this);
@@ -117,16 +117,14 @@ public class KaossTest implements Observer {
      */
     public InstrumentController changeController()
     {
-      CONTROLLER_PENDING = true;
+      /*CONTROLLER_PENDING = true;
     System.out.println("prekill count: "+Synth.getObjectCount()); 
       
       if(controller != null) controller.kill();
     //  SynthObject.deleteAll();
-    Instrument i = new SingingSaw();
 
     System.out.println("postkill new create count: "+Synth.getObjectCount()); 
 
-      i.makeLFOs(true);
       InstrumentController newController = new InstrumentController(i);
       newController.start();
 
@@ -134,20 +132,20 @@ public class KaossTest implements Observer {
         newController.startInstrument();
 
       controller = newController;
-      CONTROLLER_PENDING = false;      
-      return controller;
+      CONTROLLER_PENDING = false;  */    
+      return null; //kill me
     }
 
-    public void changeInstrument()
+    public void changeInstrument(int id)
     {
       CONTROLLER_PENDING = true;
       //if(controller != null) controller.kill();
       //      if(! fingersPressed.isEmpty())
   //      i.start();
       
-      controller.changeInstrument();
-      if(! fingersPressed.isEmpty())
-        controller.startInstrument();
+      controller.changeInstrument(id);
+      //if(! fingersPressed.isEmpty())
+      //  controller.startInstrument();
       
       CONTROLLER_PENDING = false;      
     }

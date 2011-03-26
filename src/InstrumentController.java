@@ -9,6 +9,15 @@ import com.softsynth.jsyn.view102.SynthScope;
 
 public class InstrumentController {
 
+    private Instrument SAWTOOTH = new Sawtooth();
+    private Instrument SINE = new Sine();
+    private Instrument SQUARE = new Square();
+    private Instrument TRIANGLE = new Triangle();
+    private Instrument SINGINGSAW = new SingingSaw();
+
+    private int CURRENT_INSTRUMENT = 0;
+    private boolean init = false;
+
     private Instrument instrument;
     private TunableFilter filter;
     private SynthFilter effectsUnit;
@@ -18,14 +27,15 @@ public class InstrumentController {
 
     public boolean fxEnabled = false;
 
-    public InstrumentController(Instrument i)
+    public InstrumentController()
     {
-        this.instrument = i;
+        changeInstrument(CURRENT_INSTRUMENT);
         //i.start();
     }
 
     public void start()
     {
+      SynthMixer instrumentMix = instrument.getMixer();
       
       panUnit = new PanUnit();
       filter = new Filter_LowPass();
@@ -40,6 +50,8 @@ public class InstrumentController {
       panUnit.start();
       effectsAdder.start();
       lineOut.start();
+
+      init = true;
 
       System.out.println("controller made");
 
@@ -80,19 +92,42 @@ public class InstrumentController {
       instrument.stop();
     }
 
-    public void changeInstrument()
+    public void changeInstrument(int id)
     {
-      //SynthMixer mixer = instrument.getMixer();
-      //filter.input.disconnect();
-      instrument.kill();
+      //disconnect whatever is right now
+      if(init)
+        filter.input.disconnect();
+     
+      Instrument current = null;
+      switch(id)
+      {
 
-      Instrument i = new Sawtooth();   
-      i.makeLFOs(true); 
+        case KaossTest.INSTRUMENT_SAWTOOTH:
+          current = SAWTOOTH;
+          break;
+        case KaossTest.INSTRUMENT_SINE:
+          current = SINE;
+          break;
+        case KaossTest.INSTRUMENT_TRIANGLE:
+          current = TRIANGLE;
+          break;
+        case KaossTest.INSTRUMENT_SQUARE:
+          current = SQUARE;
+          break;
+        case KaossTest.INSTRUMENT_SINGINGSAW:
+          current = SINGINGSAW;
+          break;
+          
+      }
 
+      SynthMixer instrumentMix = current.getMixer();
+      instrument = current;
+      startInstrument();
+      instrumentMix.start();
+      updateLFO();
 
-      instrument = i;
-      //connectMixer();      
-      start();      
+      if(init)
+        instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
     }
 
     public void kill()
@@ -100,7 +135,8 @@ public class InstrumentController {
       //stop();
       instrument.kill();
 
-      /*lineOut.stop();      
+      /*
+      lineOut.stop();      
       filter.stop();
       effectsUnit.stop();
       panUnit.stop();
@@ -110,7 +146,8 @@ public class InstrumentController {
       filter.delete();
       effectsUnit.delete();
       panUnit.delete();
-      effectsAdder.delete();*/
+      effectsAdder.delete();
+      */
 
     }
 

@@ -128,6 +128,8 @@ public abstract class Instrument
       scope.getWaveDisplay().setBackground( Color.black );
       scope.getWaveDisplay().setForeground( Color.green );
 
+      makeLFOs(true); //this is hacky. move it elsewhere. but it should be called at the end of the constructor
+
     }
 
     public static double getScaleIntervalFromOffset(int[] scale, int offset)

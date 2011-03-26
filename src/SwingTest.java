@@ -190,6 +190,21 @@ public class SwingTest extends JFrame implements KeyListener {
 		surfaceThread.start(); 
 	}
 
+  public int getInstrumentIdFromChar(char c)
+  {
+    if(c == Character.forDigit(KaossTest.INSTRUMENT_SAWTOOTH,10) )
+      return KaossTest.INSTRUMENT_SAWTOOTH;
+    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINE,10) )
+      return KaossTest.INSTRUMENT_SINE;
+    else if(c == Character.forDigit(KaossTest.INSTRUMENT_TRIANGLE,10) )
+      return KaossTest.INSTRUMENT_TRIANGLE;
+    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUARE,10) )
+      return KaossTest.INSTRUMENT_SQUARE;
+    else
+      return KaossTest.INSTRUMENT_SINGINGSAW;
+
+  }
+
   /*
    * Use this to change freq or whatnot
    */
@@ -197,13 +212,19 @@ public class SwingTest extends JFrame implements KeyListener {
   { 
     System.out.println("pre change: "+Synth.getObjectCount()); 
     content.remove(scope);
-    kaoss.changeInstrument();
+    char c = e.getKeyChar();
+    int id = getInstrumentIdFromChar(c);
+    kaoss.changeInstrument(id);
+    
+  
   /*  scope = kaoss.changeController().getScope();
     setupScope();
     content.add(scope, BorderLayout.SOUTH);
-  */  System.out.println("post change: "+Synth.getObjectCount()); 
-    
+  */  
+    System.out.println("post change: "+Synth.getObjectCount()); 
   }
+    
+
   public void keyReleased(KeyEvent e) {}
   public void keyTyped(KeyEvent e)   {}
   
