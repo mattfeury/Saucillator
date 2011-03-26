@@ -51,7 +51,7 @@ public class KaossTest implements Observer {
     public final static int INSTRUMENT_TRIANGLE = 2;
     public final static int INSTRUMENT_SQUARE = 3;
     public final static int INSTRUMENT_SINGINGSAW = 4;
-//    public static int INSTRUMENT_SAWTOOTH = 0;
+    public final static int INSTRUMENT_CUOMO = 5;
 
     //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
@@ -135,6 +135,8 @@ public class KaossTest implements Observer {
 
     }
 
+    float lDx = 0, hDx = 0, lDy = 0, hDy = 0;
+
     public void updateViaFinger(Finger f)
     {
       //update display
@@ -153,7 +155,15 @@ public class KaossTest implements Observer {
       float   x = f.getX();
       float   y = f.getY();
       float   dx = f.getXVelocity();
-      float   dy = f.getYVelocity();                
+      float   dy = f.getYVelocity();     
+
+      if(dx < lDx) lDx = dx;
+      if(dx > hDx) hDx = dx;
+      if(dy < lDy) lDy = dy;
+      if(dy > hDy) hDy = dy;
+
+      System.out.println(lDx + "  ,  "  +hDx + "  / " + lDy + "  " + hDy);      
+//-13.950837  ,  17.629349  / -15.644904  20.096266
 
       //mark on / off 
       if(! fingersPressed.contains(id)) { //finger pressed. 
@@ -189,11 +199,11 @@ public class KaossTest implements Observer {
           return;
         case 1:
           updateLowpass((int)(x * 2000));
-          updateFrequency((int)(y * TRACKPAD_GRID_SIZE));        
+          updateFrequency((int)(y * TRACKPAD_GRID_SIZE));      
           break;
         case 2:
           updateModRate((int)(x*20));
-          updateModDepth((int)(y*1000)); //this is cool except it is rarely zero
+          updateModDepth((int)(y*1000)); //this is cool except it is rarely zero          
           break;
         //default:
           
@@ -240,6 +250,11 @@ public class KaossTest implements Observer {
 
       //pan by accelerometer
       updatePan((double)(acc.getX() % 100) / 100);
+    }
+
+    public void changeScale(int[] scale)
+    {
+      controller.changeScale(scale);
     }
     
 

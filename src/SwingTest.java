@@ -208,8 +208,10 @@ public class SwingTest extends JFrame implements KeyListener {
       return KaossTest.INSTRUMENT_TRIANGLE;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUARE,10) )
       return KaossTest.INSTRUMENT_SQUARE;
-    else
+    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINGINGSAW,10) )
       return KaossTest.INSTRUMENT_SINGINGSAW;
+    else
+      return KaossTest.INSTRUMENT_CUOMO;
 
   }
 
@@ -221,7 +223,20 @@ public class SwingTest extends JFrame implements KeyListener {
     System.out.println("pre change: "+Synth.getObjectCount()); 
     char c = e.getKeyChar();
     int id = getInstrumentIdFromChar(c);
-    kaoss.changeInstrument(id);
+    switch(c)
+    {
+      case 'n':
+        kaoss.changeScale(Instrument.minorScale);
+        break;
+      case 'm':
+        kaoss.changeScale(Instrument.majorScale);
+        break;
+      case 'c':
+        kaoss.changeScale(Instrument.chromaticScale);
+        break;
+      default:
+        kaoss.changeInstrument(id);    
+    }
 
     System.out.println("post change: "+Synth.getObjectCount()); 
   }
