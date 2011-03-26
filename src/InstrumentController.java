@@ -126,23 +126,7 @@ public class InstrumentController {
 
     public void kill()
     {
-      //stop();
       CURRENT_INSTRUMENT.kill();
-
-      /*
-      lineOut.stop();      
-      filter.stop();
-      effectsUnit.stop();
-      panUnit.stop();
-      effectsAdder.stop();
-
-      lineOut.delete();      
-      filter.delete();
-      effectsUnit.delete();
-      panUnit.delete();
-      effectsAdder.delete();
-      */
-
     }
 
     public void disableLFO()

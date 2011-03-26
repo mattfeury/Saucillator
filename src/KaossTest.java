@@ -69,7 +69,6 @@ public class KaossTest implements Observer {
       try {
           Synth.requestVersion( 144 );
           Synth.startEngine(0);  
-          System.out.println("go");
           SynthObject.enableDeletionByGarbageCollector(true); //formerly static
       } catch(Exception e) {
         System.out.println(e);
@@ -95,8 +94,9 @@ public class KaossTest implements Observer {
         Thread thread = new MouseObserverThread(mouseObs);
         thread.start(); 
 
-        //FIXME
-        //changeController();
+        controller = new InstrumentController();
+        controller.start();
+
         mouseObs.addObserver(this); //start observing
       }
       //start display
@@ -110,10 +110,9 @@ public class KaossTest implements Observer {
       CONTROLLER_PENDING = true;
       
       controller.changeInstrument(id);
-      if(! fingersPressed.isEmpty())
+      if(! useMultitouch || ! fingersPressed.isEmpty())
         controller.startInstrument();
 
-      System.out.println("new scope");
       display.newScope(controller.getScope());
       
       CONTROLLER_PENDING = false;      
