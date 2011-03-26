@@ -135,6 +135,8 @@ public abstract class Instrument
       scope.getWaveDisplay().setBackground( Color.black );
       scope.getWaveDisplay().setForeground( Color.green );
 
+      makeLFOs(true); //this is hacky. move it elsewhere. but it should be called at the end of the constructor
+
     }
 
     public static double getScaleIntervalFromOffset(int[] scale, int offset)
@@ -150,6 +152,22 @@ public abstract class Instrument
     public boolean isPlaying()
     {
         return isPlaying;
+    }
+
+    public void kill()
+    {
+      //stop();
+      mixer.stop();
+      mixer.delete();
+
+      for(LFO lfo : lfos)
+        lfo.delete();
+      
+      for(SynthOscillator osc : sineInputs)
+      {
+        osc.stop();
+        osc.delete();
+      }
     }
 
     class LFO
@@ -206,6 +224,17 @@ public abstract class Instrument
         myLag.halfLife.set(LAG_LIFE); //freq lag        
         myLFO.amplitude.set(MOD_DEPTH); //mod depth
         myLFO.frequency.set(MOD_RATE); //mod rate   
+      }
+
+      public void delete()
+      {
+        myLag.stop();
+        myLFO.stop();
+        mySum.stop();
+        
+        myLag.delete();
+        myLFO.delete();
+        mySum.delete();
       }
 
 

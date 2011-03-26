@@ -57,6 +57,7 @@ public class SingingSaw extends Instrument {
 
       //harmonics
 
+//      KaossTest.context.startEngine(0);
       mixer = new SynthMixer(overtones.length, 2);
       for(int i = 0; i < overtones.length; i++)
       {
