@@ -9,11 +9,11 @@ import com.softsynth.jsyn.view102.SynthScope;
 
 public class InstrumentController {
 
-    private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINE = new Sine();
     private Instrument TRIANGLE = new Triangle();
     private Instrument SQUARE = new Square();
 	private Instrument REDNOISE = new RedNoise();
+	private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();
 	private Instrument CUOMO = new Cuomo();    
 
@@ -115,12 +115,12 @@ public class InstrumentController {
         case KaossTest.INSTRUMENT_SAWTOOTH:
           CURRENT_INSTRUMENT = SAWTOOTH;
           break;
+        case KaossTest.INSTRUMENT_SINGINGSAW:
+          CURRENT_INSTRUMENT = SINGINGSAW;
+          break;
 		case KaossTest.INSTRUMENT_CUOMO:
           CURRENT_INSTRUMENT = CUOMO;
           break;
-        case KaossTest.INSTRUMENT_SINGINGSAW:
-          CURRENT_INSTRUMENT = SINGINGSAW;
-          break;   
       }
 
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
