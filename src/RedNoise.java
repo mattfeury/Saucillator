@@ -34,7 +34,7 @@ public class RedNoise extends Instrument {
             mixer.setGain( i, 0, amplitude );
             mixer.setGain( i, 1, amplitude );
 
-            //noiseOsc.amplitude.set(amplitude);  //noise
+            noiseOsc.amplitude.set(amplitude);  //noise
           }
     }
     
