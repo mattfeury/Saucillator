@@ -97,7 +97,6 @@ public class InstrumentController {
       if(init)
         filter.input.disconnect();
      
-	  System.out.println(init + "   " +id);
       switch(id)
       {
 
@@ -121,7 +120,7 @@ public class InstrumentController {
           break;
         case KaossTest.INSTRUMENT_SINGINGSAW:
           CURRENT_INSTRUMENT = SINGINGSAW;
-          
+          break;   
       }
 
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
@@ -185,6 +184,16 @@ public class InstrumentController {
     public boolean isPlaying()
     {
       return CURRENT_INSTRUMENT.isPlaying();
+    }
+
+    public void changeScale(int[] scale)
+    {
+      SAWTOOTH.changeScale(scale);
+      SINE.changeScale(scale);
+      TRIANGLE.changeScale(scale);
+      SQUARE.changeScale(scale);
+      SINGINGSAW.changeScale(scale);
+      CUOMO.changeScale(scale);
     }
 
     public void changeFrequency(int offset)
