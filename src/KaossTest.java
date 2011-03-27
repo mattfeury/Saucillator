@@ -55,6 +55,8 @@ public class KaossTest implements Observer {
 	  public final static int INSTRUMENT_CUOMO = 7;
   	public final static int INSTRUMENT_MESSIER = 8;
 	  public final static int INSTRUMENT_GONG = 9;
+
+    public final static int INSTRUMENT_DEFAULT = INSTRUMENT_SINE;
     
 
     //most of these are sucky. but we are using some for now

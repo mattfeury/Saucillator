@@ -67,21 +67,21 @@ public class Gong extends Instrument {
 	 
         mixer = new SynthMixer(harmonics.length, 2);    
 		  //highHarmonics
-        for(int i = 0; i < highHarmonics.length; i++)
-	     {
-	       SineOscillator sineOsc = new SineOscillator();
-	       sineInputs.add(sineOsc);
-	       freqMods.add(sineOsc.frequency);
-	
-	       //stereo wavves
-	       mixer.connectInput( i, sineOsc.output, 0 );
-	       mixer.setGain( i, 0, amplitude / (i+1));
-	       mixer.setGain( i, 1, amplitude / (i+1));
-	
-			 envPlayer.output.connect( sineOsc.amplitude );
-	      
-	       sineOsc.amplitude.set(amplitude); //sawtooth and square
-	     }
+      for(int i = 0; i < highHarmonics.length; i++)
+      {
+        SineOscillator sineOsc = new SineOscillator();
+        sineInputs.add(sineOsc);
+        freqMods.add(sineOsc.frequency);
+
+        //stereo wavves
+        mixer.connectInput( i, sineOsc.output, 0 );
+        mixer.setGain( i, 0, amplitude / (i+1));
+        mixer.setGain( i, 1, amplitude / (i+1));
+
+        envPlayer.output.connect( sineOsc.amplitude );
+      
+        sineOsc.amplitude.set(amplitude); //sawtooth and square
+      }
 		  //triangle
 		  for(int i = 0; i < oddHarmonics.length; i++)
       {
