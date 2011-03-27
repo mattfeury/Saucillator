@@ -185,8 +185,10 @@ public class SwingTest extends JFrame implements KeyListener {
     //do header separate    
     header.setFont(headerFont);
     header.setForeground(fgText);
-    header.setAlignmentX(Component.CENTER_ALIGNMENT);
+    header.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(header);
+
+	controls.add(Box.createVerticalGlue());
 
     //control labels
     int i = 1;
@@ -199,8 +201,9 @@ public class SwingTest extends JFrame implements KeyListener {
       else
         label.setForeground(instrumText);
       
-      label.setAlignmentX(Component.CENTER_ALIGNMENT);
+      label.setAlignmentX(Component.LEFT_ALIGNMENT);
       controls.add(label);
+	  controls.add(Box.createVerticalGlue());
       i++;
     }
   }
