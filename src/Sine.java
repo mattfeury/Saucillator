@@ -42,6 +42,10 @@ public class Sine extends Instrument {
     {
        System.out.println("start");
        isPlaying = true;
+
+       envPlayer.envelopePort.clear(); // clear the queue        
+       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
+       
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }

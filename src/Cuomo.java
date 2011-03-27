@@ -25,7 +25,8 @@ public class Cuomo extends Instrument {
     
     public void makeTimbre()
     {
-       mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);      
+       mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);  
+       //this can go away since there are no custom harmonics. i'll leave it here in case you want to play around with more
        for(int i = 0; i < harmonics.length; i++)
        {
          SineOscillator sineOsc = new SineOscillator();
@@ -33,7 +34,7 @@ public class Cuomo extends Instrument {
          freqMods.add(sineOsc.frequency);
 
          //stereo wavves
-         //mixer.connectInput( i, sineOsc.output, 0 );
+         mixer.connectInput( i, sineOsc.output, 0 );
          mixer.setGain( i, 0, amplitude );
          mixer.setGain( i, 1, amplitude );
 
@@ -57,6 +58,9 @@ public class Cuomo extends Instrument {
     {
        System.out.println("start");
        isPlaying = true;
+
+       envPlayer.envelopePort.clear(); // clear the queue         
+       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
 
        for(Instrument extra : extraneous)
          extra.start();
