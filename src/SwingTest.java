@@ -206,6 +206,15 @@ public class SwingTest extends JFrame implements KeyListener {
 	  controls.add(Box.createVerticalGlue());
       i++;
     }
+
+    //knobs
+    controls.add(Box.createVerticalGlue());
+
+  	knobs = new JPanel();
+	  knobs.setPreferredSize(new Dimension(200, 400));
+    knobs.setLayout(new BoxLayout(knobs, BoxLayout.Y_AXIS));
+    knobs.setBackground( bgColor );
+  	controls.add(knobs);  
   }
 
   public void updateFinger(Finger f)

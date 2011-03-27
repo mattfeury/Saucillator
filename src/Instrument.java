@@ -26,6 +26,9 @@ public abstract class Instrument
     protected ArrayList<LFO> lfos;
     protected LinkedList<Instrument> extraneous = new LinkedList<Instrument>();
     
+    protected SynthEnvelope envData = new SynthEnvelope( new double[]{0.0, 1.0} ); //no envelope by default
+    protected EnvelopePlayer envPlayer = new EnvelopePlayer();
+    protected boolean customEnvelope = false;
     
     protected int BASE_FREQ = 440;
     protected SynthScope scope;
@@ -87,9 +90,13 @@ public abstract class Instrument
       else  disableLFOs();
     }
 
-    public ArrayList<LFO> getLFOs()
+    public void setEnvelopeData(SynthEnvelope envData)
     {
-      return lfos;
+      customEnvelope = true;
+      this.envData = envData;
+//      envPlayer.envelopePort.clear(); // clear the queue         
+//       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
+      
     }
 
     public void enableLFOs()
@@ -139,6 +146,23 @@ public abstract class Instrument
     {
       return mixer;
     }
+
+    public void resetEnvelope()
+    {
+      envData = new SynthEnvelope( new double[]{0.0, 1.0} );
+    }
+
+    public void connectEnvelope()
+    {
+      if(customEnvelope) return; //if it is custom, assume the creater takes care of all this
+
+      envPlayer.output.disconnect();
+      for(SynthOscillator osc : sineInputs)
+        envPlayer.output.connect( osc.amplitude );
+
+      envPlayer.start();   
+    }
+      
     
     public void startScope()
     {      
@@ -149,6 +173,7 @@ public abstract class Instrument
       scope.getWaveDisplay().setBackground( Color.black );
       scope.getWaveDisplay().setForeground( Color.green );
 
+      connectEnvelope();
       makeLFOs(true); //this is hacky. move it elsewhere. but it should be called at the end of the constructor
 
     }

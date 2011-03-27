@@ -16,7 +16,7 @@ public class InstrumentController {
   	private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();    
     private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
-	  private Instrument GONG = new Gong();   
+	  private Instrument GONG = new Gong(TRIANGLE);   
   	private Instrument MESSIER = new Messier();      
 
     private Instrument CURRENT_INSTRUMENT = SINE;
@@ -107,6 +107,7 @@ public class InstrumentController {
           break;
         case KaossTest.INSTRUMENT_TRIANGLE:
           CURRENT_INSTRUMENT = TRIANGLE;
+          CURRENT_INSTRUMENT.resetEnvelope();
           break;
         case KaossTest.INSTRUMENT_SQUARE:
           CURRENT_INSTRUMENT = SQUARE;

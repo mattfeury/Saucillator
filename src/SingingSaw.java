@@ -29,6 +29,7 @@ public class SingingSaw extends Instrument {
         LAG_LIFE = 0.2; //0.4
         MOD_DEPTH = 16;
         MOD_RATE = 9;
+        customEnvelope = true;
 
         //set characteristics
         scale = majorScale;
@@ -68,7 +69,7 @@ public class SingingSaw extends Instrument {
         freqMods.add(sineOsc.frequency);
 
         //stereo wavves
-		  mixer.connectInput( i, sineOsc.output, 0 );
+		    mixer.connectInput( i, sineOsc.output, 0 );
 
         mixer.setGain( i, 0, .5);
         mixer.setGain( i, 1, .5);
