@@ -99,7 +99,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	private SurfaceCanvas surface;
   	private SynthScope scope;
   	private SynthMixer mixer;
-  	private JPanel content, container, controls;
+  	private JPanel content, container, controls, knobs;
   	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   	private Color bgColor = Color.BLACK;
   	private Color fgText = KaossTest.lightGreenTest;
@@ -184,53 +184,79 @@ public class SwingTest extends JFrame implements KeyListener {
 
     header.setFont(headerFont);
     header.setForeground(fgText);
-    header.setAlignmentX(Component.CENTER_ALIGNMENT);
+    header.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(header);
+
+	controls.add(Box.createVerticalGlue());
 
     oneLabel.setFont(headerFont);
     oneLabel.setForeground(instrumText);
-    oneLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    oneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(oneLabel);
+
+	controls.add(Box.createVerticalGlue());
 	
     twoLabel.setFont(headerFont);
     twoLabel.setForeground(instrumText);
-    twoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    twoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(twoLabel);
+
+	controls.add(Box.createVerticalGlue());
 
     threeLabel.setFont(headerFont);
     threeLabel.setForeground(instrumText);
-    threeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    threeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(threeLabel);
+
+	controls.add(Box.createVerticalGlue());
 
     fourLabel.setFont(headerFont);
     fourLabel.setForeground(instrumText);
-    fourLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    fourLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(fourLabel);
+
+	controls.add(Box.createVerticalGlue());
 
     fiveLabel.setFont(headerFont);
     fiveLabel.setForeground(instrumSelText);
-    fiveLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    fiveLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(fiveLabel);
+
+	controls.add(Box.createVerticalGlue());
 
 	sixLabel.setFont(headerFont);
     sixLabel.setForeground(instrumText);
-    sixLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    sixLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(sixLabel);
+
+	controls.add(Box.createVerticalGlue());
 
 	sevenLabel.setFont(headerFont);
     sevenLabel.setForeground(instrumText);
-    sevenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    sevenLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(sevenLabel);
+
+	controls.add(Box.createVerticalGlue());
 	
 	eightLabel.setFont(headerFont);
     eightLabel.setForeground(instrumText);
-    eightLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    eightLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(eightLabel);
+
+	controls.add(Box.createVerticalGlue());
 
 	nineLabel.setFont(headerFont);
     nineLabel.setForeground(instrumText);
-    nineLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    nineLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(nineLabel);
+
+	controls.add(Box.createVerticalGlue());
+
+	knobs = new JPanel();
+	knobs.setPreferredSize(new Dimension(200, 400));
+    knobs.setLayout(new BoxLayout(knobs, BoxLayout.Y_AXIS));
+    knobs.setBackground( bgColor );
+	controls.add(knobs);
   }
 
   public void updateFinger(Finger f)
