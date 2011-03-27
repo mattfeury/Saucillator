@@ -97,15 +97,15 @@ public class SwingTest extends JFrame implements KeyListener {
 	
 	private Fingers fingers;
 	private SurfaceCanvas surface;
-  private SynthScope scope;
-  private SynthMixer mixer;
-  private JPanel content, container, controls;
-  private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
-  private Color bgColor = Color.BLACK;
-  private Color fgText = KaossTest.lightGreenTest;
+  	private SynthScope scope;
+  	private SynthMixer mixer;
+  	private JPanel content, container, controls, knobs;
+  	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
+  	private Color bgColor = Color.BLACK;
+  	private Color fgText = KaossTest.lightGreenTest;
 	private Color instrumText = KaossTest.darkBrownTest;
 	private Color instrumSelText = KaossTest.lightBrownTest;
-  private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
+  	private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
 
 	private JLabel header = new JLabel("SAUCILLATOR");
 	private JLabel oneLabel = new JLabel("1 Sine");
@@ -125,17 +125,17 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //panels
     container = new JPanel(); //holds all
-	  container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
+	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
     container.setLayout(new BorderLayout());
 
     makeControls();
 
     content = new JPanel(); //holds scope, fingers
-	  content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
+	content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
     content.setLayout(new BorderLayout());
 
-	  surface = new SurfaceCanvas(); //holds fingers. inside content
-	  surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
+	surface = new SurfaceCanvas(); //holds fingers. inside content
+	surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
     surface.setBackground( bgColor );
 
     content.add(surface, BorderLayout.CENTER);
@@ -145,10 +145,10 @@ public class SwingTest extends JFrame implements KeyListener {
     container.add(controls, BorderLayout.WEST);
 
     this.setContentPane(container);
-    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    this.pack();
-    this.setTitle("kaoss");
-    this.setVisible(true);
+	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+	this.pack();
+	this.setTitle("kaoss");
+	this.setVisible(true);
 
     surfaceStart();
 	}
@@ -176,7 +176,7 @@ public class SwingTest extends JFrame implements KeyListener {
   public void makeControls()
   {
     controls = new JPanel(); //future sidebar?
-	  controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
+	controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
 
