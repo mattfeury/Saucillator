@@ -26,7 +26,7 @@ public class SingingSaw extends Instrument {
     public SingingSaw()
     {
         super();
-        LAG_LIFE = 0.4;
+        LAG_LIFE = 0.2; //0.4
         MOD_DEPTH = 16;
         MOD_RATE = 9;
 

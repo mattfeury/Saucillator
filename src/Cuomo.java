@@ -6,41 +6,61 @@ import com.softsynth.jsyn.*;
 
 public class Cuomo extends Instrument {
 
-    public Cuomo()
+    
+    public Cuomo(Instrument... extras)
     {
         super();
 
         //set characteristics
         scale = majorScale;
-		    harmonics = addHarmonics(noHarmonics, oddHarmonics); //Add sine and square harmonics
+		    harmonics = new int[]{}; //Add sine and square harmonics
 
+        for(Instrument i : extras)
+          extraneous.add(i);    
+        
         //make timbre and start        
         makeTimbre();
-        startScope();        
+        startScope();    
     }
     
     public void makeTimbre()
     {
-        mixer = new SynthMixer(harmonics.length, 2);      
-        for(int i = 0; i < harmonics.length; i++)
-          {
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
-            freqMods.add(sineOsc.frequency);
+       mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);      
+       for(int i = 0; i < harmonics.length; i++)
+       {
+         SineOscillator sineOsc = new SineOscillator();
+         sineInputs.add(sineOsc);
+         freqMods.add(sineOsc.frequency);
 
-            //stereo wavves
-            mixer.connectInput( i, sineOsc.output, 0 );
-            mixer.setGain( i, 0, amplitude );
-            mixer.setGain( i, 1, amplitude );
+         //stereo wavves
+         //mixer.connectInput( i, sineOsc.output, 0 );
+         mixer.setGain( i, 0, amplitude );
+         mixer.setGain( i, 1, amplitude );
 
-            sineOsc.amplitude.set(1 / harmonics[i]); //Full amplitude for sine harmonic, 1/n for the rest  
-          }
+         sineOsc.amplitude.set(1 / harmonics[i]); //Full amplitude for sine harmonic, 1/n for the rest  
+       }
+
+       int i =0;
+       for(Instrument extra : extraneous)
+       {
+         SynthMixer extraMixer = extra.getMixer();
+         mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
+         mixer.setGain( harmonics.length + i, 0, amplitude * 2.0 / 3.0 );
+         mixer.setGain( harmonics.length + i, 1, amplitude * 2.0 / 3.0 );
+         extraMixer.start();
+         i++;
+       }
+        
     }
     
     public void start()  
     {
        System.out.println("start");
        isPlaying = true;
+
+       for(Instrument extra : extraneous)
+         extra.start();
+
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
@@ -49,12 +69,19 @@ public class Cuomo extends Instrument {
     {
        System.out.println("stop");
        isPlaying = false;
+
+       for(Instrument extra : extraneous)       
+         extra.stop();
+
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
     
     public void adjustFrequencyByOffset(int offset) {
         //harmonic mode
+        for(Instrument extra : extraneous)       
+          extra.adjustFrequencyByOffset(offset);
+
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);

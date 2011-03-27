@@ -150,9 +150,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	this.setTitle("kaoss");
 	this.setVisible(true);
 
-
-
-	surfaceStart();
+    surfaceStart();
 	}
 
   public void setupScope()
@@ -182,81 +180,29 @@ public class SwingTest extends JFrame implements KeyListener {
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
 
+    JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel};
+
+    //do header separate    
     header.setFont(headerFont);
     header.setForeground(fgText);
-    header.setAlignmentX(Component.LEFT_ALIGNMENT);
+    header.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(header);
 
-	controls.add(Box.createVerticalGlue());
+    //control labels
+    int i = 1;
+    for(JLabel label : labels)
+    {
+      label.setFont(headerFont);
 
-    oneLabel.setFont(headerFont);
-    oneLabel.setForeground(instrumText);
-    oneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(oneLabel);
-
-	controls.add(Box.createVerticalGlue());
-	
-    twoLabel.setFont(headerFont);
-    twoLabel.setForeground(instrumText);
-    twoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(twoLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-    threeLabel.setFont(headerFont);
-    threeLabel.setForeground(instrumText);
-    threeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(threeLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-    fourLabel.setFont(headerFont);
-    fourLabel.setForeground(instrumText);
-    fourLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(fourLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-    fiveLabel.setFont(headerFont);
-    fiveLabel.setForeground(instrumSelText);
-    fiveLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(fiveLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-	sixLabel.setFont(headerFont);
-    sixLabel.setForeground(instrumText);
-    sixLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(sixLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-	sevenLabel.setFont(headerFont);
-    sevenLabel.setForeground(instrumText);
-    sevenLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(sevenLabel);
-
-	controls.add(Box.createVerticalGlue());
-	
-	eightLabel.setFont(headerFont);
-    eightLabel.setForeground(instrumText);
-    eightLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(eightLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-	nineLabel.setFont(headerFont);
-    nineLabel.setForeground(instrumText);
-    nineLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(nineLabel);
-
-	controls.add(Box.createVerticalGlue());
-
-	knobs = new JPanel();
-	knobs.setPreferredSize(new Dimension(200, 400));
-    knobs.setLayout(new BoxLayout(knobs, BoxLayout.Y_AXIS));
-    knobs.setBackground( bgColor );
-	controls.add(knobs);
+      if(KaossTest.INSTRUMENT_DEFAULT == i)
+        label.setForeground(instrumSelText);
+      else
+        label.setForeground(instrumText);
+      
+      label.setAlignmentX(Component.CENTER_ALIGNMENT);
+      controls.add(label);
+      i++;
+    }
   }
 
   public void updateFinger(Finger f)
@@ -349,9 +295,12 @@ public class SwingTest extends JFrame implements KeyListener {
       case 'c':
         kaoss.changeScale(Instrument.chromaticScale);
         break;
+      case 'b':
+        kaoss.changeScale(Instrument.minorBluesScale);
+        break;
       default:
         kaoss.changeInstrument(id);
-    	updateControls(id);
+      	updateControls(id);
     }
 
     System.out.println("post change: "+Synth.getObjectCount()); 

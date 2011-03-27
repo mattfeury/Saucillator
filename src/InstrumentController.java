@@ -2,7 +2,7 @@
 // Controls an instrument based on trackpad movement.
 // This should probably be modified to control multiple instruments
 
-//import java.util.*;
+import java.util.ArrayList;
   
 import com.softsynth.jsyn.*;
 import com.softsynth.jsyn.view102.SynthScope;
@@ -15,11 +15,11 @@ public class InstrumentController {
 	  private Instrument REDNOISE = new RedNoise();
   	private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();    
-    private Instrument CUOMO = new Cuomo(); 
+    private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
 	  private Instrument GONG = new Gong();   
   	private Instrument MESSIER = new Messier();      
 
-    private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
+    private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;
 
     private TunableFilter filter;
@@ -32,7 +32,7 @@ public class InstrumentController {
 
     public InstrumentController()
     {
-        changeInstrument(KaossTest.INSTRUMENT_SAWTOOTH);
+        changeInstrument(KaossTest.INSTRUMENT_SINE);
         //i.start();
     }
 
@@ -99,9 +99,9 @@ public class InstrumentController {
       if(init)
         filter.input.disconnect();
      
+      CURRENT_INSTRUMENT.stop();
       switch(id)
       {
-
         case KaossTest.INSTRUMENT_SINE:
           CURRENT_INSTRUMENT = SINE;
           break;
