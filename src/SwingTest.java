@@ -117,9 +117,9 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel sevenLabel = new JLabel("7 Cuomo");
 	private JLabel eightLabel = new JLabel("8 Messier");
 	private JLabel nineLabel = new JLabel("9 Gong");
-	private JLabel zeroLabel = new JLabel("0 Squoise");
+	private JLabel zeroLabel = new JLabel("10 Squoise");
 	
-	JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel};
+	JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -243,7 +243,8 @@ public class SwingTest extends JFrame implements KeyListener {
   public void updateControls(int id)
  {
 	for(JLabel label : labels) label.setForeground(instrumText);
-	labels[id - 1].setForeground(instrumSelText);
+	if (id > 0) labels[id - 1].setForeground(instrumSelText);
+	else labels[labels.length-1].setForeground(instrumSelText);
 	
  }
 
