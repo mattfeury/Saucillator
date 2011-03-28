@@ -5,15 +5,22 @@ import java.util.*;
 import com.softsynth.jsyn.*;
 
 public class Messier extends Instrument {
+  
+    private SynthEnvelope envData;
+    private EnvelopePlayer envPlayer;
 
+    private float baseFreq;
     
     public Messier(Instrument... extras)
     {
         super();
 
         //set characteristics
+        MOD_DEPTH = 20;
+        MOD_RATE = 25;
         scale = majorScale;
-		    harmonics = new int[]{}; 
+		    harmonics = new int[]{};
+        customEnvelope = true;
 
         for(Instrument i : extras)
           extraneous.add(i);    
@@ -25,6 +32,19 @@ public class Messier extends Instrument {
     
     public void makeTimbre()
     {
+      // envelope for sine wave
+      envPlayer = new EnvelopePlayer();  
+      // define shape of envelope as an array of doubles
+      // quick envelope sounds like short bursts
+      double[] data =
+      {
+        0.02, 1.0,  // Take 0.02 seconds to go to value 1.0.
+        0.03, 0.5,  
+        0.02, 0.0   
+      };
+      envData = new SynthEnvelope( data );
+
+      
        mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);  
        //this can go away since there are no custom harmonics. i'll leave it here in case you want to play around with more
        for(int i = 0; i < harmonics.length; i++)
@@ -63,7 +83,10 @@ public class Messier extends Instrument {
        envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
 
        for(Instrument extra : extraneous)
+       {
+         extra.setEnvelopeData(envData); 
          extra.start();
+       }
 
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
