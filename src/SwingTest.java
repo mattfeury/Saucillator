@@ -117,6 +117,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel sevenLabel = new JLabel("7 Cuomo");
 	private JLabel eightLabel = new JLabel("8 Messier");
 	private JLabel nineLabel = new JLabel("9 Gong");
+	private JLabel zeroLabel = new JLabel("0 Squoise");
 	
 	JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel};
 
@@ -266,6 +267,10 @@ public class SwingTest extends JFrame implements KeyListener {
     	return KaossTest.INSTRUMENT_CUOMO;
 	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
     	return KaossTest.INSTRUMENT_MESSIER;
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
+    	return KaossTest.INSTRUMENT_GONG;
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUOISE,10) )
+    	return KaossTest.INSTRUMENT_SQUOISE;
     else
       return KaossTest.INSTRUMENT_DEFAULT;
 
