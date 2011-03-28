@@ -98,7 +98,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	private SurfaceCanvas surface;
   	private SynthScope scope;
   	private SynthMixer mixer;
-  	private JPanel content, container, controls, knobs;
+  	private JPanel content, container, controls, instruments, knobs;
   	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   	private Color bgColor = Color.BLACK;
   	private Color fgText = KaossTest.lightGreenTest;
@@ -106,7 +106,8 @@ public class SwingTest extends JFrame implements KeyListener {
 	private Color instrumSelText = KaossTest.lightBrownTest;
 	private Color knobText = Color.WHITE;
   	private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
-  	private Font knobFont = new Font("Helvetica", Font.BOLD, 12);
+  	private Font instrumFont = new Font("Helvetica", Font.BOLD, 22);
+  	private Font knobFont = new Font("Helvetica", Font.BOLD, 14);
 
 	private JLabel header = new JLabel("SAUCILLATOR");
 	private JLabel oneLabel = new JLabel("1 Sine");
@@ -138,7 +139,7 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //panels
     container = new JPanel(); //holds all
-	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
+	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 250, SURFACE_HEIGHT+400));
     container.setLayout(new BorderLayout());
 
     makeControls();
@@ -188,24 +189,31 @@ public class SwingTest extends JFrame implements KeyListener {
 
   public void makeControls()
   {
-    controls = new JPanel(); //future sidebar?
-	controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
+    controls = new JPanel();
+    instruments = new JPanel();
+    controls.add(instruments);
+     
+	controls.setPreferredSize(new Dimension(250, SURFACE_HEIGHT+400));
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
+    
+    instruments.setPreferredSize(new Dimension(250, 350));  
+    instruments.setLayout(new GridLayout(0,1));
+    instruments.setBackground( bgColor );
 
     //do header separate    
     header.setFont(headerFont);
     header.setForeground(fgText);
     header.setAlignmentX(Component.LEFT_ALIGNMENT);
-    controls.add(header);
+    instruments.add(header);
 
-    controls.add(Box.createVerticalGlue());
+    instruments.add(Box.createVerticalGlue());
 
     //control labels
     int i = 1;
     for(JLabel label : instrumLabels)
     {
-      label.setFont(headerFont);
+      label.setFont(instrumFont);
 
       if(KaossTest.INSTRUMENT_DEFAULT == i)
         label.setForeground(instrumSelText);
@@ -213,16 +221,15 @@ public class SwingTest extends JFrame implements KeyListener {
         label.setForeground(instrumText);
       
       label.setAlignmentX(Component.LEFT_ALIGNMENT);
-      controls.add(label);
-	    controls.add(Box.createVerticalGlue());
+      instruments.add(label);
+	    instruments.add(Box.createVerticalGlue());
       i++;
     }
 
+    //instruments.add(Box.createVerticalGlue());
     //knobs
-    controls.add(Box.createVerticalGlue());
-
   	knobs = new JPanel();
-	  knobs.setPreferredSize(new Dimension(200, 300));
+	  knobs.setPreferredSize(new Dimension(250, 300));
     knobs.setLayout(new GridLayout(0,2));
     knobs.setBackground( bgColor );
   	controls.add(knobs);
