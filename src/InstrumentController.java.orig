@@ -15,10 +15,16 @@ public class InstrumentController {
 	 private Instrument REDNOISE = new RedNoise();
   	 private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();    
+<<<<<<< HEAD
+    private Instrument CUOMO = new Cuomo(); 
+	 private Instrument GONG = new Gong();   
+  	 private Instrument MESSIER = new Messier();
+	 private Instrument SQUOISE = new Squoise();      
+=======
     private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
 	  private Instrument GONG = new Gong(TRIANGLE);   
   	private Instrument MESSIER = new Messier();      
-    private Instrument SQUOISE = new Squoise();      
+>>>>>>> master
 
     private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;

@@ -31,10 +31,10 @@ public class Triangle extends Instrument {
 
         //stereo wavves
         mixer.connectInput( i, sineOsc.output, 0 );
-        mixer.setGain( i, 0, amplitude );
-        mixer.setGain( i, 1, amplitude );
+        mixer.setGain( i, 0, amplitude / Math.pow(i+1,2) );
+        mixer.setGain( i, 1, amplitude / Math.pow(i+1,2) );
 
-        sineOsc.amplitude.set(amplitude / Math.pow(i+1,2));  //triangle
+        sineOsc.amplitude.set(amplitude);  //triangle
       }
     }
     
@@ -42,6 +42,11 @@ public class Triangle extends Instrument {
     {
        System.out.println("start");
        isPlaying = true;
+
+       envPlayer.envelopePort.clear(); // clear the queue        
+       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
+       //envPlayer.start();
+
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
