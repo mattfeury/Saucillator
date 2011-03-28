@@ -88,7 +88,6 @@ public class Gong extends Instrument {
     int i =0;
     for(Instrument extra : extraneous)
     {
-      extra.setEnvelopeData(envData2);
       SynthMixer extraMixer = extra.getMixer();
       mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
       mixer.setGain( harmonics.length + i, 0, amplitude * 2.0 / 3.0 );

@@ -114,6 +114,10 @@ public abstract class Instrument
     public void disableLFOs()
     {
       LFO_ENABLED = false;
+
+      for(Instrument extra : extraneous)
+        extra.disableLFOs();
+      
       for(LFO lfo : lfos)
       {
         lfo.disconnect();
@@ -122,6 +126,9 @@ public abstract class Instrument
 
     public void updateLFOs()
     {
+      for(Instrument extra : extraneous)
+        extra.updateLFOs();
+
       for(LFO lfo : lfos)
         lfo.update();
     }
