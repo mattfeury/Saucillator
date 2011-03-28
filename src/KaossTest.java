@@ -296,6 +296,11 @@ public class KaossTest implements Observer {
       controller.toggleDelay();
     }
 
+    public void toggleReverb()
+    {
+      controller.toggleReverb();
+    }
+
     public void sauceBoss()
     {
       controller.iThinkItsTheSauceBoss();

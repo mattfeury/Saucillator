@@ -302,6 +302,9 @@ public class SwingTest extends JFrame implements KeyListener {
       case 'd':
         kaoss.toggleDelay();
         break;
+      case 'r':
+        kaoss.toggleReverb();
+        break;
       case 's':
         kaoss.sauceBoss();
         break;

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.softsynth.jsyn.*;
 import com.softsynth.jsyn.view102.SynthScope;
 import java.io.*;
+import com.softsynth.jsyn.circuits.Reverb1;
 
 
 public class InstrumentController {
@@ -28,22 +29,26 @@ public class InstrumentController {
     private boolean init = false;
 
     private TunableFilter filter;
+    private Reverb1 reverbUnit;
+    private BusWriter busWriter;
     private SynthFilter effectsUnit;
     private PanUnit panUnit;
     private LineOut lineOut;
     private AddUnit effectsAdder, inputAdder;
 
-    public boolean fxEnabled = true;
+    public boolean fxEnabled = false;
+    public boolean verbEnabled = false;
 
     public InstrumentController()
     {
         changeInstrument(KaossTest.INSTRUMENT_SINE);
-        //i.start();
     }
 
     public void start()
     { 
       panUnit = new PanUnit();
+      busWriter = new BusWriter();
+      reverbUnit = new Reverb1();
       filter = new Filter_LowPass();
       effectsUnit = new DelayUnit( 0.5); 
       effectsAdder = new AddUnit();
@@ -56,6 +61,8 @@ public class InstrumentController {
       inputAdder.start();
       filter.start();
       effectsUnit.start();
+      reverbUnit.start();
+      busWriter.start();
       panUnit.start();
       effectsAdder.start();
       lineOut.start();
@@ -75,6 +82,23 @@ public class InstrumentController {
         effectsUnit.output.connect(effectsAdder.inputB);
     }
 
+    public void toggleReverb()
+    {
+      verbEnabled = ! verbEnabled;
+
+      panUnit.input.disconnect();
+      if(verbEnabled) {
+        effectsAdder.output.connect( busWriter.input ); //connect to buswriter
+        
+        reverbUnit.busInput.connect(0, busWriter.busOutput, 0);
+        reverbUnit.dryGain.connect(0, effectsAdder.output, 0);
+        reverbUnit.output.connect(0, panUnit.input, 0);
+      } else {
+        effectsAdder.output.connect( panUnit.input ); //connect to pan
+      }
+
+    }
+
     public void connectMixer()
     {
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
@@ -89,8 +113,17 @@ public class InstrumentController {
 
       if(fxEnabled) //if we want fx send them to the adder
         effectsUnit.output.connect(effectsAdder.inputB);
+    
+      if(verbEnabled) {
+        effectsAdder.output.connect( busWriter.input ); //connect to buswriter
+        
+        reverbUnit.busInput.connect(0, busWriter.busOutput, 0);
+        reverbUnit.dryGain.connect(0, effectsAdder.output, 0);
+        reverbUnit.output.connect(0, panUnit.input, 0);
+      } else {
+        effectsAdder.output.connect( panUnit.input ); //connect to pan
+      }
 
-      effectsAdder.output.connect( panUnit.input); //connect to pan unit
 
       panUnit.output.connect( 0, lineOut.input, 0 ); //pan unit goes to line out, ala sound
       panUnit.output.connect( 1, lineOut.input, 1 );
