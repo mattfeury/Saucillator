@@ -19,7 +19,7 @@ public class InstrumentController {
     private Instrument SINGINGSAW = new SingingSaw();    
     private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
 	  private Instrument GONG = new Gong(TRIANGLE);   
-  	private Instrument MESSIER = new Messier();      
+  	private Instrument MESSIER = new Messier(TRIANGLE, REDNOISE);      
     private Instrument SQUOISE = new Squoise(SQUARE, REDNOISE);      
 
     private	SampleFileStreamer streamer;
