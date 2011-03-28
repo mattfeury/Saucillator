@@ -79,7 +79,6 @@ class Fingers {
 				   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
 			   
 				   g.setColor(Color.DARK_GRAY);
-				   //g.drawString("" + i, x,y);
 			   }
 	   		}
 			if(bloblist.size() > 10) bloblist.remove(0);
@@ -105,7 +104,9 @@ public class SwingTest extends JFrame implements KeyListener {
   	private Color fgText = KaossTest.lightGreenTest;
 	private Color instrumText = KaossTest.darkBrownTest;
 	private Color instrumSelText = KaossTest.lightBrownTest;
-  	private Font headerFont = new Font("Helvetica", Font.BOLD, 26);
+	private Color knobText = Color.WHITE;
+  	private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
+  	private Font knobFont = new Font("Helvetica", Font.BOLD, 12);
 
 	private JLabel header = new JLabel("SAUCILLATOR");
 	private JLabel oneLabel = new JLabel("1 Sine");
@@ -119,7 +120,16 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel nineLabel = new JLabel("9 Gong");
 	private JLabel zeroLabel = new JLabel("10 Squoise");
 	
-	JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
+	private JLabel lowpassLabel = new JLabel("Low-Pass Filter");
+	private JLabel pitchLabel = new JLabel("Pitch");
+	private JLabel panLabel = new JLabel("Pan");
+	private JLabel depthLabel = new JLabel("Mod Depth");
+	private JLabel rateLabel = new JLabel("Mod Rate");
+	
+	private DKnob loKnob, pitchKnob, depthKnob, rateKnob, panKnob;
+	
+	JLabel[] instrumLabels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
+  JLabel[] knobLabels = new JLabel[]{lowpassLabel, pitchLabel, panLabel, depthLabel, rateLabel};
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -193,7 +203,7 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //control labels
     int i = 1;
-    for(JLabel label : labels)
+    for(JLabel label : instrumLabels)
     {
       label.setFont(headerFont);
 
@@ -212,10 +222,30 @@ public class SwingTest extends JFrame implements KeyListener {
     controls.add(Box.createVerticalGlue());
 
   	knobs = new JPanel();
-	  knobs.setPreferredSize(new Dimension(200, 400));
-    knobs.setLayout(new BoxLayout(knobs, BoxLayout.Y_AXIS));
+	  knobs.setPreferredSize(new Dimension(200, 300));
+    knobs.setLayout(new GridLayout(0,2));
     knobs.setBackground( bgColor );
-  	controls.add(knobs);  
+  	controls.add(knobs);
+  	
+  	for(JLabel label : knobLabels)
+    {
+      label.setFont(knobFont);
+      label.setForeground(knobText);
+      label.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
+
+  	knobs.add(loKnob = new DKnob());
+  	knobs.add(lowpassLabel);
+	  knobs.add(pitchKnob = new DKnob());
+	  knobs.add(pitchLabel);
+	  knobs.add(panKnob = new DKnob());
+	  knobs.add(panLabel);
+	  knobs.add(depthKnob = new DKnob());
+	  knobs.add(depthLabel);
+	  knobs.add(rateKnob = new DKnob());
+	  knobs.add(rateLabel);
+	  
+
   }
 
   public void updateFinger(Finger f)
@@ -241,12 +271,37 @@ public class SwingTest extends JFrame implements KeyListener {
 	}
 	
   public void updateControls(int id)
- {
-	for(JLabel label : labels) label.setForeground(instrumText);
-	if (id > 0) labels[id - 1].setForeground(instrumSelText);
-	else labels[labels.length-1].setForeground(instrumSelText);
+  {
+	for(JLabel label : instrumLabels) label.setForeground(instrumText);
+	if (id > 0) instrumLabels[id - 1].setForeground(instrumSelText);
+	else instrumLabels[instrumLabels.length-1].setForeground(instrumSelText); //Special case - 0 instrument comes last
 	
- }
+  }
+  
+  public void updateLoKnob(int lowpass)
+  {
+  	loKnob.setValue((float)lowpass/(float)KaossTest.LOWPASS_MAX);
+  }
+  
+  public void updatePitchKnob(int y)
+  {
+  	pitchKnob.setValue((float)y/(float)KaossTest.TRACKPAD_GRID_SIZE);
+  }
+  
+  public void updatePanKnob(double pan)
+  {
+    panKnob.setValue((float)(pan + 1.0)); //Not sure bout this one.
+  }
+  
+  public void updateDepthKnob(int depth)
+  {
+  	depthKnob.setValue((float)depth/(float)KaossTest.MOD_DEPTH_MAX);
+  }
+  
+  public void updateRateKnob(int rate)
+  {
+  	rateKnob.setValue((float)rate/(float)KaossTest.MOD_RATE_MAX);
+  } 
 
   /*
    * Use this to change freq or whatnot

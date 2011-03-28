@@ -56,6 +56,9 @@ public class KaossTest implements Observer {
   	public final static int INSTRUMENT_MESSIER = 8;
 	  public final static int INSTRUMENT_GONG = 9;
 	  public final static int INSTRUMENT_SQUOISE = 0;
+	public final static int LOWPASS_MAX = 2000;
+	public final static int MOD_RATE_MAX = 20;
+	public final static int MOD_DEPTH_MAX = 1000;
 
     public final static int INSTRUMENT_DEFAULT = INSTRUMENT_SINE;
     
@@ -71,7 +74,6 @@ public class KaossTest implements Observer {
 
     public KaossTest()
     {
-
       //start synth & instruments
       try {
           Synth.requestVersion( 144 );
@@ -205,12 +207,12 @@ public class KaossTest implements Observer {
         case 0:
           return;
         case 1:
-          updateLowpass((int)(x * 2000));
+          updateLowpass((int)(x * LOWPASS_MAX));
           updateFrequency((int)(y * TRACKPAD_GRID_SIZE));      
           break;
         case 2:
-          updateModRate((int)(x*20));
-          updateModDepth((int)(y*1000)); //this is cool except it is rarely zero          
+          updateModRate((int)(x*MOD_RATE_MAX));
+          updateModDepth((int)(y*MOD_DEPTH_MAX)); //this is cool except it is rarely zero          
           break;
         //default:
           
@@ -241,7 +243,6 @@ public class KaossTest implements Observer {
 
 	 	  if(display != null)    
 			  display.updateFinger(f);
-
       }
 
       updateFrequency((int)(y * TRACKPAD_GRID_SIZE));
@@ -274,26 +275,31 @@ public class KaossTest implements Observer {
     public void updatePan(double pan)
     {
       controller.pan(pan);
+      display.updatePanKnob(pan);
     }
 
     public void updateFrequency(int y)
     {
       controller.changeFrequency(y);
+      display.updatePitchKnob(y);
     } 
 
     public void updateLowpass(int lowpass)
     {
       controller.lowpass(lowpass);
+	    display.updateLoKnob(lowpass); //update knobs
     }  
 
     public void updateModRate(int rate)
     {
       controller.updateModRate(rate);
+      display.updateRateKnob(rate);
     } 
 
     public void updateModDepth(int depth)
     {
       controller.updateModDepth(depth);
+      display.updateDepthKnob(depth);
     }
 
     public void toggleDelay()
