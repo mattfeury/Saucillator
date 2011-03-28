@@ -77,6 +77,7 @@ public class KaossTest implements Observer {
           Synth.requestVersion( 144 );
           Synth.startEngine(0);  
           SynthObject.enableDeletionByGarbageCollector(true); //formerly static
+          SynthObject.enableTracking(true);
       } catch(Exception e) {
         System.out.println(e);
       }
@@ -244,8 +245,7 @@ public class KaossTest implements Observer {
       }
 
       updateFrequency((int)(y * TRACKPAD_GRID_SIZE));
-      updateModRate((int)(x * 20));
-
+      updateLowpass((int)(x * 2000));
     }
 
     public void updateViaAccelerometer()
@@ -263,6 +263,11 @@ public class KaossTest implements Observer {
     public void changeScale(int[] scale)
     {
       controller.changeScale(scale);
+    }
+
+    public void changePitch(int i)
+    {
+      Instrument.BASE_FREQ *= Math.pow(2, (i) / 12.0);
     }
     
 

@@ -12,7 +12,6 @@ public class Cuomo extends Instrument {
         super();
 
         //set characteristics
-        scale = majorScale;
 		    harmonics = new int[]{}; //Add sine and square harmonics
 
         for(Instrument i : extras)

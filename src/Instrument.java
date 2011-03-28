@@ -30,11 +30,12 @@ public abstract class Instrument
     protected EnvelopePlayer envPlayer = new EnvelopePlayer();
     protected boolean customEnvelope = false;
     
-    protected int BASE_FREQ = 440;
     protected SynthScope scope;
     protected SynthMixer mixer;
     
-    protected int[] scale;
+    public static float BASE_FREQ = 440f;
+    public static int[] scale;
+
     public static int[] chromaticScale = {0,1,2,3,4,5,6,7,8,9,10,11};
     public static int[] majorScale = {0,2,4,5,7,9,11};
     public static int[] minorScale = {0,2,3,5,7,8,10};

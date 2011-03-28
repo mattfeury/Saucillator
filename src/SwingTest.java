@@ -283,34 +283,45 @@ public class SwingTest extends JFrame implements KeyListener {
   public void keyPressed(KeyEvent e) 
   { 
     System.out.println("pre change: "+Synth.getObjectCount()); 
-    char c = e.getKeyChar();
-    int id = getInstrumentIdFromChar(c);
-    switch(c)
+    int code = e.getKeyCode();
+    //int id = getInstrumentIdFromChar(c);
+    switch(code)
     {
-      case 'n':
+      case KeyEvent.VK_N:
         kaoss.changeScale(Instrument.minorScale);
         break;
-      case 'm':
+      case KeyEvent.VK_M:
         kaoss.changeScale(Instrument.majorScale);
         break;
-      case 'c':
+      case KeyEvent.VK_C:
         kaoss.changeScale(Instrument.chromaticScale);
         break;
-      case 'b':
+      case KeyEvent.VK_B:
         kaoss.changeScale(Instrument.minorBluesScale);
         break;
-      case 'd':
+      case KeyEvent.VK_D:
         kaoss.toggleDelay();
         break;
-      case 'r':
+      case KeyEvent.VK_R:
         kaoss.toggleReverb();
         break;
-      case 's':
+      case KeyEvent.VK_S:
         kaoss.sauceBoss();
         break;
+      case KeyEvent.VK_UP:
+        kaoss.changePitch(1);
+        break;
+      case KeyEvent.VK_DOWN:
+        kaoss.changePitch(-1);
+        break;
       default:
-        kaoss.changeInstrument(id);
-      	updateControls(id);
+        int id = Character.getNumericValue(e.getKeyChar());
+        if(id > -1)
+        {
+          kaoss.changeInstrument(id);
+      	  updateControls(id);
+        }
+
     }
 
     System.out.println("post change: "+Synth.getObjectCount()); 

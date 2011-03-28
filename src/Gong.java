@@ -20,17 +20,16 @@ public class Gong extends Instrument {
 	
 	private SynthEnvelope envData2;
 
+  private float baseFreq;
+
   public Gong(Instrument... extras)
   {
     super();
+
+    //set characteristics
     MOD_DEPTH = 8;
     MOD_RATE = 15;
-
-    BASE_FREQ /= 2;
-    //set characteristics
-    scale = minorScale;        
     harmonics = highHarmonics; //just the high harmonics since we import the triangle
-
     customEnvelope = true;
 
     for(Instrument i : extras)
@@ -130,6 +129,7 @@ public class Gong extends Instrument {
   }
   
   public void adjustFrequencyByOffset(int offset) {
+    baseFreq = BASE_FREQ / 2;
       
     for(Instrument extra : extraneous)       
       extra.adjustFrequencyByOffset(offset);
@@ -137,7 +137,7 @@ public class Gong extends Instrument {
     //harmonic mode
     int i = 0;
     double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
-    int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+    int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * baseFreq);
   
     for(SynthInput freqMod : freqMods)
     {

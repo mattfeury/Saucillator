@@ -243,15 +243,7 @@ public class InstrumentController {
 
     public void changeScale(int[] scale)
     {
-      SAWTOOTH.changeScale(scale);
-      SINE.changeScale(scale);
-      TRIANGLE.changeScale(scale);
-      SQUARE.changeScale(scale);
-      SINGINGSAW.changeScale(scale);
-      CUOMO.changeScale(scale);
-  		GONG.changeScale(scale);
-  	   MESSIER.changeScale(scale);
-		SQUOISE.changeScale(scale);
+      Instrument.scale = scale;
     }
 
     public void changeFrequency(int offset)

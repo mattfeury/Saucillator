@@ -18,7 +18,6 @@ import com.softsynth.jsyn.view102.SynthScope;
 public class SingingSaw extends Instrument {
 
     int[] overtones = {0,2,4}; //this will give us the third and the fifth (index # in the scale)
-    private int lastFreq = BASE_FREQ;
     
   	private SynthEnvelope      envData;
     private EnvelopePlayer     envPlayer;
