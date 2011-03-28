@@ -67,8 +67,8 @@ class Fingers {
 				   int ysize = (int) (10*blob.getSize() * (blob.getMinorAxis()/2));
 				   int ang   = blob.getAngle();
 
-
-					Color pitchcolor = new Color(x % 255, y % 255, (x + y) % 255);
+          //Scale x and y to go from 0 to 255 and make new color
+					Color pitchcolor = new Color((int)Math.floor((x/800.0)*255), 255 - (int)Math.floor((y/600.0)*255), 0);
 				   g.setColor(pitchcolor);
 				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
 			   
