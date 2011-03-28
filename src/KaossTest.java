@@ -290,18 +290,17 @@ public class KaossTest implements Observer {
     {
       controller.updateModDepth(depth);
     }
-    
-    /*
-     * Returns a value from 0 - max inclusive based on a percentage (float from 0.0 - 1.0)
-     *
-     * this is a stupid method. you just multiple the numbers. oy vay. don't use this.
-     */
-    public int scaleToRange(float scale, double max)
+
+    public void toggleDelay()
     {
-      int scaled = (int)((scale * max)); 
-      return scaled;
+      controller.toggleDelay();
     }
-    
+
+    public void sauceBoss()
+    {
+      controller.iThinkItsTheSauceBoss();
+    }
+        
     public static void main(String[] args) {
         KaossTest k = new KaossTest();   
 

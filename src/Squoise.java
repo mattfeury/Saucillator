@@ -40,14 +40,14 @@ public class Squoise extends Instrument {
     {
       SynthMixer extraMixer = extra.getMixer();
       mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
-		if(extra instanceof RedNoise)
-		{
-      	mixer.setGain( harmonics.length + i, 0, amplitude );
-      	mixer.setGain( harmonics.length + i, 1, amplitude );
-		} else {
-      	mixer.setGain( harmonics.length + i, 0, amplitude * 0.5 );
-      	mixer.setGain( harmonics.length + i, 1, amplitude * 0.5 );
-		}
+      if(extra instanceof RedNoise)
+      {
+          mixer.setGain( harmonics.length + i, 0, amplitude );
+          mixer.setGain( harmonics.length + i, 1, amplitude );
+      } else {
+          mixer.setGain( harmonics.length + i, 0, amplitude * 0.5 );
+          mixer.setGain( harmonics.length + i, 1, amplitude * 0.5 );
+      }
       extraMixer.start();
       i++;
     }

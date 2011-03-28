@@ -6,6 +6,8 @@ import java.util.ArrayList;
   
 import com.softsynth.jsyn.*;
 import com.softsynth.jsyn.view102.SynthScope;
+import java.io.*;
+
 
 public class InstrumentController {
 
@@ -20,6 +22,8 @@ public class InstrumentController {
   	private Instrument MESSIER = new Messier();      
     private Instrument SQUOISE = new Squoise(SQUARE, REDNOISE);      
 
+    private	SampleFileStreamer streamer;
+    
     private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;
 
@@ -27,9 +31,9 @@ public class InstrumentController {
     private SynthFilter effectsUnit;
     private PanUnit panUnit;
     private LineOut lineOut;
-    private AddUnit effectsAdder;
+    private AddUnit effectsAdder, inputAdder;
 
-    public boolean fxEnabled = false;
+    public boolean fxEnabled = true;
 
     public InstrumentController()
     {
@@ -43,10 +47,13 @@ public class InstrumentController {
       filter = new Filter_LowPass();
       effectsUnit = new DelayUnit( 0.5); 
       effectsAdder = new AddUnit();
+      inputAdder = new AddUnit();
       lineOut = new LineOut();        
-  
+
+      makeSauce();
       connectMixer();
 
+      inputAdder.start();
       filter.start();
       effectsUnit.start();
       panUnit.start();
@@ -59,12 +66,22 @@ public class InstrumentController {
 
     }
 
+    public void toggleDelay()
+    {
+      fxEnabled = ! fxEnabled;
+      effectsUnit.output.disconnect();
+
+      if(fxEnabled) //if we want fx send them to the adder
+        effectsUnit.output.connect(effectsAdder.inputB);
+    }
+
     public void connectMixer()
     {
-
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
       
-      instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
+      instrumentMix.connectOutput( 0, inputAdder.inputA, 0 ); //connect instrument to filter (low pass)
+
+      inputAdder.output.connect( filter.input );
 
       filter.output.connect(effectsUnit.input); //send filter mix like an aux send using fx adder
       filter.output.connect(effectsAdder.inputA); //and also the effects unit
@@ -230,6 +247,28 @@ public class InstrumentController {
     {
       //System.out.println(absolutePan);
       panUnit.pan.set(absolutePan);      
+    }
+
+    public void makeSauce()
+    {
+      try {
+				// Load sample from a file.
+				File sampleFile = new File("src/sauceboss.wav");
+				streamer = new SampleFileStreamer(sampleFile);
+			} catch (IOException exc) {
+				exc.printStackTrace(System.err);
+				throw new RuntimeException(exc.getMessage());
+			}
+
+			// Connect streamer to output.
+			streamer.getOutput().connect(0, inputAdder.inputB, 0);
+			
+    }
+
+    public void iThinkItsTheSauceBoss()
+    {
+      streamer.startStream();
+			      
     }
     
 }
