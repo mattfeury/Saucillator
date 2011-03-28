@@ -275,31 +275,36 @@ public class KaossTest implements Observer {
     public void updatePan(double pan)
     {
       controller.pan(pan);
-      display.updatePanKnob(pan);
+	 	  if(display != null)          
+        display.updatePanKnob(pan);
     }
 
     public void updateFrequency(int y)
     {
       controller.changeFrequency(y);
-      display.updatePitchKnob(y);
+	 	  if(display != null)                
+        display.updatePitchKnob(y);
     } 
 
     public void updateLowpass(int lowpass)
     {
       controller.lowpass(lowpass);
-	    display.updateLoKnob(lowpass); //update knobs
+	 	  if(display != null)          
+  	    display.updateLoKnob(lowpass); //update knobs
     }  
 
     public void updateModRate(int rate)
     {
       controller.updateModRate(rate);
-      display.updateRateKnob(rate);
+	 	  if(display != null)          
+        display.updateRateKnob(rate);
     } 
 
     public void updateModDepth(int depth)
     {
       controller.updateModDepth(depth);
-      display.updateDepthKnob(depth);
+	 	  if(display != null)          
+        display.updateDepthKnob(depth);
     }
 
     public void toggleDelay()

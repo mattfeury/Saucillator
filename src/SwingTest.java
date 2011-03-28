@@ -266,6 +266,8 @@ public class SwingTest extends JFrame implements KeyListener {
 		Thread surfaceThread = new Thread() {
 			public void run() {
 				while (true) {
+          requestFocus();
+          requestFocusInWindow();
 					surfaceUpdate();
 					repaint();
 					try {
@@ -297,7 +299,7 @@ public class SwingTest extends JFrame implements KeyListener {
   
   public void updatePanKnob(double pan)
   {
-    panKnob.setValue((float)(pan + 1.0)); //Not sure bout this one.
+    panKnob.setValue((float)(pan + 1.0) / 2.0f); //Not sure bout this one.
   }
   
   public void updateDepthKnob(int depth)

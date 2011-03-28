@@ -140,7 +140,7 @@ public class InstrumentController {
     {
       //disconnect whatever is right now
       if(init)
-        filter.input.disconnect();
+        inputAdder.inputA.disconnect();
      
       CURRENT_INSTRUMENT.stop();
       switch(id)
@@ -183,7 +183,7 @@ public class InstrumentController {
       updateLFO();
 
       if(init)
-        instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
+        instrumentMix.connectOutput( 0, inputAdder.inputA, 0 ); //connect instrument to filter (low pass)
     }
 
     public void kill()
