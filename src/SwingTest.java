@@ -117,6 +117,8 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel sevenLabel = new JLabel("7 Cuomo");
 	private JLabel eightLabel = new JLabel("8 Messier");
 	private JLabel nineLabel = new JLabel("9 Gong");
+	
+	JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel};
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -180,8 +182,6 @@ public class SwingTest extends JFrame implements KeyListener {
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
 
-    JLabel[] labels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel};
-
     //do header separate    
     header.setFont(headerFont);
     header.setForeground(fgText);
@@ -241,26 +241,9 @@ public class SwingTest extends JFrame implements KeyListener {
 	
   public void updateControls(int id)
  {
-	oneLabel.setForeground(instrumText);
-	twoLabel.setForeground(instrumText);
-	threeLabel.setForeground(instrumText);
-	fourLabel.setForeground(instrumText);
-	fiveLabel.setForeground(instrumText);
-	sixLabel.setForeground(instrumText);
-	sevenLabel.setForeground(instrumText);
-	eightLabel.setForeground(instrumText);
-	nineLabel.setForeground(instrumText);
+	for(JLabel label : labels) label.setForeground(instrumText);
+	labels[id - 1].setForeground(instrumSelText);
 	
- 	if (id == 1) oneLabel.setForeground(instrumSelText);
-	else if (id == 2) twoLabel.setForeground(instrumSelText);
-	else if (id == 3) threeLabel.setForeground(instrumSelText);
-	else if (id == 4) fourLabel.setForeground(instrumSelText);
-	else if (id == 5) fiveLabel.setForeground(instrumSelText);
-	else if (id == 6) sixLabel.setForeground(instrumSelText);
-	else if (id == 7) sevenLabel.setForeground(instrumSelText);
-	else if (id == 8) eightLabel.setForeground(instrumSelText);
-	else if (id == 9) nineLabel.setForeground(instrumSelText);
-	else fiveLabel.setForeground(instrumSelText);
  }
 
   public int getInstrumentIdFromChar(char c)
@@ -284,7 +267,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
     	return KaossTest.INSTRUMENT_MESSIER;
     else
-      return KaossTest.INSTRUMENT_CUOMO;
+      return KaossTest.INSTRUMENT_DEFAULT;
 
   }
 
