@@ -117,6 +117,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel sevenLabel = new JLabel("7 Cuomo");
 	private JLabel eightLabel = new JLabel("8 Messier");
 	private JLabel nineLabel = new JLabel("9 Gong");
+	private JLabel zeroLabel = new JLabel("0 Squoise");
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -125,17 +126,17 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //panels
     container = new JPanel(); //holds all
-	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
+	 container.setPreferredSize(new Dimension(SURFACE_WIDTH + 200, SURFACE_HEIGHT+400));
     container.setLayout(new BorderLayout());
 
     makeControls();
 
     content = new JPanel(); //holds scope, fingers
-	content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
+	 content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
     content.setLayout(new BorderLayout());
 
-	surface = new SurfaceCanvas(); //holds fingers. inside content
-	surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
+	 surface = new SurfaceCanvas(); //holds fingers. inside content
+	 surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
     surface.setBackground( bgColor );
 
     content.add(surface, BorderLayout.CENTER);
@@ -144,7 +145,7 @@ public class SwingTest extends JFrame implements KeyListener {
     container.add(content, BorderLayout.CENTER);
     container.add(controls, BorderLayout.WEST);
 
-    this.setContentPane(container);
+   this.setContentPane(container);
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	this.pack();
 	this.setTitle("kaoss");
@@ -178,7 +179,7 @@ public class SwingTest extends JFrame implements KeyListener {
   public void makeControls()
   {
     controls = new JPanel(); //future sidebar?
-	controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
+	 controls.setPreferredSize(new Dimension(200, SURFACE_HEIGHT+400));
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
 
@@ -212,25 +213,30 @@ public class SwingTest extends JFrame implements KeyListener {
     fiveLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(fiveLabel);
 
-	sixLabel.setFont(headerFont);
+	 sixLabel.setFont(headerFont);
     sixLabel.setForeground(instrumText);
     sixLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(sixLabel);
 
-	sevenLabel.setFont(headerFont);
+	 sevenLabel.setFont(headerFont);
     sevenLabel.setForeground(instrumText);
     sevenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(sevenLabel);
 	
-	eightLabel.setFont(headerFont);
+	 eightLabel.setFont(headerFont);
     eightLabel.setForeground(instrumText);
     eightLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(eightLabel);
 
-	nineLabel.setFont(headerFont);
+	 nineLabel.setFont(headerFont);
     nineLabel.setForeground(instrumText);
     nineLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     controls.add(nineLabel);
+	 
+	 zeroLabel.setFont(headerFont);
+    zeroLabel.setForeground(instrumText);
+    zeroLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    controls.add(zeroLabel);
   }
 
   public void updateFinger(Finger f)
@@ -266,6 +272,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	sevenLabel.setForeground(instrumText);
 	eightLabel.setForeground(instrumText);
 	nineLabel.setForeground(instrumText);
+	zeroLabel.setForeground(instrumText);
 	
  	if (id == 1) oneLabel.setForeground(instrumSelText);
 	else if (id == 2) twoLabel.setForeground(instrumSelText);
@@ -276,6 +283,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	else if (id == 7) sevenLabel.setForeground(instrumSelText);
 	else if (id == 8) eightLabel.setForeground(instrumSelText);
 	else if (id == 9) nineLabel.setForeground(instrumSelText);
+	else if (id == 0) zeroLabel.setForeground(instrumSelText);
 	else fiveLabel.setForeground(instrumSelText);
  }
 
@@ -291,14 +299,18 @@ public class SwingTest extends JFrame implements KeyListener {
       return KaossTest.INSTRUMENT_SINGINGSAW;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
       return KaossTest.INSTRUMENT_GONG;
-  	else if(c == Character.forDigit(KaossTest.INSTRUMENT_REDNOISE,10) )
+  	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_REDNOISE,10) )
     	return KaossTest.INSTRUMENT_REDNOISE;
     else if(c == Character.forDigit(KaossTest.INSTRUMENT_SAWTOOTH,10) )
       return KaossTest.INSTRUMENT_SAWTOOTH;
-	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_CUOMO,10) )
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_CUOMO,10) )
     	return KaossTest.INSTRUMENT_CUOMO;
-	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
     	return KaossTest.INSTRUMENT_MESSIER;
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
+    	return KaossTest.INSTRUMENT_GONG;
+	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUOISE,10) )
+    	return KaossTest.INSTRUMENT_SQUOISE;
     else
       return KaossTest.INSTRUMENT_CUOMO;
 

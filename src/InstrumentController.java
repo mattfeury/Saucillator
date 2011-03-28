@@ -12,12 +12,13 @@ public class InstrumentController {
     private Instrument SINE = new Sine();
     private Instrument TRIANGLE = new Triangle();
     private Instrument SQUARE = new Square();
-	  private Instrument REDNOISE = new RedNoise();
-  	private Instrument SAWTOOTH = new Sawtooth();
+	 private Instrument REDNOISE = new RedNoise();
+  	 private Instrument SAWTOOTH = new Sawtooth();
     private Instrument SINGINGSAW = new SingingSaw();    
     private Instrument CUOMO = new Cuomo(); 
-	  private Instrument GONG = new Gong();   
-  	private Instrument MESSIER = new Messier();      
+	 private Instrument GONG = new Gong();   
+  	 private Instrument MESSIER = new Messier();
+	 private Instrument SQUOISE = new Squoise();      
 
     private Instrument CURRENT_INSTRUMENT = SAWTOOTH;
     private boolean init = false;
@@ -111,7 +112,7 @@ public class InstrumentController {
         case KaossTest.INSTRUMENT_SQUARE:
           CURRENT_INSTRUMENT = SQUARE;
           break;
-		    case KaossTest.INSTRUMENT_REDNOISE:
+	     case KaossTest.INSTRUMENT_REDNOISE:
           CURRENT_INSTRUMENT = REDNOISE;
           break;
         case KaossTest.INSTRUMENT_SAWTOOTH:
@@ -120,14 +121,17 @@ public class InstrumentController {
         case KaossTest.INSTRUMENT_SINGINGSAW:
           CURRENT_INSTRUMENT = SINGINGSAW;
           break;
-		    case KaossTest.INSTRUMENT_CUOMO:
+		  case KaossTest.INSTRUMENT_CUOMO:
           CURRENT_INSTRUMENT = CUOMO;
   	 		  break;
 	  	  case KaossTest.INSTRUMENT_GONG:
           CURRENT_INSTRUMENT = GONG;
           break;
-		    case KaossTest.INSTRUMENT_MESSIER:
+		  case KaossTest.INSTRUMENT_MESSIER:
           CURRENT_INSTRUMENT = MESSIER;
+          break;
+		  case KaossTest.INSTRUMENT_SQUOISE:
+          CURRENT_INSTRUMENT = SQUOISE;
           break;
       }
 
@@ -203,7 +207,8 @@ public class InstrumentController {
       SINGINGSAW.changeScale(scale);
       CUOMO.changeScale(scale);
   		GONG.changeScale(scale);
-  	  MESSIER.changeScale(scale);
+  	   MESSIER.changeScale(scale);
+		SQUOISE.changeScale(scale);
     }
 
     public void changeFrequency(int offset)
