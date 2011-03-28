@@ -39,11 +39,11 @@ public class Square extends Instrument {
 
             //stereo wavves
             mixer.connectInput( i, sineOsc.output, 0 );
-            mixer.setGain( i, 0, amplitude);
-            mixer.setGain( i, 1, amplitude);
+            mixer.setGain( i, 0, amplitude / (i+1));
+            mixer.setGain( i, 1, amplitude / (i+1));
 
             
-            sineOsc.amplitude.set(amplitude / (i+1)); //sawtooth and square
+            sineOsc.amplitude.set(amplitude); //sawtooth and square
           }   
     }
     
