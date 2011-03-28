@@ -248,35 +248,6 @@ public class SwingTest extends JFrame implements KeyListener {
 	
  }
 
-  public int getInstrumentIdFromChar(char c)
-  {
-    if(c == Character.forDigit(KaossTest.INSTRUMENT_SINE,10) )
-      return KaossTest.INSTRUMENT_SINE;
-    else if(c == Character.forDigit(KaossTest.INSTRUMENT_TRIANGLE,10) )
-      return KaossTest.INSTRUMENT_TRIANGLE;
-    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUARE,10) )
-      return KaossTest.INSTRUMENT_SQUARE;
-    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SINGINGSAW,10) )
-      return KaossTest.INSTRUMENT_SINGINGSAW;
-    else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
-      return KaossTest.INSTRUMENT_GONG;
-  	else if(c == Character.forDigit(KaossTest.INSTRUMENT_REDNOISE,10) )
-    	return KaossTest.INSTRUMENT_REDNOISE;
-    else if(c == Character.forDigit(KaossTest.INSTRUMENT_SAWTOOTH,10) )
-      return KaossTest.INSTRUMENT_SAWTOOTH;
-	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_CUOMO,10) )
-    	return KaossTest.INSTRUMENT_CUOMO;
-	  else if(c == Character.forDigit(KaossTest.INSTRUMENT_MESSIER,10) )
-    	return KaossTest.INSTRUMENT_MESSIER;
-	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_GONG,10) )
-    	return KaossTest.INSTRUMENT_GONG;
-	 else if(c == Character.forDigit(KaossTest.INSTRUMENT_SQUOISE,10) )
-    	return KaossTest.INSTRUMENT_SQUOISE;
-    else
-      return KaossTest.INSTRUMENT_DEFAULT;
-
-  }
-
   /*
    * Use this to change freq or whatnot
    */
