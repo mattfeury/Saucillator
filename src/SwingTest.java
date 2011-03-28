@@ -68,8 +68,10 @@ class Fingers {
 				   int ang   = blob.getAngle();
 
           //Scale x and y to go from 0 to 255 and make new color
-					Color pitchcolor = new Color((int)Math.floor((x/800.0)*255), 255 - (int)Math.floor((y/600.0)*255), 0);
-				   g.setColor(pitchcolor);
+          if (x > 0 && y > 0) {
+					  Color pitchcolor = new Color((int)Math.floor((x/800.0)*255), 255 - (int)Math.floor((y/600.0)*255), 0);
+				    g.setColor(pitchcolor);
+			    
 				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
 			   
 				   AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
@@ -79,6 +81,7 @@ class Fingers {
 				   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
 			   
 				   g.setColor(Color.DARK_GRAY);
+			   }
 			   }
 	   		}
 			if(bloblist.size() > 10) bloblist.remove(0);
