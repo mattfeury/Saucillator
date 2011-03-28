@@ -199,7 +199,7 @@ public class SwingTest extends JFrame implements KeyListener {
     header.setAlignmentX(Component.LEFT_ALIGNMENT);
     controls.add(header);
 
-	controls.add(Box.createVerticalGlue());
+    controls.add(Box.createVerticalGlue());
 
     //control labels
     int i = 1;
@@ -214,7 +214,7 @@ public class SwingTest extends JFrame implements KeyListener {
       
       label.setAlignmentX(Component.LEFT_ALIGNMENT);
       controls.add(label);
-	  controls.add(Box.createVerticalGlue());
+	    controls.add(Box.createVerticalGlue());
       i++;
     }
 
@@ -353,6 +353,15 @@ public class SwingTest extends JFrame implements KeyListener {
         break;
       case 'b':
         kaoss.changeScale(Instrument.minorBluesScale);
+        break;
+      case 'd':
+        kaoss.toggleDelay();
+        break;
+      case 'r':
+        kaoss.toggleReverb();
+        break;
+      case 's':
+        kaoss.sauceBoss();
         break;
       default:
         kaoss.changeInstrument(id);

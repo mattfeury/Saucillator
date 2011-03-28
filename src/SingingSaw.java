@@ -26,7 +26,7 @@ public class SingingSaw extends Instrument {
     public SingingSaw()
     {
         super();
-        LAG_LIFE = 0.2; //0.4
+        LAG_LIFE = 0.4; //0.4
         MOD_DEPTH = 16;
         MOD_RATE = 9;
         customEnvelope = true;
@@ -84,8 +84,8 @@ public class SingingSaw extends Instrument {
       sineInputs.add(noiseOsc);
       freqMods.add(noiseOsc.frequency);
       mixer.connectInput( overtones.length, noiseOsc.output, 0 );
-      mixer.setGain( overtones.length, 0, .2);
-      mixer.setGain( overtones.length, 1, .2);
+      mixer.setGain( overtones.length, 0, 0.05);
+      mixer.setGain( overtones.length, 1, 0.05);
       envPlayer.output.connect( noiseOsc.amplitude );
       noiseOsc.amplitude.set(1.0);      
 

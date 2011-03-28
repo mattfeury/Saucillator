@@ -57,7 +57,7 @@ public abstract class Instrument
     private boolean LFO_ENABLED = false;
 
 
-    protected float amplitude = 1.0f; //amplitude for the fundamental
+    protected float amplitude = 0.8f; //amplitude for the fundamental
     
     public Instrument() { //constructor needs: scale, freq, amp?
       sineInputs = new LinkedList<SynthOscillator>();

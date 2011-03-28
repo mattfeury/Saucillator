@@ -6,6 +6,9 @@ import java.util.ArrayList;
   
 import com.softsynth.jsyn.*;
 import com.softsynth.jsyn.view102.SynthScope;
+import java.io.*;
+import com.softsynth.jsyn.circuits.Reverb1;
+
 
 public class InstrumentController {
 
@@ -20,37 +23,50 @@ public class InstrumentController {
   	private Instrument MESSIER = new Messier(TRIANGLE, REDNOISE);      
     private Instrument SQUOISE = new Squoise(SQUARE, REDNOISE);      
 
+    private	SampleFileStreamer streamer;
+    
     private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;
 
     private TunableFilter filter;
+    private Reverb1 reverbUnit;
+    private BusWriter busWriter;
     private SynthFilter effectsUnit;
     private PanUnit panUnit;
     private LineOut lineOut;
-    private AddUnit effectsAdder;
+    private AddUnit effectsAdder, inputAdder, outputAdder;
 
     public boolean fxEnabled = false;
+    public boolean verbEnabled = false;
 
     public InstrumentController()
     {
         changeInstrument(KaossTest.INSTRUMENT_SINE);
-        //i.start();
     }
 
     public void start()
     { 
       panUnit = new PanUnit();
+      busWriter = new BusWriter();
+      reverbUnit = new Reverb1();
       filter = new Filter_LowPass();
       effectsUnit = new DelayUnit( 0.5); 
       effectsAdder = new AddUnit();
+      inputAdder = new AddUnit();
+      outputAdder = new AddUnit();
       lineOut = new LineOut();        
-  
+
+      makeSauce();
       connectMixer();
 
+      inputAdder.start();
       filter.start();
       effectsUnit.start();
+      reverbUnit.start();
+      busWriter.start();
       panUnit.start();
       effectsAdder.start();
+      outputAdder.start();
       lineOut.start();
 
       init = true;
@@ -59,21 +75,47 @@ public class InstrumentController {
 
     }
 
+    public void toggleDelay()
+    {
+      fxEnabled = ! fxEnabled;
+      effectsUnit.output.disconnect();
+
+      if(fxEnabled) //if we want fx send them to the adder
+        effectsUnit.output.connect(effectsAdder.inputB);
+    }
+
+    public void toggleReverb()
+    {
+      verbEnabled = ! verbEnabled;
+
+      reverbUnit.output.disconnect();
+
+      if(verbEnabled)
+        reverbUnit.output.connect(0, outputAdder.inputB, 0); 
+    }
+
     public void connectMixer()
     {
-
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
       
-      instrumentMix.connectOutput( 0, filter.input, 0 ); //connect instrument to filter (low pass)
+      instrumentMix.connectOutput( 0, inputAdder.inputA, 0 ); //connect instrument to filter (low pass)
+
+      inputAdder.output.connect( filter.input );
 
       filter.output.connect(effectsUnit.input); //send filter mix like an aux send using fx adder
       filter.output.connect(effectsAdder.inputA); //and also the effects unit
 
-
       if(fxEnabled) //if we want fx send them to the adder
         effectsUnit.output.connect(effectsAdder.inputB);
+    
+      effectsAdder.output.connect( busWriter.input ); //connect to buswriter  
+      reverbUnit.busInput.connect(0, busWriter.busOutput, 0);
 
-      effectsAdder.output.connect( panUnit.input); //connect to pan unit
+      effectsAdder.output.connect( outputAdder.inputA ); //connect to summer  
+      if(verbEnabled) //if we want verb sent it to the adder
+        reverbUnit.output.connect(0, outputAdder.inputB, 0);
+
+      outputAdder.output.connect( panUnit.input ); //connect to pan
 
       panUnit.output.connect( 0, lineOut.input, 0 ); //pan unit goes to line out, ala sound
       panUnit.output.connect( 1, lineOut.input, 1 );
@@ -230,6 +272,28 @@ public class InstrumentController {
     {
       //System.out.println(absolutePan);
       panUnit.pan.set(absolutePan);      
+    }
+
+    public void makeSauce()
+    {
+      try {
+				// Load sample from a file.
+				File sampleFile = new File("src/sauceboss.wav");
+				streamer = new SampleFileStreamer(sampleFile);
+			} catch (IOException exc) {
+				exc.printStackTrace(System.err);
+				throw new RuntimeException(exc.getMessage());
+			}
+
+			// Connect streamer to output.
+			streamer.getOutput().connect(0, inputAdder.inputB, 0);
+			
+    }
+
+    public void iThinkItsTheSauceBoss()
+    {
+      streamer.startStream();
+			      
     }
     
 }
