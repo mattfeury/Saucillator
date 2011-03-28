@@ -18,7 +18,7 @@ public class InstrumentController {
     private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
 	  private Instrument GONG = new Gong(TRIANGLE);   
   	private Instrument MESSIER = new Messier();      
-    private Instrument SQUOISE = new Squoise();      
+    private Instrument SQUOISE = new Squoise(SQUARE, REDNOISE);      
 
     private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;

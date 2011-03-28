@@ -12,80 +12,91 @@ import com.softsynth.jsyn.view102.SynthScope;
 
 public class Squoise extends Instrument {
 
-    public Squoise()
+  public Squoise(Instrument... extras)
+  {
+    super();
+
+    BASE_FREQ /= 2;
+    //set characteristics
+    scale = minorScale;        
+    harmonics = new int[]{}; //just the high harmonics since we import the triangle
+
+    for(Instrument i : extras)
+      extraneous.add(i);    
+    
+    //make timbre and start        
+    makeTimbre();
+    startScope();
+  }
+      
+  public void makeTimbre()
+  {
+ 
+    mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);    
+
+    //triangle most likely
+    int i =0;
+    for(Instrument extra : extraneous)
     {
-        super();
-
-        //set characteristics
-        scale = chromaticScale;        
-        harmonics = addHarmonics(noHarmonics, oddHarmonics); //for noise and square
-
-        //make timbre and start        
-        makeTimbre();
-        startScope();
+      SynthMixer extraMixer = extra.getMixer();
+      mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
+		if(extra instanceof RedNoise)
+		{
+      	mixer.setGain( harmonics.length + i, 0, amplitude );
+      	mixer.setGain( harmonics.length + i, 1, amplitude );
+		} else {
+      	mixer.setGain( harmonics.length + i, 0, amplitude * 0.5 );
+      	mixer.setGain( harmonics.length + i, 1, amplitude * 0.5 );
+		}
+      extraMixer.start();
+      i++;
     }
-        
-    public void makeTimbre()
-    {
-        mixer = new SynthMixer(harmonics.length + 1, 2);    
-        for(int i = 0; i < harmonics.length; i++)
-          {
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
-            freqMods.add(sineOsc.frequency);
 
-            //stereo wavves
-            mixer.connectInput( i, sineOsc.output, 0 );
-            mixer.setGain( i, 0, 0.5);
-            mixer.setGain( i, 1, 0.5);
-
-            
-            sineOsc.amplitude.set(amplitude / (i+1)); //for square
-          }   
-			 
-			 com.softsynth.jsyn.RedNoise noiseOsc = new com.softsynth.jsyn.RedNoise();
-      	 sineInputs.add(noiseOsc);
-      	 freqMods.add(noiseOsc.frequency);
-      	 mixer.connectInput( harmonics.length, noiseOsc.output, 0 );
-      	 mixer.setGain( harmonics.length, 0, .2);
-     	    mixer.setGain( harmonics.length, 1, .2);
-      	 noiseOsc.amplitude.set(1.0); 
+  }
+  
+  public void start()  
+  {
+    System.out.println("start GONG");
+    isPlaying = true;
+    
+    for(Instrument extra : extraneous) {
+      extra.start();
     }
     
-    public void start()  
-    {
-       System.out.println("start");
-       isPlaying = true;
-       for(SynthOscillator sineOsc : sineInputs)
-         sineOsc.start();
-    }
+    for(SynthOscillator sineOsc : sineInputs)
+      sineOsc.start();
+  }
+  
+  public void stop()
+  {
+     System.out.println("stop");
+     isPlaying = false;
+
+     for(Instrument extra : extraneous)       
+       extra.stop();
+     
+     for(SynthOscillator sineOsc : sineInputs)
+       sineOsc.stop();
+  }
+  
+  public void adjustFrequencyByOffset(int offset) {
+      
+    for(Instrument extra : extraneous)       
+      extra.adjustFrequencyByOffset(offset);
     
-    public void stop()
+    //harmonic mode
+    int i = 0;
+    double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
+    int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+  
+    for(SynthInput freqMod : freqMods)
     {
-       System.out.println("stop");
-       isPlaying = false;
-       for(SynthOscillator sineOsc : sineInputs)
-         sineOsc.stop();
+      //overtone offset
+      //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
+      freqMod.set(freq * harmonics[i]);              
+      i++;
     }
-    
-    public void adjustFrequencyByOffset(int offset) {
-        
-        
-        //harmonic mode
-        int i = 0;
-        double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
-        int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
-        
-        for(SynthInput freqMod : freqMods)
-        {
-            //overtone offset
-            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
-            
-            //harmonic offset
-            freqMod.set(freq * harmonics[i]);
-            i++;
-        }
-    }   
+  }   
     
     
 }
