@@ -68,8 +68,8 @@ class Fingers {
 				   int ang   = blob.getAngle();
 
           //Scale x and y to go from 0 to 255 and make new color
-          if (x > 0 && y > 0) {
-					  Color pitchcolor = new Color((int)Math.floor((x/800.0)*255), 255 - (int)Math.floor((y/600.0)*255), 0);
+          if (x > 0 && y > 0 && x < SwingTest.SURFACE_WIDTH && y < SwingTest.SURFACE_HEIGHT) {
+					  Color pitchcolor = new Color((int)Math.floor((x/(float)SwingTest.SURFACE_WIDTH)*255), 255 - (int)Math.floor((y/(float)SwingTest.SURFACE_HEIGHT)*255), 0);
 				    g.setColor(pitchcolor);
 			    
 				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
@@ -81,7 +81,7 @@ class Fingers {
 				   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
 			   
 				   g.setColor(Color.DARK_GRAY);
-			   }
+			    }
 			   }
 	   		}
 			if(bloblist.size() > 10) bloblist.remove(0);
@@ -92,37 +92,43 @@ class Fingers {
 
 public class SwingTest extends JFrame implements KeyListener {  
 	
-	private static final int SURFACE_WIDTH = 800;
-	private static final int SURFACE_HEIGHT = 600;
-	private static final int UPDATE_RATE = 30;  // number of update per second
-	private static final long UPDATE_PERIOD = 1000L / UPDATE_RATE;  // milliseconds
+	public static final int SURFACE_WIDTH = 800;
+	public static final int SURFACE_HEIGHT = 600;
+	public static final int UPDATE_RATE = 30;  // number of update per second
+	public static final long UPDATE_PERIOD = 1000L / UPDATE_RATE;  // milliseconds
 	
 	private Fingers fingers;
 	private SurfaceCanvas surface;
   	private SynthScope scope;
   	private SynthMixer mixer;
-  	private JPanel content, container, controls, instruments, knobs;
+  	private JPanel content, container, controls, instruments, knobs, extraControls;
   	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   	private Color bgColor = Color.BLACK;
   	private Color fgText = KaossTest.lightGreenTest;
 	private Color instrumText = KaossTest.darkBrownTest;
 	private Color instrumSelText = KaossTest.lightBrownTest;
 	private Color knobText = Color.WHITE;
+	private Color effectText = KaossTest.darkBrownTest;
+	private Color effectSelText = KaossTest.lightBrownTest;
+	private Color scaleText = KaossTest.darkBrownTest;
+	private Color scaleSelText = KaossTest.lightBrownTest;
   	private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
   	private Font instrumFont = new Font("Helvetica", Font.BOLD, 22);
   	private Font knobFont = new Font("Helvetica", Font.BOLD, 14);
+  	private Font effectFont = new Font("Helvetica", Font.BOLD, 16);
+  	private Font scaleFont = new Font("Helvetica", Font.BOLD, 16);
 
 	private JLabel header = new JLabel("SAUCILLATOR");
-	private JLabel oneLabel = new JLabel("1 Sine");
-	private JLabel twoLabel = new JLabel("2 Triangle");
-	private JLabel threeLabel = new JLabel("3 Square");
-	private JLabel fourLabel = new JLabel("4 Noise");
-	private JLabel fiveLabel = new JLabel("5 Sawtooth");
-	private JLabel sixLabel = new JLabel("6 Singing Saw");
-	private JLabel sevenLabel = new JLabel("7 Cuomo");
-	private JLabel eightLabel = new JLabel("8 Messier");
-	private JLabel nineLabel = new JLabel("9 Gong");
-	private JLabel zeroLabel = new JLabel("10 Squoise");
+	private JLabel oneLabel = new JLabel("1: Sine");
+	private JLabel twoLabel = new JLabel("2: Triangle");
+	private JLabel threeLabel = new JLabel("3: Square");
+	private JLabel fourLabel = new JLabel("4: Noise");
+	private JLabel fiveLabel = new JLabel("5: Sawtooth");
+	private JLabel sixLabel = new JLabel("6: Singing Saw");
+	private JLabel sevenLabel = new JLabel("7: Cuomo");
+	private JLabel eightLabel = new JLabel("8: Messier");
+	private JLabel nineLabel = new JLabel("9: Gong");
+	private JLabel zeroLabel = new JLabel("10: Squoise");
 	
 	private JLabel lowpassLabel = new JLabel("Low-Pass Filter");
 	private JLabel pitchLabel = new JLabel("Pitch");
@@ -130,10 +136,23 @@ public class SwingTest extends JFrame implements KeyListener {
 	private JLabel depthLabel = new JLabel("Mod Depth");
 	private JLabel rateLabel = new JLabel("Mod Rate");
 	
+	private JLabel delayLabel = new JLabel("D: Delay");
+	private JLabel reverbLabel = new JLabel("R: Reverb");
+	
+	private JLabel majorLabel = new JLabel("M: Major");
+	private JLabel minorLabel = new JLabel("N: Minor");
+	private JLabel chromaticLabel = new JLabel("C: Chromatic");
+	private JLabel bluesLabel = new JLabel("B: Blues");
+	
 	private DKnob loKnob, pitchKnob, depthKnob, rateKnob, panKnob;
 	
 	JLabel[] instrumLabels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
   JLabel[] knobLabels = new JLabel[]{lowpassLabel, pitchLabel, panLabel, depthLabel, rateLabel};
+  JLabel[] effectLabels = new JLabel[]{delayLabel, reverbLabel};
+  JLabel[] scaleLabels = new JLabel[]{majorLabel, minorLabel, chromaticLabel, bluesLabel};
+  
+  private boolean fxEnabled = false;
+  private boolean reverbEnabled = false;
 
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -142,14 +161,19 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //panels
     container = new JPanel(); //holds all
-	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 250, SURFACE_HEIGHT+400));
+	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 250, SURFACE_HEIGHT+450));
     container.setLayout(new BorderLayout());
 
-    makeControls();
-
-    content = new JPanel(); //holds scope, fingers
-	content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+400));
+    content = new JPanel(); //holds scope, fingers, effect labels and scale labels
+	content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+450));
     content.setLayout(new BorderLayout());
+    
+    extraControls = new JPanel();
+    extraControls.setPreferredSize(new Dimension(0, 50));
+    extraControls.setLayout(new BoxLayout(extraControls, BoxLayout.X_AXIS));
+    extraControls.setBackground( bgColor );
+    
+    makeControls();
 
 	surface = new SurfaceCanvas(); //holds fingers. inside content
 	surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
@@ -160,6 +184,7 @@ public class SwingTest extends JFrame implements KeyListener {
     
     container.add(content, BorderLayout.CENTER);
     container.add(controls, BorderLayout.WEST);
+    content.add(extraControls, BorderLayout.SOUTH);
 
     this.setContentPane(container);
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -187,6 +212,7 @@ public class SwingTest extends JFrame implements KeyListener {
     this.scope = scope;
     setupScope();
     content.add(this.scope, BorderLayout.SOUTH);
+    content.add(extraControls, BorderLayout.SOUTH);
     content.validate();
   }
 
@@ -229,8 +255,7 @@ public class SwingTest extends JFrame implements KeyListener {
       i++;
     }
 
-    //instruments.add(Box.createVerticalGlue());
-    //knobs
+    //knobs and knob labels
   	knobs = new JPanel();
 	  knobs.setPreferredSize(new Dimension(250, 300));
     knobs.setLayout(new GridLayout(0,2));
@@ -255,7 +280,25 @@ public class SwingTest extends JFrame implements KeyListener {
 	  knobs.add(rateKnob = new DKnob());
 	  knobs.add(rateLabel);
 	  
-
+	  for(JLabel label : scaleLabels)
+	  {
+	    label.setFont(scaleFont);
+	    label.setForeground(scaleText);
+	    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    extraControls.add(label);
+	    extraControls.add(Box.createHorizontalGlue());
+	  }
+	  
+	  for(JLabel label : effectLabels)
+	  {
+	    label.setFont(effectFont);
+	    label.setForeground(effectText);
+	    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    extraControls.add(label);
+	    extraControls.add(Box.createHorizontalGlue());
+	  }
+	  // Set defaults extra labels
+    majorLabel.setForeground(scaleSelText);
   }
 
   public void updateFinger(Finger f)
@@ -284,10 +327,9 @@ public class SwingTest extends JFrame implements KeyListener {
 	
   public void updateControls(int id)
   {
-	for(JLabel label : instrumLabels) label.setForeground(instrumText);
-	if (id > 0) instrumLabels[id - 1].setForeground(instrumSelText);
-	else instrumLabels[instrumLabels.length-1].setForeground(instrumSelText); //Special case - 0 instrument comes last
-	
+	  for(JLabel label : instrumLabels) label.setForeground(instrumText);
+	  if (id > 0) instrumLabels[id - 1].setForeground(instrumSelText);
+	  else instrumLabels[instrumLabels.length-1].setForeground(instrumSelText); //Special case - 0 instrument comes last
   }
   
   public void updateLoKnob(int lowpass)
@@ -327,21 +369,35 @@ public class SwingTest extends JFrame implements KeyListener {
     {
       case KeyEvent.VK_N:
         kaoss.changeScale(Instrument.minorScale);
+        for(JLabel label : scaleLabels) label.setForeground(scaleText);
+        minorLabel.setForeground(scaleSelText);
         break;
       case KeyEvent.VK_M:
         kaoss.changeScale(Instrument.majorScale);
+        for(JLabel label : scaleLabels) label.setForeground(scaleText);
+        majorLabel.setForeground(scaleSelText);
         break;
       case KeyEvent.VK_C:
         kaoss.changeScale(Instrument.chromaticScale);
+        for(JLabel label : scaleLabels) label.setForeground(scaleText);
+        chromaticLabel.setForeground(scaleSelText);
         break;
       case KeyEvent.VK_B:
         kaoss.changeScale(Instrument.minorBluesScale);
+        for(JLabel label : scaleLabels) label.setForeground(scaleText);
+        bluesLabel.setForeground(scaleSelText);
         break;
       case KeyEvent.VK_D:
         kaoss.toggleDelay();
+        fxEnabled = !fxEnabled;
+        if(fxEnabled) delayLabel.setForeground(effectSelText);
+        else delayLabel.setForeground(effectText);
         break;
       case KeyEvent.VK_R:
         kaoss.toggleReverb();
+        reverbEnabled = !reverbEnabled;
+        if (reverbEnabled) reverbLabel.setForeground(effectSelText);
+        else reverbLabel.setForeground(effectText);
         break;
       case KeyEvent.VK_S:
         kaoss.sauceBoss();
