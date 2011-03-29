@@ -16,9 +16,7 @@ public class Squoise extends Instrument {
   {
     super();
 
-    BASE_FREQ /= 2;
     //set characteristics
-    scale = minorScale;        
     harmonics = new int[]{}; //just the high harmonics since we import the triangle
 
     for(Instrument i : extras)
@@ -87,7 +85,7 @@ public class Squoise extends Instrument {
     //harmonic mode
     int i = 0;
     double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
-    int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+    int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * (BASE_FREQ / 2));
   
     for(SynthInput freqMod : freqMods)
     {

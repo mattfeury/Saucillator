@@ -20,7 +20,6 @@ public class Square extends Instrument {
         super();
 
         //set characteristics
-        scale = majorScale;        
         harmonics = oddHarmonics; //square & triangle
 
         //make timbre and start        

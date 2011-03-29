@@ -12,7 +12,6 @@ public class RedNoise extends Instrument {
         super();
 
         //set characteristics
-        scale = majorScale;
         harmonics = noHarmonics; //sine
 
         //make timbre and start        
@@ -62,7 +61,7 @@ public class RedNoise extends Instrument {
         
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
-        int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
+        int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ * 2);
         
         for(SynthInput freqMod : freqMods)
         {

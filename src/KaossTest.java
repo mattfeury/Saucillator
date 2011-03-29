@@ -126,7 +126,7 @@ public class KaossTest implements Observer {
       display.updateDepthKnob(controller.getModDepth());
       display.updateRateKnob(controller.getModRate());
       
-      CONTROLLER_PENDING = false;      
+      CONTROLLER_PENDING = false;
     }
 
     // Touchpad Multitouch update event handler, called on single MT Finger event

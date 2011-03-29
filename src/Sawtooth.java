@@ -15,7 +15,6 @@ public class Sawtooth extends Instrument {
         super();
 
         //set characteristics
-        scale = majorScale;
         harmonics = allHarmonics; //sawtooth
 
         //make timbre         

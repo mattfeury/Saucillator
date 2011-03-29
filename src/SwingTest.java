@@ -104,7 +104,7 @@ public class SwingTest extends JFrame implements KeyListener {
   	private JPanel content, container, controls, instruments, knobs, extraControls;
   	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
   	private Color bgColor = Color.BLACK;
-  	private Color fgText = KaossTest.lightGreenTest;
+  	private Color fgText = KaossTest.lightBrownTest;
 	private Color instrumText = KaossTest.darkBrownTest;
 	private Color instrumSelText = KaossTest.lightBrownTest;
 	private Color knobText = Color.WHITE;
@@ -298,7 +298,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	    extraControls.add(Box.createHorizontalGlue());
 	  }
 	  // Set defaults extra labels
-    majorLabel.setForeground(scaleSelText);
+    minorLabel.setForeground(scaleSelText);
   }
 
   public void updateFinger(Finger f)

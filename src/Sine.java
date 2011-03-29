@@ -12,7 +12,6 @@ public class Sine extends Instrument {
         super();
 
         //set characteristics
-        scale = majorScale;
         harmonics = noHarmonics; //sine
 
         //make timbre and start        

@@ -31,7 +31,6 @@ public class SingingSaw extends Instrument {
         customEnvelope = true;
 
         //set characteristics
-        scale = majorScale;
         harmonics = noHarmonics;
  
         //make timbre and start        
