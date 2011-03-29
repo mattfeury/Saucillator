@@ -201,7 +201,7 @@ public class SwingTest extends JFrame implements KeyListener {
     scope.getWaveDisplay().setForeground( bgColor );
 
     scope.hideControls();
-    scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 250)); //this is a pretty strange number
+    scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 200)); //this is a pretty strange number
   }
 
   public void newScope(SynthScope scope)
