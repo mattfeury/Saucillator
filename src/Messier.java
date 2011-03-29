@@ -1,5 +1,9 @@
-//
-//  Instrument that combines square and sine waves
+/*
+* Messier instrument class. Uses Triangle and Noise Instruments to create
+* a spacey sound. Uses an envelope with a short duration.
+* @author Mike Hirth  
+* 
+*/
 
 import java.util.*;
 import com.softsynth.jsyn.*;
@@ -9,7 +13,7 @@ public class Messier extends Instrument {
     public Messier(Instrument... extras)
     {
         super();
-        //set characteristics
+        // set characteristics
         MOD_DEPTH = 20;
         MOD_RATE = 25;
 
@@ -19,7 +23,7 @@ public class Messier extends Instrument {
         for(Instrument i : extras)
           extraneous.add(i);    
         
-        //make timbre and start        
+        // make timbre and start        
         makeTimbre();
         startScope();    
     }
@@ -32,15 +36,15 @@ public class Messier extends Instrument {
       // quick envelope sounds like short bursts
       double[] data =
       {
-        0.02, 1.0,  // Take 0.02 seconds to go to value 1.0.
+        0.02, 1.0,  // take 0.02 seconds to go to value 1.0.
         0.03, 0.5,  
         0.02, 0.0   
       };
       envData = new SynthEnvelope( data );
 
-      
        mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);  
-       //this can go away since there are no custom harmonics. i'll leave it here in case you want to play around with more
+       
+       // set the amplitude 
        for(int i = 0; i < harmonics.length; i++)
        {
          SineOscillator sineOsc = new SineOscillator();

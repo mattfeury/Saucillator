@@ -1,5 +1,9 @@
-//
-//  Instrument that combines square and sine waves
+/*
+* Cuomo instrument class. Uses Sine and Square Instruments to create
+* a sound similar to a synth lead. Uses no envelopes.
+* @author Mike Hirth  
+* 
+*/
 
 import java.util.*;
 import com.softsynth.jsyn.*;
