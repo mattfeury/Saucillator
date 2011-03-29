@@ -5,20 +5,14 @@ import java.util.*;
 import com.softsynth.jsyn.*;
 
 public class Messier extends Instrument {
-  
-    private SynthEnvelope envData;
-    private EnvelopePlayer envPlayer;
-
-    private float baseFreq;
-    
+      
     public Messier(Instrument... extras)
     {
         super();
-
         //set characteristics
         MOD_DEPTH = 20;
         MOD_RATE = 25;
-        scale = majorScale;
+
 		    harmonics = new int[]{};
         customEnvelope = true;
 
