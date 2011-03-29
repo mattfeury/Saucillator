@@ -1,3 +1,9 @@
+/**
+ * Mouse observable class reads mouse input.
+ * 
+ * @author theChillwavves
+ */
+
 import java.util.Observable;
 import java.awt.*;
 

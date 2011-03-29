@@ -1,6 +1,12 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ * Red Noise instrument class. Creates gritty sounding noise similar to 
+ * white noise. Uses noise oscillator from JSyn.
+ *
+ * http://www.softsynth.com/jsyn/docs/autodocs/com/softsynth/jsyn/RedNoise.html
+ *
+ * @author theChillwavves  
+ * 
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;

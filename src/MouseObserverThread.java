@@ -1,3 +1,8 @@
+/**
+ * Thread for the mouse observer.
+ * 
+ * @author theChillwavves
+ */
 
 public class MouseObserverThread extends Thread {
     MouseObservable obs;
@@ -10,7 +15,6 @@ public class MouseObserverThread extends Thread {
     // This method is called when the thread runs    
     public void run() {
       try { while(true) {
-		  //System.out.println(obs);
         obs.readMouse();
         Thread.sleep(100);
       }    } catch (Exception e) {

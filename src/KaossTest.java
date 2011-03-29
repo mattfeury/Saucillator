@@ -1,13 +1,9 @@
-  /*
- * A test for the basic idea behind our Kaoss Emulator. This class will see substantial changes.
- *
- * TODO:
- * This should be an instrument controller and observe trackpad changes.
- * Multiple instrument support
- * User input mode:
- *    -how to select instruments, etc (independent fingers / single finger)
+/**
+ * Main class for the application. Creates an instrument controller
+ * and observers for input.  
  * 
- * Decide on axis effects (envelope, panning, EQ?)
+ * @author theChillwavves
+ *
  */
 
 import com.softsynth.jsyn.*;
@@ -56,21 +52,17 @@ public class KaossTest implements Observer {
   	public final static int INSTRUMENT_MESSIER = 8;
 	  public final static int INSTRUMENT_GONG = 9;
 	  public final static int INSTRUMENT_SQUOISE = 0;
-	public final static int LOWPASS_MAX = 2000;
-	public final static int MOD_RATE_MAX = 20;
-	public final static int MOD_DEPTH_MAX = 1000;
+	  public final static int LOWPASS_MAX = 2000;
+	  public final static int MOD_RATE_MAX = 20;
+	  public final static int MOD_DEPTH_MAX = 1000;
 
     public final static int INSTRUMENT_DEFAULT = INSTRUMENT_SINE;
     
-
-    //most of these are sucky. but we are using some for now
     public static Color darkBrownTest = new Color(166, 65, 8);
     public static Color lightBrownTest = new Color(242, 204, 133);
     public static Color darkGreenTest = new Color(37,89,59);
     public static Color lightGreenTest = new Color(100, 126, 41);
     public static Color brownTest = new Color(223,167,73);
-
-//    public static SynthContext context = new SynthContext(); //we should prob implement this
 
     public KaossTest()
     {
@@ -140,7 +132,7 @@ public class KaossTest implements Observer {
         Finger f = (Finger) arg;
         updateViaFinger(f);
       } else {
-        //degrade to mouse position on screen. this sucks but it's a quick and stable alternative
+        //degrade to mouse position on screen. 
         updateViaMouse((Dimension)arg);
       } 
 
@@ -173,9 +165,6 @@ public class KaossTest implements Observer {
       if(dy < lDy) lDy = dy;
       if(dy > hDy) hDy = dy;
 
-      //System.out.println(lDx + "  ,  "  +hDx + "  / " + lDy + "  " + hDy);      
-//-13.950837  ,  17.629349  / -15.644904  20.096266
-
       //mark on / off 
       if(! fingersPressed.contains(id)) { //finger pressed. 
         //we were not tracking this finger. so let's add it to the queue.          
@@ -198,11 +187,8 @@ public class KaossTest implements Observer {
       
       updateViaAccelerometer();
 
-      //boolean fingerIsController = fingersPressed.getFirst().equals(id);
-      //if(! fingerIsController) return; //only use control finger for points
-
       int whichFinger = fingersPressed.indexOf(id) + 1;
-      //System.out.println(whichFinger);
+
       //depends on nth finger
       switch(whichFinger)
       {
@@ -216,8 +202,6 @@ public class KaossTest implements Observer {
           updateModRate((int)(x*MOD_RATE_MAX));
           updateModDepth((int)(y*MOD_DEPTH_MAX)); //this is cool except it is rarely zero          
           break;
-        //default:
-          
 
       }
 

@@ -1,6 +1,10 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ * Triangle instrument class. Creates a basic triangle wave
+ * using odd harmonics.
+ *
+ * @author theChillwavves  
+ * 
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;

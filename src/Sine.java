@@ -1,6 +1,9 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ * Sine instrument class. Creates a basic sine wave.
+ *
+ * @author theChillwavves  
+ * 
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;

@@ -1,6 +1,9 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ * Square instrument class. Uses odd harmonics to create a square wave.
+ *
+ * @author theChillwavves  
+ * 
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;
@@ -9,7 +12,6 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.AffineTransform;
-
 
 import com.softsynth.jsyn.view102.SynthScope;
 
@@ -67,18 +69,14 @@ public class Square extends Instrument {
     }
     
     public void adjustFrequencyByOffset(int offset) {
-        
-        
+              
         //harmonic mode
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
         for(SynthInput freqMod : freqMods)
-        {
-            //overtone offset
-            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
-            
+        {   
             //harmonic offset
             freqMod.set(freq * harmonics[i]);
             i++;

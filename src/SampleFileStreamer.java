@@ -1,4 +1,3 @@
-
 /** 
  * Play a file by streaming off of disk.
  * Output the synthesized data using SampleQueueOutputStream

@@ -1,4 +1,10 @@
-
+/**
+ * Abstract class for instruments. Contains data for harmonics, oscillators, LFOs, 
+ * envelopes and scopes.
+ * 
+ * @author theChillwavves
+ *
+ */
 
 import java.util.*;
 
@@ -10,14 +16,6 @@ import java.awt.geom.AffineTransform;
 import com.softsynth.jsyn.*;
 import com.softsynth.jsyn.view102.SynthScope;
 
-
-
-/**
- * Abstract class Instrument - write a description of the class here
- * 
- * @author (your name here)
- * @version (version number or date here)
- */
 public abstract class Instrument
 {
     protected boolean isPlaying;
@@ -54,7 +52,7 @@ public abstract class Instrument
     public double LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
 
     //state variables?
-    private boolean LFO_INIT = false; //we don't prolly need these
+    private boolean LFO_INIT = false; 
     private boolean LFO_ENABLED = false;
 
 
@@ -69,13 +67,17 @@ public abstract class Instrument
     abstract void stop();
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
+    
 
-	public int[] addHarmonics(int[] firstHarmonics, int[] secondHarmonics) {
-		int[] newHarmonics = new int[firstHarmonics.length + secondHarmonics.length];
-		System.arraycopy(secondHarmonics, 0, newHarmonics, 0, secondHarmonics.length);
-		System.arraycopy(firstHarmonics, 0, newHarmonics, secondHarmonics.length, firstHarmonics.length);
-		return newHarmonics;
-	}
+    /*
+     * Adds two arrays of harmonics together by copying. Appends and does not sort 
+     */
+  	public int[] addHarmonics(int[] firstHarmonics, int[] secondHarmonics) {
+  		int[] newHarmonics = new int[firstHarmonics.length + secondHarmonics.length];
+  		System.arraycopy(secondHarmonics, 0, newHarmonics, 0, secondHarmonics.length);
+  		System.arraycopy(firstHarmonics, 0, newHarmonics, secondHarmonics.length, firstHarmonics.length);
+  		return newHarmonics;
+  	}
 
     public void makeLFOs(boolean enable)
     {
@@ -95,9 +97,6 @@ public abstract class Instrument
     {
       customEnvelope = true;
       this.envData = envData;
-//      envPlayer.envelopePort.clear(); // clear the queue         
-//       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
-      
     }
 
     public void enableLFOs()

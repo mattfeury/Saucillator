@@ -1,9 +1,9 @@
 /*
-* Messier instrument class. Uses Triangle and Noise Instruments to create
-* a spacey sound. Uses an envelope with a short duration.
-* @author Mike Hirth  
-* 
-*/
+ * Messier instrument class. Uses Triangle and Noise Instruments to create
+ * a spacey sound. Uses an envelope with a short duration.
+ * @author Mike Hirth  
+ * 
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;

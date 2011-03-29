@@ -1,7 +1,3 @@
-//
-// Controls an instrument based on trackpad movement.
-// This should probably be modified to control multiple instruments
-
 import java.util.ArrayList;
   
 import com.softsynth.jsyn.*;
@@ -264,10 +260,6 @@ public class InstrumentController {
       CURRENT_INSTRUMENT.adjustFrequencyByOffset(offset);
     }
 
-    public void changeAmplitude()
-    {
-    }
-
     public void lowpass(int freq)
     {
       filter.frequency.set(freq);
@@ -275,7 +267,6 @@ public class InstrumentController {
 
     public void pan(double absolutePan)
     {
-      //System.out.println(absolutePan);
       panUnit.pan.set(absolutePan);      
     }
 
@@ -297,8 +288,7 @@ public class InstrumentController {
 
     public void iThinkItsTheSauceBoss()
     {
-      streamer.startStream();
-			      
+      streamer.startStream();			      
     }
     
 }
