@@ -31,8 +31,8 @@ public class RedNoise extends Instrument {
 
             //stereo wavves
             mixer.connectInput( i, noiseOsc.output, 0 );
-            mixer.setGain( i, 0, amplitude );
-            mixer.setGain( i, 1, amplitude );
+            mixer.setGain( i, 0, amplitude * 2 );
+            mixer.setGain( i, 1, amplitude * 2 ); //it's quiet
 
             noiseOsc.amplitude.set(amplitude);  //noise
           }

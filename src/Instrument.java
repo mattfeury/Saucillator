@@ -49,8 +49,8 @@ public abstract class Instrument
     public static int[] noHarmonics = {1};
 
     
-    public static int MOD_DEPTH = 0; //(0-2000) maybe
-    public static int MOD_RATE = 0; //in hz (0-20)
+    public int MOD_DEPTH = 0; //(0-2000) maybe
+    public int MOD_RATE = 0; //in hz (0-20)
     public double LAG_LIFE = 0; //lag between freqs (used after LFO creation) (0-10)
 
     //state variables?
@@ -169,6 +169,32 @@ public abstract class Instrument
         envPlayer.output.connect( osc.amplitude );
 
       envPlayer.start();   
+    }
+
+    public int getModRate()
+    {
+      return MOD_RATE;
+    }
+
+    public int getModDepth()
+    {
+      return MOD_DEPTH;
+    }
+      
+    public void updateModRate(int i)
+    {
+      MOD_RATE = i;
+      for(Instrument extra : extraneous)
+        extra.updateModRate(i);
+
+    }
+
+    public void updateModDepth(int i)
+    {
+      MOD_DEPTH = i;
+      for(Instrument extra : extraneous)
+        extra.updateModDepth(i);
+      
     }
       
     

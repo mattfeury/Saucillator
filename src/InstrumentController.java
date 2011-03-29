@@ -215,16 +215,26 @@ public class InstrumentController {
       CURRENT_INSTRUMENT.stopLFOs();
     }
 
+    public int getModRate()
+    {
+      return CURRENT_INSTRUMENT.getModRate();
+    }
+
+    public int getModDepth()
+    {
+      return CURRENT_INSTRUMENT.getModDepth();
+    }
+
     public void updateModRate(int rate)
     {
-      CURRENT_INSTRUMENT.MOD_RATE = rate;
+      CURRENT_INSTRUMENT.updateModRate(rate);
       //System.out.println("MOd "+rate);
       updateLFO();
     }
 
     public void updateModDepth(int depth)
     {
-      CURRENT_INSTRUMENT.MOD_DEPTH = depth;
+      CURRENT_INSTRUMENT.updateModDepth(depth);
       //System.out.println("depth "+depth);      
       updateLFO();
     }

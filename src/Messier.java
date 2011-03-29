@@ -65,6 +65,8 @@ public class Messier extends Instrument {
          extraMixer.start();
          i++;
        }
+
+       envPlayer.start();
         
     }
     

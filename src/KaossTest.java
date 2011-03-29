@@ -123,6 +123,8 @@ public class KaossTest implements Observer {
         controller.startInstrument();
 
       display.newScope(controller.getScope());
+      display.updateDepthKnob(controller.getModDepth());
+      display.updateRateKnob(controller.getModRate());
       
       CONTROLLER_PENDING = false;      
     }
@@ -270,7 +272,6 @@ public class KaossTest implements Observer {
     {
       Instrument.BASE_FREQ *= Math.pow(2, (i) / 12.0);
     }
-    
 
     public void updatePan(double pan)
     {
