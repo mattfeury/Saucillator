@@ -410,7 +410,7 @@ public class SwingTest extends JFrame implements KeyListener {
         break;
       default:
         int id = Character.getNumericValue(e.getKeyChar());
-        if(id > -1)
+        if(id > -1 && id < instrumLabels.length)
         {
           kaoss.changeInstrument(id);
       	  updateControls(id);
