@@ -1,6 +1,6 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ *  Leah's Instrument #1: The Gong
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;
@@ -13,15 +13,25 @@ import java.awt.geom.AffineTransform;
 
 import com.softsynth.jsyn.view102.SynthScope;
 
+/*
+ *  This is the Gong class. This instrument utilizes sine waves and a triangle wave to create a 
+ *  sound inspired by a gong. 
+ *  @author Leah Downey
+ */
 public class Gong extends Instrument {
 
   private SynthEnvelope envData;
   private EnvelopePlayer envPlayer;
 	
-	private SynthEnvelope envData2;
+  private SynthEnvelope envData2;
 
   private float baseFreq;
 
+  /*
+   *  The method Gong takes in Instruments and adds them to a linked list defined in 
+   *  Instrument.  Here the various variables from Instrument are set.  Also, makeTimbre()
+   *  and startScope() are called.
+   */
   public Gong(Instrument... extras)
   {
     super();
@@ -39,7 +49,14 @@ public class Gong extends Instrument {
     makeTimbre();
     startScope();
   }
-      
+   
+  /*
+   *  In makeTimbre the details of the envelopes are defined using arrays.  The sine oscillators that 
+   *  create the sine waves for each of the harmonics are created.  The output from the 
+   *  sine oscillators is added to the linked list sineInputs and is connected to a 
+   *  SynthMixer.  As a Triangle is passed into Gong() as an argument, it is also 
+   *  connected to the mixer.  Here, the envelope starts.
+   */   
   public void makeTimbre()
   {
     // envelope for sine wave
@@ -49,8 +66,7 @@ public class Gong extends Instrument {
     {
       0.0, 0.0,  
       1.0, 0.9,
-        1.0, 0.0
-      //2.0, 1.0  
+      1.0, 0.0 
     };
     envData = new SynthEnvelope( data );
     
@@ -59,8 +75,7 @@ public class Gong extends Instrument {
     {
       0.0, 1.0,  
       1.0, 0.0,
-        1.0, 1.0
-      //2.0, 0.0  
+      1.0, 1.0  
     };
     envData2 = new SynthEnvelope( data2 );
 
@@ -83,7 +98,7 @@ public class Gong extends Instrument {
       sineOsc.amplitude.set(amplitude); //sawtooth and square
     }
 
-    //triangle most likely
+    //triangle 
     int i =0;
     for(Instrument extra : extraneous)
     {
@@ -98,9 +113,11 @@ public class Gong extends Instrument {
     envPlayer.start();
   }
   
+  /*
+   *  This method manages the envelopes for both the sine waves and the triangle wave.  
+   */
   public void start()  
   {
-    System.out.println("start GONG");
     isPlaying = true;
    
     //for sine wave
@@ -116,9 +133,12 @@ public class Gong extends Instrument {
       sineOsc.start();
   }
   
+  /*
+   *  This gets called when the gong is no longer playing.  The triangle wave and the sine 
+   *  oscillators are stopped.
+   */
   public void stop()
   {
-     System.out.println("stop");
      isPlaying = false;
 
      for(Instrument extra : extraneous)       
@@ -128,6 +148,9 @@ public class Gong extends Instrument {
        sineOsc.stop();
   }
   
+  /*
+   *  In this method, the frequency is defined and set depending on the harmonics.
+   */
   public void adjustFrequencyByOffset(int offset) {
     baseFreq = BASE_FREQ / 2;
       
@@ -142,7 +165,6 @@ public class Gong extends Instrument {
     for(SynthInput freqMod : freqMods)
     {
       //overtone offset
-      //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
       freqMod.set(freq * harmonics[i]);              
       i++;
     }
@@ -150,4 +172,3 @@ public class Gong extends Instrument {
     
     
 }
-
