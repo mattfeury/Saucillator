@@ -153,7 +153,7 @@ public class SwingTest extends JFrame implements KeyListener {
   private JLabel[] effectLabels = new JLabel[]{delayLabel, reverbLabel};
   private JLabel[] scaleLabels = new JLabel[]{majorLabel, minorLabel, chromaticLabel, bluesLabel};
   
-  private String[] keys = new String[]{"A", "Ab/A#", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#,Gb", "G", "G#/Gb"};
+  private String[] keys = new String[]{"A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#,Gb", "G", "G#/Gb"};
   private JLabel keyLabel = new JLabel("Up/Down Key: ");
   private JLabel key = new JLabel(keys[0]);
   
@@ -420,12 +420,13 @@ public class SwingTest extends JFrame implements KeyListener {
       case KeyEvent.VK_UP:
         kaoss.changePitch(1);
         keyCounter++;
-        key.setText(keys[keyCounter % 12]);
+        //Change remainder operator into actual modulus
+        key.setText(keys[((keyCounter % 12) + 12) % 12]);
         break;
       case KeyEvent.VK_DOWN:
         kaoss.changePitch(-1);
         keyCounter--;
-        key.setText(keys[keyCounter % 12]);
+        key.setText(keys[((keyCounter % 12) + 12) % 12]);
         break;
       default:
         int id = Character.getNumericValue(e.getKeyChar());
