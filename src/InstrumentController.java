@@ -147,6 +147,7 @@ public class InstrumentController {
       {
         case KaossTest.INSTRUMENT_SINE:
           CURRENT_INSTRUMENT = SINE;
+          CURRENT_INSTRUMENT.resetEnvelope();
           break;
         case KaossTest.INSTRUMENT_TRIANGLE:
           CURRENT_INSTRUMENT = TRIANGLE;
@@ -154,9 +155,11 @@ public class InstrumentController {
           break;
         case KaossTest.INSTRUMENT_SQUARE:
           CURRENT_INSTRUMENT = SQUARE;
+          CURRENT_INSTRUMENT.resetEnvelope();
           break;
-	     case KaossTest.INSTRUMENT_REDNOISE:
+        case KaossTest.INSTRUMENT_REDNOISE:
           CURRENT_INSTRUMENT = REDNOISE;
+          CURRENT_INSTRUMENT.resetEnvelope();
           break;
         case KaossTest.INSTRUMENT_SAWTOOTH:
           CURRENT_INSTRUMENT = SAWTOOTH;
@@ -164,16 +167,16 @@ public class InstrumentController {
         case KaossTest.INSTRUMENT_SINGINGSAW:
           CURRENT_INSTRUMENT = SINGINGSAW;
           break;
-		  case KaossTest.INSTRUMENT_CUOMO:
+        case KaossTest.INSTRUMENT_CUOMO:
           CURRENT_INSTRUMENT = CUOMO;
-  	 		  break;
-	  	  case KaossTest.INSTRUMENT_GONG:
+          break;
+        case KaossTest.INSTRUMENT_GONG:
           CURRENT_INSTRUMENT = GONG;
           break;
-		  case KaossTest.INSTRUMENT_MESSIER:
+        case KaossTest.INSTRUMENT_MESSIER:
           CURRENT_INSTRUMENT = MESSIER;
           break;
-		  case KaossTest.INSTRUMENT_SQUOISE:
+        case KaossTest.INSTRUMENT_SQUOISE:
           CURRENT_INSTRUMENT = SQUOISE;
           break;
       }
