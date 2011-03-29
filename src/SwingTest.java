@@ -146,10 +146,16 @@ public class SwingTest extends JFrame implements KeyListener {
 	
 	private DKnob loKnob, pitchKnob, depthKnob, rateKnob, panKnob;
 	
-	JLabel[] instrumLabels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
-  JLabel[] knobLabels = new JLabel[]{lowpassLabel, pitchLabel, panLabel, depthLabel, rateLabel};
-  JLabel[] effectLabels = new JLabel[]{delayLabel, reverbLabel};
-  JLabel[] scaleLabels = new JLabel[]{majorLabel, minorLabel, chromaticLabel, bluesLabel};
+	private int keyCounter;
+	
+	private JLabel[] instrumLabels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
+  private JLabel[] knobLabels = new JLabel[]{lowpassLabel, pitchLabel, panLabel, depthLabel, rateLabel};
+  private JLabel[] effectLabels = new JLabel[]{delayLabel, reverbLabel};
+  private JLabel[] scaleLabels = new JLabel[]{majorLabel, minorLabel, chromaticLabel, bluesLabel};
+  
+  private String[] keys = new String[]{"A", "Ab/A#", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#,Gb", "G", "G#/Gb"};
+  private JLabel keyLabel = new JLabel("Up/Down Key: ");
+  private JLabel key = new JLabel(keys[0]);
   
   private boolean fxEnabled = false;
   private boolean reverbEnabled = false;
@@ -297,6 +303,15 @@ public class SwingTest extends JFrame implements KeyListener {
 	    extraControls.add(label);
 	    extraControls.add(Box.createHorizontalGlue());
 	  }
+	  // Key label
+	  key.setFont(effectFont);
+    key.setForeground(effectText);
+    keyLabel.setFont(effectFont);
+    keyLabel.setForeground(effectText);
+    extraControls.add(keyLabel);
+	  extraControls.add(key);
+	  extraControls.add(Box.createHorizontalGlue());
+	  
 	  // Set defaults extra labels
     minorLabel.setForeground(scaleSelText);
   }
@@ -404,9 +419,13 @@ public class SwingTest extends JFrame implements KeyListener {
         break;
       case KeyEvent.VK_UP:
         kaoss.changePitch(1);
+        keyCounter++;
+        key.setText(keys[keyCounter % 12]);
         break;
       case KeyEvent.VK_DOWN:
         kaoss.changePitch(-1);
+        keyCounter--;
+        key.setText(keys[keyCounter % 12]);
         break;
       default:
         int id = Character.getNumericValue(e.getKeyChar());
