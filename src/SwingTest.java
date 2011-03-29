@@ -184,7 +184,7 @@ public class SwingTest extends JFrame implements KeyListener {
     
     container.add(content, BorderLayout.CENTER);
     container.add(controls, BorderLayout.WEST);
-    content.add(extraControls, BorderLayout.SOUTH);
+    content.add(extraControls, BorderLayout.NORTH);
 
     this.setContentPane(container);
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -212,7 +212,7 @@ public class SwingTest extends JFrame implements KeyListener {
     this.scope = scope;
     setupScope();
     content.add(this.scope, BorderLayout.SOUTH);
-    content.add(extraControls, BorderLayout.SOUTH);
+    //content.add(extraControls, BorderLayout.SOUTH);
     content.validate();
   }
 
