@@ -44,8 +44,10 @@ class Fingers {
 		if (id <= MAX_FINGER_BLOBS)
 			blobs[id-1]= f;
 
-  }    
- 
+  } 
+  /*
+	 * Draw blobs for each finger. Create a trail for each blob.
+	 */   
 	public void draw(Graphics g) {
 	   ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -83,22 +85,24 @@ class Fingers {
 	}
 }
 
-
+/*
+ * Creates the GUI
+ */
 public class SwingTest extends JFrame implements KeyListener {  
 	
-	public static final int SURFACE_WIDTH = 800;
+  public static final int SURFACE_WIDTH = 800;
 	public static final int SURFACE_HEIGHT = 600;
 	public static final int UPDATE_RATE = 30;  // number of update per second
 	public static final long UPDATE_PERIOD = 1000L / UPDATE_RATE;  // milliseconds
 	
 	private Fingers fingers;
 	private SurfaceCanvas surface;
-  	private SynthScope scope;
-  	private SynthMixer mixer;
-  	private JPanel content, container, controls, instruments, knobs, extraControls;
-  	private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
-  	private Color bgColor = Color.BLACK;
-  	private Color fgText = KaossTest.lightBrownTest;
+  private SynthScope scope;
+  private SynthMixer mixer;
+  private JPanel content, container, controls, instruments, knobs, extraControls;
+  private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
+  private Color bgColor = Color.BLACK;
+  private Color fgText = KaossTest.lightBrownTest;
 	private Color instrumText = KaossTest.darkBrownTest;
 	private Color instrumSelText = KaossTest.lightBrownTest;
 	private Color knobText = Color.WHITE;
@@ -106,11 +110,11 @@ public class SwingTest extends JFrame implements KeyListener {
 	private Color effectSelText = KaossTest.lightBrownTest;
 	private Color scaleText = KaossTest.darkBrownTest;
 	private Color scaleSelText = KaossTest.lightBrownTest;
-  	private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
-  	private Font instrumFont = new Font("Helvetica", Font.BOLD, 22);
-  	private Font knobFont = new Font("Helvetica", Font.BOLD, 14);
-  	private Font effectFont = new Font("Helvetica", Font.BOLD, 16);
-  	private Font scaleFont = new Font("Helvetica", Font.BOLD, 16);
+  private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
+  private Font instrumFont = new Font("Helvetica", Font.BOLD, 22);
+  private Font knobFont = new Font("Helvetica", Font.BOLD, 14);
+  private Font effectFont = new Font("Helvetica", Font.BOLD, 16);
+  private Font scaleFont = new Font("Helvetica", Font.BOLD, 16);
 
 	private JLabel header = new JLabel("SAUCILLATOR");
 	private JLabel oneLabel = new JLabel("1: Sine");
@@ -153,7 +157,10 @@ public class SwingTest extends JFrame implements KeyListener {
   
   private boolean fxEnabled = false;
   private boolean reverbEnabled = false;
-
+  
+  /*
+	 * Create the panels
+	 */
 	public SwingTest(KaossTest kaoss, SynthScope scope) {
     this.kaoss = kaoss;
     this.setFocusable(true);   // Allow this panel to get focus.
@@ -161,11 +168,11 @@ public class SwingTest extends JFrame implements KeyListener {
 
     //panels
     container = new JPanel(); //holds all
-	container.setPreferredSize(new Dimension(SURFACE_WIDTH + 250, SURFACE_HEIGHT+450));
+	  container.setPreferredSize(new Dimension(SURFACE_WIDTH + 250, SURFACE_HEIGHT+450));
     container.setLayout(new BorderLayout());
 
     content = new JPanel(); //holds scope, fingers, effect labels and scale labels
-	content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+450));
+	  content.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT+450));
     content.setLayout(new BorderLayout());
     
     extraControls = new JPanel();
@@ -175,8 +182,8 @@ public class SwingTest extends JFrame implements KeyListener {
     
     makeControls();
 
-	surface = new SurfaceCanvas(); //holds fingers. inside content
-	surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
+	  surface = new SurfaceCanvas(); //holds fingers. inside content
+	  surface.setPreferredSize(new Dimension(SURFACE_WIDTH, SURFACE_HEIGHT));
     surface.setBackground( bgColor );
 
     content.add(surface, BorderLayout.CENTER);
@@ -187,14 +194,16 @@ public class SwingTest extends JFrame implements KeyListener {
     content.add(extraControls, BorderLayout.NORTH);
 
     this.setContentPane(container);
-	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-	this.pack();
-	this.setTitle("kaoss");
-	this.setVisible(true);
+	  this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+	  this.pack();
+	  this.setTitle("kaoss");
+	  this.setVisible(true);
 
     surfaceStart();
 	}
-
+  /*
+	 * Set up the scope display
+	 */
   public void setupScope()
   {
     scope.getWaveDisplay().setBackground( bgColor );
@@ -203,7 +212,9 @@ public class SwingTest extends JFrame implements KeyListener {
     scope.hideControls();
     scope.setPreferredSize(new Dimension(SURFACE_WIDTH, 200)); //this is a pretty strange number
   }
-
+  /*
+	 * Create new scope display for each instrument
+	 */
   public void newScope(SynthScope scope)
   {
     if(this.scope != null)
@@ -215,14 +226,16 @@ public class SwingTest extends JFrame implements KeyListener {
     //content.add(extraControls, BorderLayout.SOUTH);
     content.validate();
   }
-
+  /*
+	 * Set up left sidebar labels
+	 */
   public void makeControls()
   {
     controls = new JPanel();
     instruments = new JPanel();
     controls.add(instruments);
      
-	controls.setPreferredSize(new Dimension(250, SURFACE_HEIGHT+400));
+	  controls.setPreferredSize(new Dimension(250, SURFACE_HEIGHT+400));
     controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     controls.setBackground( bgColor );
     
@@ -279,7 +292,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	  knobs.add(depthLabel);
 	  knobs.add(rateKnob = new DKnob());
 	  knobs.add(rateLabel);
-	  
+	  //Labels for the scales
 	  for(JLabel label : scaleLabels)
 	  {
 	    label.setFont(scaleFont);
@@ -288,7 +301,7 @@ public class SwingTest extends JFrame implements KeyListener {
 	    extraControls.add(label);
 	    extraControls.add(Box.createHorizontalGlue());
 	  }
-	  
+	  //Labels for reverb and delay
 	  for(JLabel label : effectLabels)
 	  {
 	    label.setFont(effectFont);
@@ -333,7 +346,9 @@ public class SwingTest extends JFrame implements KeyListener {
 		};
 		surfaceThread.start(); 
 	}
-	
+	/*
+	 * Update labels on the controls
+	 */
   public void updateControls(int id)
   {
 	  for(JLabel label : instrumLabels) label.setForeground(instrumText);
@@ -367,7 +382,7 @@ public class SwingTest extends JFrame implements KeyListener {
   } 
 
   /*
-   * Use this to change freq or whatnot
+   * Use this to change freq or whatnot, handle input
    */
   public void keyPressed(KeyEvent e) 
   { 
