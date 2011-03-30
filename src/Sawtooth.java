@@ -1,10 +1,19 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
+/*
+ *  Matt's Instrument #1: Super Sawtooth
+ */
 
 import java.util.*;
 import com.softsynth.jsyn.*;
 
+/*
+ * What started as a simple sawtooth wave, I had to add my remaining channels (Square, Triangle)
+ * to this in order to use all 4. So, the vision shifted from a simple sawtooth to something 
+ * that I wanted to sound very artificial. I wanted it to be a strange mix of harmonics with
+ * also a little bit of bitcrush in there to give it that artificial digital sound. Due to this
+ * desire, no envelope was used.
+ *
+ * @author Matt Feury
+ */
 public class Sawtooth extends Instrument {
 
     public Sawtooth(Instrument... extras)
@@ -22,6 +31,10 @@ public class Sawtooth extends Instrument {
         startScope();
     }
 
+    /*
+     *  Creates sine oscillators an their harmonics to create a sawtooth
+     *  also connects the extra instruments to this mixer.
+     */
     public void makeTimbre()
     {
         mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);
@@ -43,17 +56,19 @@ public class Sawtooth extends Instrument {
         {
           SynthMixer extraMixer = extra.getMixer();
           mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
-          mixer.setGain( harmonics.length + i, 0, amplitude * 2.0 / 3.0 );
-          mixer.setGain( harmonics.length + i, 1, amplitude * 2.0 / 3.0 );
+          mixer.setGain( harmonics.length + i, 0, amplitude * 0.5 );
+          mixer.setGain( harmonics.length + i, 1, amplitude * 0.5 );
           extraMixer.start();
           i++;
         }
 
     }
     
+    /*
+     * Start all the oscillators and queue an envelope (in this case the default)
+     */
     public void start()  
     {
-       System.out.println("start");
        isPlaying = true;
 
        envPlayer.envelopePort.clear(); // clear the queue        
@@ -66,9 +81,11 @@ public class Sawtooth extends Instrument {
          sineOsc.start();
     }
     
+    /*
+     * stops the oscillators.
+     */
     public void stop()
     {
-       System.out.println("stop");
        isPlaying = false;
 
        for(Instrument extra : extraneous)       
@@ -78,6 +95,9 @@ public class Sawtooth extends Instrument {
          sineOsc.stop();
     }
     
+    /*
+     * adjust the frequency for these oscillators and any they inherit
+     */
     public void adjustFrequencyByOffset(int offset) {
         
         for(Instrument extra : extraneous)       

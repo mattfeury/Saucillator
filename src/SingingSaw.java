@@ -1,7 +1,6 @@
-//
-//  Class to test the Mac Mulittouch API mixed with JSyn.
-//  Modifying some code shtuffs here
-
+/*
+ *  Matt's Instrument #1: Singing Saw
+ */
 import java.util.*;
 import com.softsynth.jsyn.*;
 
@@ -14,7 +13,13 @@ import java.awt.geom.AffineTransform;
 
 import com.softsynth.jsyn.view102.SynthScope;
 
-
+/*
+ * This instrument emulates the sound of a musical saw. To do so, we default the LFO to settings
+ * that will create a light vibrato and also create a lag between notes that will cause a slow gradual
+ * change between frequencies.
+ * 
+ * @author Matt Feury
+ */
 public class SingingSaw extends Instrument {
 
     int[] overtones = {0,2,4}; //this will give us the third and the fifth (index # in the scale)
@@ -22,6 +27,9 @@ public class SingingSaw extends Instrument {
   	private SynthEnvelope      envData;
     private EnvelopePlayer     envPlayer;
 
+    /*
+     * Create a SingingSaw instrument and define the custom LFO settings.
+     */
     public SingingSaw()
     {
         super();
@@ -37,7 +45,15 @@ public class SingingSaw extends Instrument {
         makeTimbre();
         startScope();
     }
-        
+    
+    /*
+     * Create the SingingSaw envelope. This will slowly rise in amplitude and peak for half a second
+     * then come back down to normal amplitude.
+     *
+     * We use basic sine waves to create the timbre. Rather than setting them at harmonics, we set
+     * them up as overtones, creating a chord (1-3-5). We also use RedNoise to simulate the texture
+     * of the violin bow.
+     */    
     public void makeTimbre()
     {
       //envelope
@@ -49,14 +65,10 @@ public class SingingSaw extends Instrument {
 				0.8, 1.0,
         0.5, 1.5,
         0.3, 1.0
-
-//				0.4, 0.0   
 			};
 			envData = new SynthEnvelope( data );
 
       //harmonics
-
-//      KaossTest.context.startEngine(0);
       mixer = new SynthMixer(overtones.length + 1, 2);
 
       //sines
@@ -90,10 +102,12 @@ public class SingingSaw extends Instrument {
 
       envPlayer.start();
     }
-    
+
+    /*
+     * Start the singingSaw. Queue the envelope, not as a loop though.
+     */
     public void start()  
     {
-      System.out.println("start");
       isPlaying = true;
        
       envPlayer.envelopePort.clear(); // clear the queue        
@@ -103,15 +117,22 @@ public class SingingSaw extends Instrument {
         sineOsc.start();
     }
     
+    /*
+     * Stop the oscillators.
+     */
     public void stop()
     { 
-      System.out.println("stop");
       isPlaying = false;
       
       for(SynthOscillator sineOsc : sineInputs)
         sineOsc.stop();
     }
     
+    /*
+     * adjust the frequency for these oscillators and any they inherit
+     *
+     * this is a little different because we don't use harmonics. Rather we use overtones to create a chord.
+     */    
     public void adjustFrequencyByOffset(int offset) {  
       //sine oscs
       for(int i = 0; i < overtones.length; i++)
