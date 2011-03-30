@@ -44,6 +44,7 @@ public class InstrumentController {
     private Instrument CURRENT_INSTRUMENT = SINE;
     private boolean init = false;
 
+    //this is for our signal flow to the lineout
     private TunableFilter filter;
     private Reverb1 reverbUnit;
     private BusWriter busWriter;
@@ -52,14 +53,21 @@ public class InstrumentController {
     private LineOut lineOut;
     private AddUnit effectsAdder, inputAdder, outputAdder;
 
-    public boolean fxEnabled = false;
-    public boolean verbEnabled = false;
+    //turn fx on or off
+    public boolean fxEnabled = false; //this is delay
+    public boolean verbEnabled = false; //reverb
 
+    /*
+     * Create the controller with the default instrument (sine).
+     */
     public InstrumentController()
     {
         changeInstrument(KaossTest.INSTRUMENT_SINE);
     }
 
+    /*
+     * Create the pieces of our signal flow. connect them to the instrument mixer too.
+     */
     public void start()
     { 
       panUnit = new PanUnit();
@@ -86,11 +94,11 @@ public class InstrumentController {
       lineOut.start();
 
       init = true;
-
-      System.out.println("controller made");
-
     }
 
+    /*
+     * Turns on/off delay by [dis]connecting the wet mix from the signal flow
+     */
     public void toggleDelay()
     {
       fxEnabled = ! fxEnabled;
@@ -100,6 +108,9 @@ public class InstrumentController {
         effectsUnit.output.connect(effectsAdder.inputB);
     }
 
+    /*
+     * Tuirns on/off reverb by [dis]connecting the wet mix from the signal flow
+     */
     public void toggleReverb()
     {
       verbEnabled = ! verbEnabled;
@@ -110,6 +121,9 @@ public class InstrumentController {
         reverbUnit.output.connect(0, outputAdder.inputB, 0); 
     }
 
+    /*
+     * Get the current instrument's mixer and connect it to the lineout.
+     */
     public void connectMixer()
     {
       SynthMixer instrumentMix = CURRENT_INSTRUMENT.getMixer();
@@ -142,16 +156,26 @@ public class InstrumentController {
       
     }
 
+    /*
+     * Starts the current instrument. 
+     */
     public void startInstrument()
     {
       CURRENT_INSTRUMENT.start();
     }      
 
+    /*
+     * Stops the current instrument.
+     */
     public void stop()
     {
       CURRENT_INSTRUMENT.stop();
     }
 
+    /*
+     * Disconnects the previous instrument from the signal flow.
+     * Finds the id of the new instrument and reconnects it to the lineout.
+     */
     public void changeInstrument(int id)
     {
       //disconnect whatever is right now
@@ -205,42 +229,66 @@ public class InstrumentController {
         instrumentMix.connectOutput( 0, inputAdder.inputA, 0 ); //connect instrument to filter (low pass)
     }
 
+    /*
+     * Kill the instrument. This is left over from when we tried to kill the instrument when we switch.
+     * It doesn't work that well so we don't use it.
+     */
     public void kill()
     {
       CURRENT_INSTRUMENT.kill();
     }
 
+    /*
+     * send a signal to the instrument to make its LFOs invisible
+     */
     public void disableLFO()
     {
       CURRENT_INSTRUMENT.disableLFOs();
-      //controller.start();    
     }
 
+    /*
+     * Enable LFOs on the current instrument. These are generally taken care of when they are created.
+     */
     public void enableLFO()
     { 
       CURRENT_INSTRUMENT.enableLFOs();
     }
 
+    /*
+     * Tells the current instrument to update its LFOs based on its parameters.
+     */
     public void updateLFO()
     {
       CURRENT_INSTRUMENT.updateLFOs();
     }
 
+    /*
+     * Stop the lfos!
+     */
     public void stopLFO()
     {
       CURRENT_INSTRUMENT.stopLFOs();
     }
 
+    /*
+     * Get's the current mod rate for the current instrument
+     */
     public int getModRate()
     {
       return CURRENT_INSTRUMENT.getModRate();
     }
 
+    /*
+     * Get's the current mod depth for the current instrument
+     */    
     public int getModDepth()
     {
       return CURRENT_INSTRUMENT.getModDepth();
     }
 
+    /*
+     * Set's the current mod rate for the current instrument.
+     */
     public void updateModRate(int rate)
     {
       CURRENT_INSTRUMENT.updateModRate(rate);
@@ -248,6 +296,9 @@ public class InstrumentController {
       updateLFO();
     }
 
+    /*
+     * Set's the current mod depth for the current instrument.
+     */
     public void updateModDepth(int depth)
     {
       CURRENT_INSTRUMENT.updateModDepth(depth);
@@ -255,41 +306,65 @@ public class InstrumentController {
       updateLFO();
     }
 
+    /*
+     * Get the current instrument and return it.
+     */
     public Instrument getInstrument()
     {
       return CURRENT_INSTRUMENT;
     }
 
+    /*
+     * Get the current scope. This is called by the display to update its JPanel
+     */
     public SynthScope getScope()
     {
       return CURRENT_INSTRUMENT.getScope();
     }
 
+    /*
+     * Is the current instrument playing?
+     */
     public boolean isPlaying()
     {
       return CURRENT_INSTRUMENT.isPlaying();
     }
 
+    /*
+     * Change the scale for all instruments.
+     */
     public void changeScale(int[] scale)
     {
       Instrument.scale = scale;
     }
 
+    /*
+     * Adjust the current note based on an offset (0-12) in a scale. 
+     */
     public void changeFrequency(int offset)
     {
       CURRENT_INSTRUMENT.adjustFrequencyByOffset(offset);
     }
 
+    /*
+     * Set the lowpass frequency. 
+     */
     public void lowpass(int freq)
     {
       filter.frequency.set(freq);
     }
 
+    /*
+     * Set the pan on the panunit. This should affect all signal since it's the last thing in the signal flow.
+     */
     public void pan(double absolutePan)
     {
       panUnit.pan.set(absolutePan);      
     }
 
+    /*
+     * The secret sauce. Do not look at the recipe.
+     */
     public void makeSauce()
     {
       try {
@@ -306,6 +381,9 @@ public class InstrumentController {
 			
     }
 
+    /*
+     * Share the sauce. This doesn't work if you press it a lot frequently. 
+     */
     public void iThinkItsTheSauceBoss()
     {
       streamer.startStream();			      
