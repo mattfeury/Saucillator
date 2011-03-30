@@ -7,15 +7,15 @@ import com.softsynth.jsyn.*;
 
 public class Sawtooth extends Instrument {
 
-    
-    int[] overtones = {0,2,4}; //this will give us the third and the fifth (index # in the scale)
-    
-    public Sawtooth()
+    public Sawtooth(Instrument... extras)
     {
         super();
 
         //set characteristics
         harmonics = allHarmonics; //sawtooth
+
+        for(Instrument i : extras)
+          extraneous.add(i);    
 
         //make timbre         
         makeTimbre();
@@ -24,7 +24,7 @@ public class Sawtooth extends Instrument {
 
     public void makeTimbre()
     {
-        mixer = new SynthMixer(harmonics.length, 2);
+        mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);
         for(int i = 0; i < harmonics.length; i++)
         {
           SineOscillator sineOsc = new SineOscillator();
@@ -37,7 +37,18 @@ public class Sawtooth extends Instrument {
           mixer.setGain( i, 1, amplitude / (i+1));
           
           sineOsc.amplitude.set(amplitude); //sawtooth and square
-        } 
+        }
+        int i =0;
+        for(Instrument extra : extraneous)
+        {
+          SynthMixer extraMixer = extra.getMixer();
+          mixer.connectInput( harmonics.length + i, extraMixer.getOutput(0), 0);
+          mixer.setGain( harmonics.length + i, 0, amplitude * 2.0 / 3.0 );
+          mixer.setGain( harmonics.length + i, 1, amplitude * 2.0 / 3.0 );
+          extraMixer.start();
+          i++;
+        }
+
     }
     
     public void start()  
@@ -47,6 +58,9 @@ public class Sawtooth extends Instrument {
 
        envPlayer.envelopePort.clear(); // clear the queue        
        envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
+
+       for(Instrument extra : extraneous)
+         extra.start();       
               
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
@@ -56,12 +70,18 @@ public class Sawtooth extends Instrument {
     {
        System.out.println("stop");
        isPlaying = false;
+
+       for(Instrument extra : extraneous)       
+         extra.stop();
+       
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
     
     public void adjustFrequencyByOffset(int offset) {
         
+        for(Instrument extra : extraneous)       
+          extra.adjustFrequencyByOffset(offset);
         
         //harmonic mode
         int i = 0;

@@ -237,8 +237,8 @@ public abstract class Instrument
       scope.getWaveDisplay().setForeground( Color.green );
 
       connectEnvelope();
-      makeLFOs(true); //this is hacky. move it elsewhere. but it should be called at the end of the constructor
-
+      makeLFOs(true); //this is hacky. it should be moved elsewhere to its own method, but it should be called at the end of the constructor so this is a convenient place for it for now.
+ 
     }
 
     /*

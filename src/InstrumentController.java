@@ -32,7 +32,7 @@ public class InstrumentController {
     private Instrument TRIANGLE = new Triangle();
     private Instrument SQUARE = new Square();
 	  private Instrument REDNOISE = new RedNoise();
-  	private Instrument SAWTOOTH = new Sawtooth();
+  	private Instrument SAWTOOTH = new Sawtooth(TRIANGLE, SQUARE);
     private Instrument SINGINGSAW = new SingingSaw();    
     private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
 	  private Instrument GONG = new Gong(TRIANGLE);   
