@@ -1,12 +1,16 @@
 /*
+ *  Mike's Instrument #2: Messier
+ */
+ 
+import java.util.*;
+import com.softsynth.jsyn.*;
+
+/*
  * Messier instrument class. Uses Triangle and Noise Instruments to create
  * a spacey sound. Uses an envelope with a short duration.
  * @author Mike Hirth  
  * 
  */
-
-import java.util.*;
-import com.softsynth.jsyn.*;
 
 public class Messier extends Instrument {
       
@@ -27,7 +31,10 @@ public class Messier extends Instrument {
         makeTimbre();
         startScope();    
     }
-    
+    /*
+     *  Defines details of the envelopes. Creates sine oscillators and
+     *  connects the harmonics to the mixer.
+     */
     public void makeTimbre()
     {
       // envelope for sine wave
@@ -44,21 +51,6 @@ public class Messier extends Instrument {
 
        mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);  
        
-       // set the amplitude 
-       for(int i = 0; i < harmonics.length; i++)
-       {
-         SineOscillator sineOsc = new SineOscillator();
-         sineInputs.add(sineOsc);
-         freqMods.add(sineOsc.frequency);
-
-         //stereo wavves
-         mixer.connectInput( i, sineOsc.output, 0 );
-         mixer.setGain( i, 0, amplitude );
-         mixer.setGain( i, 1, amplitude );
-
-         sineOsc.amplitude.set(amplitude); 
-       }
-
        int i =0;
        for(Instrument extra : extraneous)
        {
@@ -73,7 +65,9 @@ public class Messier extends Instrument {
        envPlayer.start();
         
     }
-    
+    /*
+     *  Manages envelopes for both the triangle wave and the noise wave.  
+     */
     public void start()  
     {
        System.out.println("start");
@@ -91,7 +85,10 @@ public class Messier extends Instrument {
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
-    
+    /*
+     *  Stops the instruments and the sine 
+     *  oscillators are stopped.
+     */
     public void stop()
     {
        System.out.println("stop");
@@ -103,7 +100,9 @@ public class Messier extends Instrument {
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
-    
+    /*
+     *  Defines frequency and sets depending on the harmonics.
+     */
     public void adjustFrequencyByOffset(int offset) {
         //harmonic mode
         for(Instrument extra : extraneous)       

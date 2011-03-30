@@ -1,16 +1,19 @@
 /*
+ *  Mike's Instrument #1: Cuomo
+ */
+
+import java.util.*;
+import com.softsynth.jsyn.*;
+
+/*
  * Cuomo instrument class. Uses Sine and Square Instruments to create
  * a sound similar to a synth lead. Uses no envelopes.
  * @author Mike Hirth  
  * 
  */
 
-import java.util.*;
-import com.softsynth.jsyn.*;
-
 public class Cuomo extends Instrument {
-
-    
+  
     public Cuomo(Instrument... extras)
     {
         super();
@@ -25,24 +28,13 @@ public class Cuomo extends Instrument {
         makeTimbre();
         startScope();    
     }
-    
+    /*
+     *  Defines details of the envelopes. Creates sine oscillators and
+     *  connects the harmonics to the mixer.
+     */
     public void makeTimbre()
     {
        mixer = new SynthMixer(harmonics.length + extraneous.size(), 2);  
-       //this can go away since there are no custom harmonics. i'll leave it here in case you want to play around with more
-       for(int i = 0; i < harmonics.length; i++)
-       {
-         SineOscillator sineOsc = new SineOscillator();
-         sineInputs.add(sineOsc);
-         freqMods.add(sineOsc.frequency);
-
-         //stereo wavves
-         mixer.connectInput( i, sineOsc.output, 0 );
-         mixer.setGain( i, 0, amplitude );
-         mixer.setGain( i, 1, amplitude );
-
-         sineOsc.amplitude.set(1 / harmonics[i]); //Full amplitude for sine harmonic, 1/n for the rest  
-       }
 
        int i =0;
        for(Instrument extra : extraneous)
@@ -57,6 +49,9 @@ public class Cuomo extends Instrument {
         
     }
     
+    /*
+     *  Manages envelopes for both the sine wave and the square wave.  
+     */
     public void start()  
     {
        System.out.println("start");
@@ -71,7 +66,10 @@ public class Cuomo extends Instrument {
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
-    
+    /*
+     *  Stops the instruments and the sine 
+     *  oscillators are stopped.
+     */
     public void stop()
     {
        System.out.println("stop");
@@ -83,7 +81,9 @@ public class Cuomo extends Instrument {
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.stop();
     }
-    
+    /*
+     *  Defines frequency and sets depending on the harmonics.
+     */
     public void adjustFrequencyByOffset(int offset) {
         //harmonic mode
         for(Instrument extra : extraneous)       
