@@ -157,14 +157,13 @@ public class Gong extends Instrument {
     for(Instrument extra : extraneous)       
       extra.adjustFrequencyByOffset(offset);
     
-    //harmonic mode
     int i = 0;
     double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
     int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * baseFreq);
   
     for(SynthInput freqMod : freqMods)
     {
-      //overtone offset
+      //harmonic offset
       freqMod.set(freq * harmonics[i]);              
       i++;
     }

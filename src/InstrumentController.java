@@ -1,3 +1,23 @@
+/*
+ * This is our instrument controller. It is main goodness for the sauce.
+ *
+ * Basically, we create all of our instruments on startup. This is a bit of a drain on CPU
+ * but since we reuse simple instruments for our complex ones, it's not too bad. It turns out
+ * it's much more exhaustive on the AudioEngine to be switching instruments at any given pace.
+ *
+ * Basically, we get the mixer from the current instrument and hook it up to the lineout. The
+ * signal flow is as follows:
+ *
+ * 1. Instrument Mixer
+ * 2. Low Pass Filter
+ * 3. Delay (dry and wet)
+ * 4. Reverb (dry and wet)
+ * 5. Pan
+ * 6. LineOut (this sends to the speakers)
+ * 
+ * @author theChillwavves
+ */
+
 import java.util.ArrayList;
   
 import com.softsynth.jsyn.*;

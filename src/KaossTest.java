@@ -1,6 +1,6 @@
 /**
  * Main class for the application. Creates an instrument controller
- * and observers for input.  
+ * and observers for input. This will also create the display.
  * 
  * @author theChillwavves
  *
@@ -138,8 +138,6 @@ public class KaossTest implements Observer {
 
     }
 
-    float lDx = 0, hDx = 0, lDy = 0, hDy = 0;
-
     public void updateViaFinger(Finger f)
     {
       //update display
@@ -159,11 +157,6 @@ public class KaossTest implements Observer {
       float   y = f.getY();
       float   dx = f.getXVelocity();
       float   dy = f.getYVelocity();     
-
-      if(dx < lDx) lDx = dx;
-      if(dx > hDx) hDx = dx;
-      if(dy < lDy) lDy = dy;
-      if(dy > hDy) hDy = dy;
 
       //mark on / off 
       if(! fingersPressed.contains(id)) { //finger pressed. 
