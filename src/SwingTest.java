@@ -100,7 +100,7 @@ public class SwingTest extends JFrame implements KeyListener {
   private SynthScope scope;
   private SynthMixer mixer;
   private JPanel content, container, controls, instruments, knobs, extraControls;
-  private KaossTest kaoss; //to control audio cause this class may need to be a keyboard listener
+  private KaossTest kaoss; //to control audio 
   private Color bgColor = Color.BLACK;
   private Color fgText = KaossTest.lightBrownTest;
 	private Color instrumText = KaossTest.darkBrownTest;
@@ -386,7 +386,7 @@ public class SwingTest extends JFrame implements KeyListener {
    */
   public void keyPressed(KeyEvent e) 
   { 
-    System.out.println("pre change: "+Synth.getObjectCount()); 
+    //System.out.println("pre change: "+Synth.getObjectCount()); 
     int code = e.getKeyCode();
     //int id = getInstrumentIdFromChar(c);
     switch(code)
@@ -447,7 +447,7 @@ public class SwingTest extends JFrame implements KeyListener {
 
     }
 
-    System.out.println("post change: "+Synth.getObjectCount()); 
+    //System.out.println("post change: "+Synth.getObjectCount()); 
   }
     
 

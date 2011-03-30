@@ -1,6 +1,6 @@
 /**
  * Abstract class for instruments. Contains data for harmonics, oscillators, LFOs, 
- * envelopes and scopes.
+ * envelopes and scopes. All other instruments extend this.
  * 
  * @author theChillwavves
  *
@@ -58,7 +58,7 @@ public abstract class Instrument
 
     protected float amplitude = 0.8f; //amplitude for the fundamental
     
-    public Instrument() { //constructor needs: scale, freq, amp?
+    public Instrument() {
       sineInputs = new LinkedList<SynthOscillator>();
       freqMods   = new LinkedList<SynthInput>();
     }
@@ -68,17 +68,11 @@ public abstract class Instrument
     abstract void makeTimbre();
     abstract void adjustFrequencyByOffset(int offset);
     
-
     /*
-     * Adds two arrays of harmonics together by copying. Appends and does not sort 
+     * Make LFOs for each oscillator in this instrument. They won't do anything until they're enabled.
+     *
+     * @param enable if true, the LFOs will be automatically connected to the sineOsc.
      */
-  	public int[] addHarmonics(int[] firstHarmonics, int[] secondHarmonics) {
-  		int[] newHarmonics = new int[firstHarmonics.length + secondHarmonics.length];
-  		System.arraycopy(secondHarmonics, 0, newHarmonics, 0, secondHarmonics.length);
-  		System.arraycopy(firstHarmonics, 0, newHarmonics, secondHarmonics.length, firstHarmonics.length);
-  		return newHarmonics;
-  	}
-
     public void makeLFOs(boolean enable)
     {
       //LFO
@@ -93,12 +87,18 @@ public abstract class Instrument
       else  disableLFOs();
     }
 
+    /*
+     * Set a new envelope for this instrument
+     */
     public void setEnvelopeData(SynthEnvelope envData)
     {
       customEnvelope = true;
       this.envData = envData;
     }
 
+    /*
+     * Connect the lfos to their simple oscillator and replace the freqMods array with the the timelag input.
+     */
     public void enableLFOs()
     {
       LFO_ENABLED = true;
@@ -111,6 +111,9 @@ public abstract class Instrument
       updateLFOs();
     }
 
+    /*
+     * Disable all the lfos for this instrument
+     */
     public void disableLFOs()
     {
       LFO_ENABLED = false;
@@ -124,6 +127,9 @@ public abstract class Instrument
       }
     }
 
+    /*
+     * force an update for the LFOs
+     */
     public void updateLFOs()
     {
       for(Instrument extra : extraneous)
@@ -133,32 +139,42 @@ public abstract class Instrument
         lfo.update();
     }
 
+    /*
+     * Disconnect all the lfos
+     */
     public void stopLFOs()
     {
       for(LFO lfo : lfos)
         lfo.disconnect();
     }
 
+    /*
+     * are lfos currently enabled?
+     */
     public boolean isLfoEnabled()
     {
       return LFO_ENABLED;
     }
 
-    public void changeScale(int[] scale)
-    {
-      this.scale = scale;
-    }
-
+    /*
+     * Get the mixer for this instrument. This is the mixer that sums all the various oscillators
+     */
     public SynthMixer getMixer()
     {
       return mixer;
     }
 
+    /*
+     * Reset the envelope to a default. This is basically no envelope. A constant DB level.
+     */
     public void resetEnvelope()
     {
-      envData = new SynthEnvelope( new double[]{0.0, 1.0} );
+      envData = new SynthEnvelope( new double[]{0.0, amplitude} );
     }
 
+    /*
+     * Connect the envelope to the amplitude of the oscillators
+     */
     public void connectEnvelope()
     {
       if(customEnvelope) return; //if it is custom, assume the creater takes care of all this
@@ -170,16 +186,25 @@ public abstract class Instrument
       envPlayer.start();   
     }
 
+    /*
+     * get the current mod rate for the LFO
+     */
     public int getModRate()
     {
       return MOD_RATE;
     }
 
+    /*
+     * get the current mod depth for the LFO
+     */
     public int getModDepth()
     {
       return MOD_DEPTH;
     }
-      
+    
+    /*
+     * Set's the current mod rate for the current instrument.
+     */
     public void updateModRate(int i)
     {
       MOD_RATE = i;
@@ -188,6 +213,9 @@ public abstract class Instrument
 
     }
 
+    /*
+     * Set's the current mod depth for the current instrument.
+     */    
     public void updateModDepth(int i)
     {
       MOD_DEPTH = i;
@@ -196,7 +224,9 @@ public abstract class Instrument
       
     }
       
-    
+    /*
+     * start the oscilloscope.
+     */
     public void startScope()
     {      
       scope = new SynthScope();
@@ -211,21 +241,37 @@ public abstract class Instrument
 
     }
 
+    /*
+     * fairly important method here. Given an integer offset calculate the actual offset
+     * from a scale. 
+     *
+     * ie, given an offset of 1, we will find the offset for the first note in the scale
+     */
     public static double getScaleIntervalFromOffset(int[] scale, int offset)
     {   
         return (scale[offset % scale.length] + 12*((int)((offset)/scale.length)));
     }
 
+    /*
+     * get the current scope
+     */
     public SynthScope getScope()
     {
         return scope;
     }
 
+    /*
+     * is this instrument currently playing?
+     */
     public boolean isPlaying()
     {
         return isPlaying;
     }
 
+    /*
+     * kill this instrument. stop and delete every SynthObject is uses. 
+     * this probably doesn't get called anymore. but is here for safety's sake.
+     */
     public void kill()
     {
       //stop();
@@ -242,6 +288,10 @@ public abstract class Instrument
       }
     }
 
+    /*
+     * inner class that functions as an LFO. this adds a low frequency oscillator with a lag
+     * and it will drive the frequency of the oscillators
+     */
     class LFO
     {
       private SineOscillator myLFO;
@@ -249,6 +299,9 @@ public abstract class Instrument
       private ExponentialLag myLag;
       private SynthInput frequency;
 
+      /*
+       * create an LFO that drives the SynthInput passed.
+       */
       public LFO(SynthInput frequency)
       {
         this.frequency = frequency;
@@ -270,6 +323,9 @@ public abstract class Instrument
 		    myLFO.start();
       }
 
+      /*
+       * get the aspect of the LFO that we use to modify the actual frequency.
+       */
       public SynthInput getFreqMod()
       {
         return myLag.input;
@@ -285,12 +341,18 @@ public abstract class Instrument
         myLFO.frequency.set(0); //mod rate      
       }
 
+      /*
+       * connect the LFO to the frequency SynthInput
+       */
       public void connect()
       { 
         update();
         mySum.output.connect(frequency);
       }
 
+      /*
+       * update the LFO settings based on the current instrument settings.
+       */
       public void update()
       {
         myLag.halfLife.set(LAG_LIFE); //freq lag        
@@ -298,6 +360,9 @@ public abstract class Instrument
         myLFO.frequency.set(MOD_RATE); //mod rate   
       }
 
+      /*
+       * delete the LFO.
+       */
       public void delete()
       {
         myLag.stop();
