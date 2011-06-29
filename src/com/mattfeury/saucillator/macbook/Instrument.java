@@ -57,7 +57,6 @@ public abstract class Instrument
     private boolean LFO_INIT = false; 
     private boolean LFO_ENABLED = false;
 
-
     protected float amplitude = 0.8f; //amplitude for the fundamental
     
     public Instrument() {
@@ -67,7 +66,7 @@ public abstract class Instrument
     
     abstract void start();
     abstract void stop();
-    abstract void makeTimbre();
+    abstract void makeTimbre() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InstantiationException;
     abstract void adjustFrequencyByOffset(int offset);
     
     /*

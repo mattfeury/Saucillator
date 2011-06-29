@@ -1,5 +1,3 @@
-Sup Y'all
-
 Based on the idea of a kaossilator through use of the macbook pro trackpad. 
 
 This depends on three libraries:
@@ -9,13 +7,6 @@ JSyn
 
 They are included. The first two work only on recent macbooks. This is designed for them. There is a fallback for other devices, but it offers much less functionality right now and for the foreseeable future.
 
-To compile and run:
-open terminal and cd to the repository's home directory
-then run the example shell.
-
-$ ./runTest.sh
-
-For windows:
-run winRun.bat
+This project includes an ANT build file for running. 
 
 Be forewarned that this was not intended to run on PCs. Many features will be missing and the audio library may not be as robust.

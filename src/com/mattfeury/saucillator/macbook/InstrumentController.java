@@ -30,20 +30,14 @@ import com.softsynth.jsyn.circuits.Reverb1;
 
 public class InstrumentController {
 
-    private Instrument SINE = new Sine();
-    private Instrument TRIANGLE = new Triangle();
-    private Instrument SQUARE = new Square();
-	  private Instrument REDNOISE = new RedNoise();
-  	private Instrument SAWTOOTH = new Sawtooth(TRIANGLE, SQUARE);
-    private Instrument SINGINGSAW = new SingingSaw();    
-    private Instrument CUOMO = new Cuomo(SQUARE, SINE); 
-	  private Instrument GONG = new Gong(TRIANGLE);   
-  	private Instrument MESSIER = new Messier(TRIANGLE, REDNOISE);      
-    private Instrument SQUOISE = new Squoise(SQUARE, REDNOISE);      
-
+    private Instrument SINE, TRIANGLE,
+                      SQUARE, REDNOISE,
+                      SAWTOOTH, SINGINGSAW,
+                      CUOMO, GONG,
+                      MESSIER, SQUOISE,
+                      CURRENT_INSTRUMENT;
     private	SampleFileStreamer streamer;
-    
-    private Instrument CURRENT_INSTRUMENT = SINE;
+
     private boolean init = false;
 
     //this is for our signal flow to the lineout
@@ -64,7 +58,24 @@ public class InstrumentController {
      */
     public InstrumentController()
     {
-        changeInstrument(Saucillator.INSTRUMENT_SINE);
+      //setup instruments
+      try {
+        SINE = new Sine();
+        TRIANGLE = new Triangle();
+        SQUARE = new Square();
+        REDNOISE = new RedNoise();
+        SAWTOOTH = new Sawtooth();
+        SINGINGSAW = new SingingSaw();    
+        CUOMO = new Cuomo(SQUARE, SINE); 
+        GONG = new Gong(TRIANGLE);   
+        MESSIER = new Messier(TRIANGLE, REDNOISE);
+        SQUOISE = new Squoise(SQUARE, REDNOISE);
+        CURRENT_INSTRUMENT = SINE;
+      } catch(Exception e) {
+        System.out.println(e);
+      } 
+
+      changeInstrument(Saucillator.INSTRUMENT_DEFAULT);
     }
 
     /*
@@ -72,6 +83,7 @@ public class InstrumentController {
      */
     public void start()
     { 
+      //setup signal flow
       panUnit = new PanUnit();
       busWriter = new BusWriter();
       reverbUnit = new Reverb1();
