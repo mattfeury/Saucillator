@@ -60,6 +60,8 @@ public class Saucillator implements Observer {
 	  public final static int MOD_DEPTH_MAX = 1000;
 
     public final static int INSTRUMENT_DEFAULT = INSTRUMENT_SINE;
+
+    public final static int MAX_FINGERS = 2;
     
     //GUI stuff. move this or delete it
     public static Color darkBrownTest = new Color(166, 65, 8);
@@ -72,10 +74,10 @@ public class Saucillator implements Observer {
     {
       //start synth & instruments
       try {
-          Synth.requestVersion( 144 );
-          Synth.startEngine(0);  
-          SynthObject.enableDeletionByGarbageCollector(true); //formerly static
-          SynthObject.enableTracking(true);
+        Synth.requestVersion( 144 );
+        Synth.startEngine(0);  
+        SynthObject.enableDeletionByGarbageCollector(true); //formerly static
+        SynthObject.enableTracking(true);
       } catch(Exception e) {
         System.out.println(e);
       }
@@ -83,6 +85,7 @@ public class Saucillator implements Observer {
       if(System.getProperty("os.name").toLowerCase().contains("mac"))
         useMultitouch = true;
 
+      System.out.println("Brewing sauce..."); 
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
@@ -107,6 +110,8 @@ public class Saucillator implements Observer {
 
         mouseObs.addObserver(this); //start observing
       }
+      System.out.println("Sauce ready.");
+      
       //start display
       if(DISPLAY)
         display = new SauceDisplay(this, controller.getScope());
@@ -146,26 +151,22 @@ public class Saucillator implements Observer {
 
     public void updateViaFinger(Finger f)
     {
-      //update display
-      if(DISPLAY && display != null)
-        display.updateFinger(f);
-
-      int     frame = f.getFrame();
-      double  timestamp = f.getTimestamp();
+      //automagically update accelerometer so we don't have to set a timer for it
+      //TODO is this the best implementation? maybe try to set up a listener thread if possible
+      updateViaAccelerometer();
+      
       int     id = f. getID(); 
       FingerState     state = f.getState();
-      float   size = f.getSize();
-      float   angRad = f.getAngleInRadians();
-      int     angle = f.getAngle();           // return in Degrees
-      float   majorAxis = f.getMajorAxis();
-      float   minorAxis = f.getMinorAxis();
       float   x = f.getX();
       float   y = f.getY();
-      float   dx = f.getXVelocity();
-      float   dy = f.getYVelocity();     
-
+      
+      //update display
+      boolean fingerPressed = fingersPressed.contains(id);
+      if (DISPLAY && display != null && fingerPressed)
+        display.updateFinger(f);
+      
       //mark on / off 
-      if(! fingersPressed.contains(id)) { //finger pressed. 
+      if (! fingerPressed && fingersPressed.size() <= MAX_FINGERS) { //finger pressed. 
         //we were not tracking this finger. so let's add it to the queue.          
         System.out.println("now tracking: "+id);
         if(fingersPressed.isEmpty())
@@ -173,18 +174,17 @@ public class Saucillator implements Observer {
 
         fingersPressed.add((Integer)id);
       }
-      if(state.equals(FingerState.RELEASED) && controller.isPlaying() && fingersPressed.contains(id)) { //finger lifted
+      if (state.equals(FingerState.RELEASED) && controller.isPlaying() && fingerPressed) { //finger lifted
         System.out.println("finger lifted: "+id);
         fingersPressed.remove((Integer)id);
       }
 
-      if(fingersPressed.isEmpty()) {
+      if (fingersPressed.isEmpty()) {
         System.out.println("no more fingers");
         controller.stop(); //stop
         return;
       }
       
-      updateViaAccelerometer();
 
       int whichFinger = fingersPressed.indexOf(id) + 1;
 

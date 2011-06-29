@@ -24,6 +24,7 @@ public class DKnob extends JComponent
     private final static float DRAG_RES = (float) 0.01;
     private final static float MULTIP = 180 / PI; 
     private final static Color DEFAULT_FOCUS_COLOR = new Color(0x8080ff);
+    private final static Color FOREGROUND = Saucillator.darkBrownTest;
 
     private int SHADOWX = 1;
     private int SHADOWY = 1;
@@ -140,55 +141,46 @@ public class DKnob extends JComponent
     }
 
     public void setDragType(int type) {
-	dragType = type;
+    	dragType = type;
     }
     public int getDragType() {
-	return dragType;
+    	return dragType;
     }
     
     public boolean isManagingFocus() {
-	return true;
+    	return true;
     }
-    
     public boolean isFocusTraversable() {
-	return true;
+    	return true;
     }
-    
-    
     
     private void incValue() {
-	setValue(val + CLICK_SPEED);
+    	setValue(val + CLICK_SPEED);
     }
-    
     private void decValue() {
-	setValue(val - CLICK_SPEED);
+    	setValue(val - CLICK_SPEED);
     }
-    
-
     public float getValue() {
-	return val;
+    	return val;
     }
-
     public void setValue(float val) {
-	if (val < 0) val = 0;
-	if (val > 1) val = 1;
-	this.val = val;
-	ang = START_ANG - (float) LENGTH_ANG * val;
-	repaint();
-	fireChangeEvent();
+      if (val < 0) val = 0;
+      if (val > 1) val = 1;
+      this.val = val;
+      ang = START_ANG - (float) LENGTH_ANG * val;
+      repaint();
+      fireChangeEvent();
     }
-
     
     public void addChangeListener(ChangeListener cl) {
-	listenerList.add(ChangeListener.class, cl);
+	    listenerList.add(ChangeListener.class, cl);
     }
-    
     public void removeChangeListener(ChangeListener cl) {
-	listenerList.remove(ChangeListener.class, cl);		
+	    listenerList.remove(ChangeListener.class, cl);		
     }
     
     public Dimension getMinimumSize() {
-	return MIN_SIZE;
+  	  return MIN_SIZE;
     }
     
     protected void fireChangeEvent() {
@@ -206,62 +198,60 @@ public class DKnob extends JComponent
 	}
     }
  
-
     // Paint the DKnob
     public void paint(Graphics g) {
-	int width = getWidth();
-	int height = getHeight();
-	size = Math.min(width, height) - 22;
-	middle = 10 + size/2;
+      int width = getWidth();
+      int height = getHeight();
+      size = Math.min(width, height) - 22;
+      middle = 10 + size/2;
 
-	if (g instanceof Graphics2D) {
-	    Graphics2D g2d = (Graphics2D) g;
-	    g2d.setBackground(getParent().getBackground());
-	    g2d.addRenderingHints(AALIAS);
-	    
-	    // For the size of the "mouse click" area
-	    hitArc.setFrame(4, 4, size+12, size+12);
-	}
-	
-	// Paint the "markers"
-	for (float a2 = START_ANG; a2 >= START_ANG - LENGTH_ANG; a2=a2 -(float)
-		 (LENGTH_ANG/10.01))
-	    {
-		int x = 10 + size/2 + (int)((6+size/2) * Math.cos(a2));
-		int y = 10 + size/2 - (int)((6+size/2) * Math.sin(a2));
-		g.drawLine(10 + size/2, 10 + size/2, x, y);
-		
-	    }
-	
-	// Set the position of the Zero
-	g.drawString("0", 2, size + 10);
-	
-	// Paint focus if in focus
-	if (hasFocus()) {
-	    g.setColor(focusColor);
-	} else {
-	    g.setColor(Color.white);
-	}
+      if (g instanceof Graphics2D) {
+          Graphics2D g2d = (Graphics2D) g;
+          g2d.setBackground(getParent().getBackground());
+          g2d.addRenderingHints(AALIAS);
+          
+          // For the size of the "mouse click" area
+          hitArc.setFrame(4, 4, size+12, size+12);
+      }
+      
+      g.setColor(FOREGROUND);
+      // Paint the "markers"
+      for (float a2 = START_ANG; a2 >= START_ANG - LENGTH_ANG; a2=a2 -(float)(LENGTH_ANG/10.01))
+      {
+        int x = 10 + size/2 + (int)((6+size/2) * Math.cos(a2));
+        int y = 10 + size/2 - (int)((6+size/2) * Math.sin(a2));
+        g.drawLine(10 + size/2, 10 + size/2, x, y);  
+      }
+      
+      // Set the position of the Zero
+      g.drawString("0", 2, size + 10);
+      
+      // Paint focus if in focus
+      if (hasFocus()) {
+          g.setColor(focusColor);
+      } else {
+          g.setColor(Color.white);
+      }
 
-	g.fillOval(10, 10, size, size);
-	g.setColor(Color.gray);
-	g.fillOval(14 + SHADOWX, 14 + SHADOWY, size-8, size-8);
-	
-	g.setColor(Color.black);
-	g.drawArc(10, 10, size, size, 315, 270);
-	g.fillOval(14, 14, size-8, size-8);
-	g.setColor(Color.white);
-	
-	int x = 10 + size/2 + (int)(size/2 * Math.cos(ang));
-	int y = 10 + size/2 - (int)(size/2 * Math.sin(ang));
-	g.drawLine(10 + size/2, 10 + size/2, x, y);
-	g.setColor(Color.gray);
-	int s2 = (int) Math.max(size / 6, 6);
-	g.drawOval(10 + s2, 10 + s2, size - s2*2, size - s2*2);
-	
-	int dx = (int)(2 * Math.sin(ang));
-	int dy = (int)(2 * Math.cos(ang));
-	g.drawLine(10 + dx + size/2, 10 + dy + size/2, x, y);
-	g.drawLine(10-dx + size/2, 10-dy + size/2, x, y);
+      g.fillOval(10, 10, size, size);
+      g.setColor(FOREGROUND);
+      g.fillOval(14 + SHADOWX, 14 + SHADOWY, size-8, size-8);
+      
+      g.setColor(Color.black);
+      g.drawArc(10, 10, size, size, 315, 270);
+      g.fillOval(14, 14, size-8, size-8);
+      g.setColor(Color.white);
+      
+      int x = 10 + size/2 + (int)(size/2 * Math.cos(ang));
+      int y = 10 + size/2 - (int)(size/2 * Math.sin(ang));
+      g.drawLine(10 + size/2, 10 + size/2, x, y);
+      g.setColor(FOREGROUND);
+      int s2 = (int) Math.max(size / 6, 6);
+      g.drawOval(10 + s2, 10 + s2, size - s2*2, size - s2*2);
+      
+      int dx = (int)(2 * Math.sin(ang));
+      int dy = (int)(2 * Math.cos(ang));
+      g.drawLine(10 + dx + size/2, 10 + dy + size/2, x, y);
+      g.drawLine(10-dx + size/2, 10-dy + size/2, x, y);
     }
 }

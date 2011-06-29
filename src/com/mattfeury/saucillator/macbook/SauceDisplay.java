@@ -28,65 +28,6 @@ import com.softsynth.jsyn.view102.WaveDisplay;
 import com.softsynth.jsyn.view102.SynthScope;
 import com.softsynth.jsyn.*;
 
-
-class Fingers {
-	private static final int MAX_FINGER_BLOBS = 20;
-	
-	private int width, height;
-	Finger blobs[] = new Finger[MAX_FINGER_BLOBS];
-	java.util.List<Finger> bloblist = new java.util.LinkedList<Finger>(); 
-	
-  public Fingers(int width, int height) {	
-		this.width = width;
-		this.height=height;
-	}
-
-  public void updateFinger(Finger f) {
-		int id = f.getID();
-		if (id <= MAX_FINGER_BLOBS)
-			blobs[id-1]= f;
-
-  } 
-  /*
-	 * Draw blobs for each finger. Create a trail for each blob.
-	 */   
-	public void draw(Graphics g) {
-	   ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-	   for (int i=0; i<MAX_FINGER_BLOBS;i++) {
-		   Finger f = blobs[i];
-		   if(f != null) bloblist.add(f);
-		   for(Finger blob : bloblist) {
-		   	if (blob != null && blob.getState() == FingerState.PRESSED) {
-			   
-				   int x     = (int) (width  * (blob.getX()));
-				   int y     = (int) (height * (1-blob.getY()));
-				   int xsize = (int) (10*blob.getSize() * (blob.getMajorAxis()/2));
-				   int ysize = (int) (10*blob.getSize() * (blob.getMinorAxis()/2));
-				   int ang   = blob.getAngle();
-
-          //Scale x and y to go from 0 to 255 and make new color
-          if (x > 0 && y > 0 && x < SauceDisplay.SURFACE_WIDTH && y < SauceDisplay.SURFACE_HEIGHT) {
-					  Color pitchcolor = new Color((int)Math.floor((x/(float)SauceDisplay.SURFACE_WIDTH)*255), 255 - (int)Math.floor((y/(float)SauceDisplay.SURFACE_HEIGHT)*255), 0);
-				    g.setColor(pitchcolor);
-			    
-				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
-			   
-				   AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
-				   at.translate(x-xsize/2, y-ysize/2);
-				   at.rotate((Math.PI/180)*-ang, xsize/2, ysize/2);  // convert degrees to radians
-			   
-				   ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
-			   
-				   g.setColor(Color.DARK_GRAY);
-			    }
-			   }
-	   		}
-			if(bloblist.size() > 10) bloblist.remove(0);
-	   }
-	}
-}
-
 /*
  * Creates the GUI
  */
@@ -129,23 +70,23 @@ public class SauceDisplay extends JFrame implements KeyListener {
 	private JLabel eightLabel = new JLabel("8: Messier");
 	private JLabel nineLabel = new JLabel("9: Gong");
 	private JLabel zeroLabel = new JLabel("10: Squoise");
-	
+
 	private JLabel lowpassLabel = new JLabel("Low-Pass Filter");
 	private JLabel pitchLabel = new JLabel("Pitch");
 	private JLabel panLabel = new JLabel("Pan");
 	private JLabel depthLabel = new JLabel("Mod Depth");
 	private JLabel rateLabel = new JLabel("Mod Rate");
-	
+
 	private JLabel delayLabel = new JLabel("D: Delay");
 	private JLabel reverbLabel = new JLabel("R: Reverb");
-	
+
 	private JLabel majorLabel = new JLabel("M: Major");
 	private JLabel minorLabel = new JLabel("N: Minor");
 	private JLabel chromaticLabel = new JLabel("C: Chromatic");
 	private JLabel bluesLabel = new JLabel("B: Blues");
-	
+
 	private DKnob loKnob, pitchKnob, depthKnob, rateKnob, panKnob;
-	
+
 	private int keyCounter;
 	
 	private JLabel[] instrumLabels = new JLabel[]{oneLabel, twoLabel, threeLabel, fourLabel, fiveLabel, sixLabel, sevenLabel, eightLabel, nineLabel, zeroLabel};
@@ -159,9 +100,11 @@ public class SauceDisplay extends JFrame implements KeyListener {
   
   private boolean fxEnabled = false;
   private boolean reverbEnabled = false;
+  private static boolean trailsEnabled = false;
   
   /*
-	 * Create the panels
+	 * Create the panels.
+   * Java layouts make me cry.
 	 */
 	public SauceDisplay(Saucillator kaoss, SynthScope scope) {
     this.kaoss = kaoss;
@@ -370,7 +313,7 @@ public class SauceDisplay extends JFrame implements KeyListener {
   
   public void updatePanKnob(double pan)
   {
-    panKnob.setValue((float)(pan + 1.0) / 2.0f); //Not sure bout this one.
+    panKnob.setValue((float)(pan + 1.0) / 2.0f);
   }
   
   public void updateDepthKnob(int depth)
@@ -388,9 +331,7 @@ public class SauceDisplay extends JFrame implements KeyListener {
    */
   public void keyPressed(KeyEvent e) 
   { 
-    //System.out.println("pre change: "+Synth.getObjectCount()); 
     int code = e.getKeyCode();
-    //int id = getInstrumentIdFromChar(c);
     switch(code)
     {
       case KeyEvent.VK_N:
@@ -441,18 +382,13 @@ public class SauceDisplay extends JFrame implements KeyListener {
         break;
       default:
         int id = Character.getNumericValue(e.getKeyChar());
-        if(id > -1 && id < instrumLabels.length)
-        {
+        if(id > -1 && id < instrumLabels.length) {
           kaoss.changeInstrument(id);
       	  updateControls(id);
         }
-
     }
-
-    //System.out.println("post change: "+Synth.getObjectCount()); 
   }
     
-
   public void keyReleased(KeyEvent e) {}
   public void keyTyped(KeyEvent e)   {}
   
@@ -472,5 +408,59 @@ public class SauceDisplay extends JFrame implements KeyListener {
 
 	
 	
+}
+
+class Fingers {
+	private static final int MAX_FINGER_BLOBS = 12;
+	
+	private int width, height;
+	Finger blobs[] = new Finger[MAX_FINGER_BLOBS];
+	
+  public Fingers(int width, int height) {	
+		this.width = width;
+		this.height=height;
+	}
+
+  public void updateFinger(Finger f) {
+		int id = f.getID();
+		if (id <= MAX_FINGER_BLOBS)
+			blobs[id-1]= f;
+
+  }
+
+  /*
+	 * Draw blobs for each finger. Create a trail for each blob.
+	 */   
+	public void draw(Graphics g) {
+	   ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+	   for (int i=0; i<MAX_FINGER_BLOBS;i++) {
+		   Finger blob = blobs[i];
+       if (blob != null && blob.getState() == FingerState.PRESSED) {
+       
+         int x     = (int) (width  * (blob.getX()));
+         int y     = (int) (height * (1-blob.getY()));
+         int xsize = (int) (10*blob.getSize() * (blob.getMajorAxis()/2));
+         int ysize = (int) (10*blob.getSize() * (blob.getMinorAxis()/2));
+         int ang   = blob.getAngle();
+
+         //Scale x and y to go from 0 to 255 and make new color
+         if (x > 0 && y > 0 && x < SauceDisplay.SURFACE_WIDTH && y < SauceDisplay.SURFACE_HEIGHT) {
+           Color pitchcolor = new Color((int)Math.floor((x/(float)SauceDisplay.SURFACE_WIDTH)*255), 255 - (int)Math.floor((y/(float)SauceDisplay.SURFACE_HEIGHT)*255), 0);
+           g.setColor(pitchcolor);
+          
+           Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
+         
+           AffineTransform at = AffineTransform.getTranslateInstance(0,0);			   
+           at.translate(x-xsize/2, y-ysize/2);
+           at.rotate((Math.PI/180)*-ang, xsize/2, ysize/2);  // convert degrees to radians
+         
+           ((Graphics2D) g).fill(at.createTransformedShape(ellipse));
+         
+           g.setColor(Color.DARK_GRAY);
+         }
+      }
+	  }
+  }
 }
 
