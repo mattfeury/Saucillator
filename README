@@ -1,12 +1,14 @@
+Saucillator
 Based on the idea of a kaossilator through use of the macbook pro trackpad. 
+
+---Very much under construction. Much of this is subject to change.---
+This project was started as group project for Georgia Tech's CS 4590 Computer Audio. I have since begun refactoring and expanding the project.
+
+This project includes an ANT build file for running. 
 
 This depends on three libraries:
 MacMultitouch (GlulogicMT.jar)
 MacbookAccelerometer
 JSyn
 
-They are included. The first two work only on recent macbooks. This is designed for them. There is a fallback for other devices, but it offers much less functionality right now and for the foreseeable future.
-
-This project includes an ANT build file for running. 
-
-Be forewarned that this was not intended to run on PCs. Many features will be missing and the audio library may not be as robust.
+They are included. The first two work only on recent macbooks. This is designed for them. There is a fallback for other devices, but it offers much less functionality right now and for the foreseeable future. Be forewarned that this was not intended to run on PCs. Many features will be missing and the audio library may not be as robust.
