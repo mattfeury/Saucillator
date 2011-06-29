@@ -17,3 +17,5 @@ syntax: glob
 
 # building
 target
+build
+Saucillator.jar

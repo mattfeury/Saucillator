@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  * Sine instrument class. Creates a basic sine wave.
  *

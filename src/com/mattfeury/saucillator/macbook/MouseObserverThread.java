@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /**
  * Thread for the mouse observer.
  * 

@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /** 
  * Play a file by streaming off of disk.
  * Output the synthesized data using SampleQueueOutputStream

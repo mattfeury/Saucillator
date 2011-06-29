@@ -1,5 +1,8 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
- * Square instrument class. Uses odd harmonics to create a square wave.
+ * Triangle instrument class. Creates a basic triangle wave
+ * using odd harmonics.
  *
  * @author theChillwavves  
  * 
@@ -8,16 +11,9 @@
 import java.util.*;
 import com.softsynth.jsyn.*;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.AffineTransform;
+public class Triangle extends Instrument {
 
-import com.softsynth.jsyn.view102.SynthScope;
-
-public class Square extends Instrument {
-
-    public Square()
+    public Triangle()
     {
         super();
 
@@ -26,26 +22,25 @@ public class Square extends Instrument {
 
         //make timbre and start        
         makeTimbre();
-        startScope();
+        startScope();        
     }
-        
+    
     public void makeTimbre()
     {
-        mixer = new SynthMixer(harmonics.length, 2);    
-        for(int i = 0; i < harmonics.length; i++)
-          {
-            SineOscillator sineOsc = new SineOscillator();
-            sineInputs.add(sineOsc);
-            freqMods.add(sineOsc.frequency);
+      mixer = new SynthMixer(harmonics.length, 2);      
+      for(int i = 0; i < harmonics.length; i++)
+      {
+        SineOscillator sineOsc = new SineOscillator();
+        sineInputs.add(sineOsc);
+        freqMods.add(sineOsc.frequency);
 
-            //stereo wavves
-            mixer.connectInput( i, sineOsc.output, 0 );
-            mixer.setGain( i, 0, amplitude / (i+1));
-            mixer.setGain( i, 1, amplitude / (i+1));
+        //stereo wavves
+        mixer.connectInput( i, sineOsc.output, 0 );
+        mixer.setGain( i, 0, amplitude / Math.pow(i+1,2) );
+        mixer.setGain( i, 1, amplitude / Math.pow(i+1,2) );
 
-            
-            sineOsc.amplitude.set(amplitude); //sawtooth and square
-          }   
+        sineOsc.amplitude.set(amplitude);  //triangle
+      }
     }
     
     public void start()  
@@ -54,8 +49,9 @@ public class Square extends Instrument {
        isPlaying = true;
 
        envPlayer.envelopePort.clear(); // clear the queue        
-       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope       
-       
+       envPlayer.envelopePort.queueLoop(envData );  // queue an envelope
+       //envPlayer.start();
+
        for(SynthOscillator sineOsc : sineInputs)
          sineOsc.start();
     }
@@ -69,14 +65,18 @@ public class Square extends Instrument {
     }
     
     public void adjustFrequencyByOffset(int offset) {
-              
+        
+        
         //harmonic mode
         int i = 0;
         double scaleOffset = getScaleIntervalFromOffset(scale, offset);    
         int freq = (int)(Math.pow(2,((scaleOffset) / 12)) * BASE_FREQ);
         
         for(SynthInput freqMod : freqMods)
-        {   
+        {
+            //overtone offset
+            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
+            
             //harmonic offset
             freqMod.set(freq * harmonics[i]);
             i++;

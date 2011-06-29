@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /**
  * Main class for the application. Creates an instrument controller
  * and observers for input. This will also create the display.
@@ -21,7 +23,7 @@ import vavi.sensor.accelerometer.Accelerometer;
 import vavi.sensor.accelerometer.macbook.MacbookAccelerometer;
 import javax.swing.SwingUtilities;
 
-public class KaossTest implements Observer {
+public class Saucillator implements Observer {
 
     // Class that is resposible for registering with the Trackpad
     // and notifies registered clients of Touchpad Multitouch Events
@@ -34,7 +36,7 @@ public class KaossTest implements Observer {
     private MacbookAccelerometer acc;
 
     private InstrumentController controller;
-    private SwingTest display;
+    private SauceDisplay display;
 
     //GLOBALS
     public static int TRACKPAD_GRID_SIZE = 12;
@@ -42,6 +44,7 @@ public class KaossTest implements Observer {
     private boolean DISPLAY = true;
     private boolean CONTROLLER_PENDING = false;
 
+    //magic numbers for our instruments
     public final static int INSTRUMENT_SINE = 1;
     public final static int INSTRUMENT_TRIANGLE = 2;
     public final static int INSTRUMENT_SQUARE = 3;
@@ -58,13 +61,14 @@ public class KaossTest implements Observer {
 
     public final static int INSTRUMENT_DEFAULT = INSTRUMENT_SINE;
     
+    //GUI stuff. move this or delete it
     public static Color darkBrownTest = new Color(166, 65, 8);
     public static Color lightBrownTest = new Color(242, 204, 133);
     public static Color darkGreenTest = new Color(37,89,59);
     public static Color lightGreenTest = new Color(100, 126, 41);
     public static Color brownTest = new Color(223,167,73);
 
-    public KaossTest()
+    public Saucillator()
     {
       //start synth & instruments
       try {
@@ -91,6 +95,8 @@ public class KaossTest implements Observer {
 
         tpo.addObserver(this);
       } else {
+        //for Windows systems. This just uses cursor location and it makes the software
+        //pretty pointless, but nonetheless it is included for basic testing / compatibility
         mouseObs = new MouseObservable();
       
         Thread thread = new MouseObserverThread(mouseObs);
@@ -103,7 +109,7 @@ public class KaossTest implements Observer {
       }
       //start display
       if(DISPLAY)
-        display = new SwingTest(this, controller.getScope());
+        display = new SauceDisplay(this, controller.getScope());
       
     }
 
@@ -301,7 +307,7 @@ public class KaossTest implements Observer {
     }
         
     public static void main(String[] args) {
-        KaossTest k = new KaossTest();   
+        Saucillator k = new Saucillator();   
 
         System.out.println("CTRL-C to exit.");
     }

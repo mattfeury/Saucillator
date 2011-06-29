@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /**
  * Mouse observable class reads mouse input.
  * 

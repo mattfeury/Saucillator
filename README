@@ -1,7 +1,5 @@
 Sup Y'all
 
-A very rough proof of concept for CS4590 proj 2. Much construction is being done here.
-
 Based on the idea of a kaossilator through use of the macbook pro trackpad. 
 
 This depends on three libraries:
@@ -16,3 +14,8 @@ open terminal and cd to the repository's home directory
 then run the example shell.
 
 $ ./runTest.sh
+
+For windows:
+run winRun.bat
+
+Be forewarned that this was not intended to run on PCs. Many features will be missing and the audio library may not be as robust.

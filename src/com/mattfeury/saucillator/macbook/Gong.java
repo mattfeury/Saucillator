@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  *  Leah's Instrument #1: The Gong
  */

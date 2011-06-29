@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 //  Copyright 2009 Wayne Keenan
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");

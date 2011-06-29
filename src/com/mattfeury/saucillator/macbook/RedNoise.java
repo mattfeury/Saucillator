@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  * Red Noise instrument class. Creates gritty sounding noise similar to 
  * white noise. Uses noise oscillator from JSyn.

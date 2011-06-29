@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  * This is our main display for the Saucillator.
  *
@@ -64,8 +66,8 @@ class Fingers {
 				   int ang   = blob.getAngle();
 
           //Scale x and y to go from 0 to 255 and make new color
-          if (x > 0 && y > 0 && x < SwingTest.SURFACE_WIDTH && y < SwingTest.SURFACE_HEIGHT) {
-					  Color pitchcolor = new Color((int)Math.floor((x/(float)SwingTest.SURFACE_WIDTH)*255), 255 - (int)Math.floor((y/(float)SwingTest.SURFACE_HEIGHT)*255), 0);
+          if (x > 0 && y > 0 && x < SauceDisplay.SURFACE_WIDTH && y < SauceDisplay.SURFACE_HEIGHT) {
+					  Color pitchcolor = new Color((int)Math.floor((x/(float)SauceDisplay.SURFACE_WIDTH)*255), 255 - (int)Math.floor((y/(float)SauceDisplay.SURFACE_HEIGHT)*255), 0);
 				    g.setColor(pitchcolor);
 			    
 				   Ellipse2D ellipse = new Ellipse2D.Float(0,0, xsize, ysize);
@@ -88,7 +90,7 @@ class Fingers {
 /*
  * Creates the GUI
  */
-public class SwingTest extends JFrame implements KeyListener {  
+public class SauceDisplay extends JFrame implements KeyListener {  
 	
   public static final int SURFACE_WIDTH = 800;
 	public static final int SURFACE_HEIGHT = 600;
@@ -100,16 +102,16 @@ public class SwingTest extends JFrame implements KeyListener {
   private SynthScope scope;
   private SynthMixer mixer;
   private JPanel content, container, controls, instruments, knobs, extraControls;
-  private KaossTest kaoss; //to control audio 
+  private Saucillator kaoss; //to control audio 
   private Color bgColor = Color.BLACK;
-  private Color fgText = KaossTest.lightBrownTest;
-	private Color instrumText = KaossTest.darkBrownTest;
-	private Color instrumSelText = KaossTest.lightBrownTest;
+  private Color fgText = Saucillator.lightBrownTest;
+	private Color instrumText = Saucillator.darkBrownTest;
+	private Color instrumSelText = Saucillator.lightBrownTest;
 	private Color knobText = Color.WHITE;
-	private Color effectText = KaossTest.darkBrownTest;
-	private Color effectSelText = KaossTest.lightBrownTest;
-	private Color scaleText = KaossTest.darkBrownTest;
-	private Color scaleSelText = KaossTest.lightBrownTest;
+	private Color effectText = Saucillator.darkBrownTest;
+	private Color effectSelText = Saucillator.lightBrownTest;
+	private Color scaleText = Saucillator.darkBrownTest;
+	private Color scaleSelText = Saucillator.lightBrownTest;
   private Font headerFont = new Font("Helvetica", Font.BOLD, 24);
   private Font instrumFont = new Font("Helvetica", Font.BOLD, 22);
   private Font knobFont = new Font("Helvetica", Font.BOLD, 14);
@@ -161,7 +163,7 @@ public class SwingTest extends JFrame implements KeyListener {
   /*
 	 * Create the panels
 	 */
-	public SwingTest(KaossTest kaoss, SynthScope scope) {
+	public SauceDisplay(Saucillator kaoss, SynthScope scope) {
     this.kaoss = kaoss;
     this.setFocusable(true);   // Allow this panel to get focus.
     this.addKeyListener(this); // listen to our own key events.
@@ -257,7 +259,7 @@ public class SwingTest extends JFrame implements KeyListener {
     {
       label.setFont(instrumFont);
 
-      if(KaossTest.INSTRUMENT_DEFAULT == i)
+      if(Saucillator.INSTRUMENT_DEFAULT == i)
         label.setForeground(instrumSelText);
       else
         label.setForeground(instrumText);
@@ -358,12 +360,12 @@ public class SwingTest extends JFrame implements KeyListener {
   
   public void updateLoKnob(int lowpass)
   {
-  	loKnob.setValue((float)lowpass/(float)KaossTest.LOWPASS_MAX);
+  	loKnob.setValue((float)lowpass/(float)Saucillator.LOWPASS_MAX);
   }
   
   public void updatePitchKnob(int y)
   {
-  	pitchKnob.setValue((float)y/(float)KaossTest.TRACKPAD_GRID_SIZE);
+  	pitchKnob.setValue((float)y/(float)Saucillator.TRACKPAD_GRID_SIZE);
   }
   
   public void updatePanKnob(double pan)
@@ -373,12 +375,12 @@ public class SwingTest extends JFrame implements KeyListener {
   
   public void updateDepthKnob(int depth)
   {
-  	depthKnob.setValue((float)depth/(float)KaossTest.MOD_DEPTH_MAX);
+  	depthKnob.setValue((float)depth/(float)Saucillator.MOD_DEPTH_MAX);
   }
   
   public void updateRateKnob(int rate)
   {
-  	rateKnob.setValue((float)rate/(float)KaossTest.MOD_RATE_MAX);
+  	rateKnob.setValue((float)rate/(float)Saucillator.MOD_RATE_MAX);
   } 
 
   /*

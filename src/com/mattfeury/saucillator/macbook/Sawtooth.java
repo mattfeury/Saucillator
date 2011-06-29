@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  *  Matt's Instrument #1: Super Sawtooth
  */
@@ -110,9 +112,6 @@ public class Sawtooth extends Instrument {
         
         for(SynthInput freqMod : freqMods)
         {
-            //overtone offset
-            //double scaleOffset = getScaleIntervalFromOffset(scale, (int)inc + overtones[i]);
-            
             //harmonic offset
             freqMod.set(freq * harmonics[i]);
             i++;

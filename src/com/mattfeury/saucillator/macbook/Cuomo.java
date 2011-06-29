@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*
  *  Mike's Instrument #1: Cuomo
  */

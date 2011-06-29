@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /*  
  * DKnob.java
  * (c) 2000 by Joakim Eriksson

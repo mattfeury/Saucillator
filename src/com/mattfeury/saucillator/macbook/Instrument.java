@@ -1,3 +1,5 @@
+package com.mattfeury.saucillator.macbook;
+
 /**
  * Abstract class for instruments. Contains data for harmonics, oscillators, LFOs, 
  * envelopes and scopes. All other instruments extend this.
@@ -231,7 +233,7 @@ public abstract class Instrument
     {      
       scope = new SynthScope();
       
-      scope.createProbe( mixer.getOutput(0), "", KaossTest.darkGreenTest );
+      scope.createProbe( mixer.getOutput(0), "", Saucillator.darkGreenTest );
       scope.finish();
       scope.getWaveDisplay().setBackground( Color.black );
       scope.getWaveDisplay().setForeground( Color.green );
