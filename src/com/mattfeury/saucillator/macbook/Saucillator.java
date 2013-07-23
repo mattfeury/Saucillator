@@ -89,7 +89,12 @@ public class Saucillator implements Observer {
       //start input devices based on support
       if(useMultitouch) {
         tpo = TouchpadObservable.getInstance();
-        acc = new MacbookAccelerometer();    
+
+        try {
+          acc = new MacbookAccelerometer();
+        } catch(Exception e) {
+          System.out.println(e);
+        }
 
         fingersPressed = new LinkedList<Integer>();
 
@@ -236,14 +241,15 @@ public class Saucillator implements Observer {
 
     public void updateViaAccelerometer()
     {
+      if (acc != null) {
+        int sense = acc.sense();
+        int aX = acc.getX();
+        int aY = acc.getY();
+        int aZ = acc.getZ();
 
-      int sense = acc.sense();
-      int aX = acc.getX();
-      int aY = acc.getY();
-      int aZ = acc.getZ();
-
-      //pan by accelerometer
-      updatePan((double)(acc.getX() % 100) / 100);
+        //pan by accelerometer
+        updatePan((double)(acc.getX() % 100) / 100);
+      }
     }
 
     public void changeScale(int[] scale)
